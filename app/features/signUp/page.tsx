@@ -16,37 +16,43 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 // ユーザー認証に関するインポート
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/libs/firebase";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 
 const defaultTheme = createTheme();
 
 const page = () => {
+  // 新規で登録するユーザーの名前・メールアドレス・パスワードを格納するステート
   const [userName, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  // ログインを失敗したときにエラーメッセージを受け取るステート
   const [errorMessageEmail, setErrorMessageEmail] = React.useState("");
   const [errorMessagePassword, setErrorMessagePassword] = React.useState("");
 
-  const handleSubmitSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+  // 新規ユーザーの登録処理
+  const handleSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // ログイン情報（email,password）にユーザー名を紐づけてストレージに保存
     await addDoc(collection(db, "users"), {
       name: userName,
       email: email,
       password: password,
+      inLogin: true,
     });
 
+    // 認証機能にログイン情報（email,password）を新規登録
     await createUserWithEmailAndPassword(auth, email, password)
+      // 正常にログインできたときに走る処理
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         console.log(user);
       })
+      // 正常にログインできたなかった時に走る処理
       .catch((error) => {
         const errorCode = error.code;
-        // const errorMessage = error.message;
         console.log({ code: errorCode });
-
+        // エラーになった理由を表示する処理
         switch (errorCode) {
           case "auth/missing-email":
             setErrorMessageEmail("メールアドレスを入力してください。");
@@ -87,7 +93,7 @@ const page = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmitSignIn} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleSubmitSignUp} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -101,7 +107,6 @@ const page = () => {
                   label="Your Name"
                   autoFocus
                 />
-                {!userName ? "ユーザー名を入力してください。" : ""}
               </Grid>
               <Grid item xs={12}>
                 <TextField
