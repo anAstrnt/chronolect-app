@@ -22,6 +22,8 @@ import { auth, db } from "@/libs/firebase";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
+import loading from "../AppPage/[PersonalPageId]/loading";
+
 const defaultTheme = createTheme();
 
 const page = () => {
