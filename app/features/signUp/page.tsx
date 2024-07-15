@@ -57,7 +57,7 @@ const page = () => {
           });
         });
       })
-      // 正常にログインできたなかった時に走る処理
+      // 正常にログインできてなかった時に走る処理
       .catch((error) => {
         const errorCode = error.code;
         console.log({ code: errorCode });

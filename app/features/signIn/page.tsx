@@ -50,6 +50,7 @@ const page = () => {
           });
         });
       })
+      // 正常にログインできてなかった時に走る処理
       .catch((error) => {
         const errorCode = error.code;
         console.log({ code: errorCode });
@@ -128,6 +129,7 @@ const page = () => {
                 autoComplete="email"
                 autoFocus
               />
+              <Typography>{errorMessageEmail}</Typography>
               <TextField
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
@@ -140,6 +142,7 @@ const page = () => {
                 id="password"
                 autoComplete="current-password"
               />
+              <Typography>{errorMessagePassword}</Typography>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
