@@ -16,29 +16,36 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typewriter from "typewriter-effect";
+// ユーザー認証に関するインポート
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/libs/firebase";
-import { addDoc, collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const defaultTheme = createTheme();
 
 const page = () => {
+  const router = useRouter();
+  // ログインするメールアドレス・パスワードを格納するステート
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [isLogin, setIsLogin] = React.useState(false);
+  // ログインを失敗したときにエラーメッセージを受け取るステート
+  const [errorMessageEmail, setErrorMessageEmail] = React.useState("");
+  const [errorMessagePassword, setErrorMessagePassword] = React.useState("");
 
+  // sign―inのボタンが押されたときに走る処理（ログイン）
   const handleSubmitSignIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
+      // 正常にログインできたときに走る処理
       .then((userCredential) => {
-        setIsLogin(true);
         const user = userCredential.user;
         console.log(user);
-
+        // AppPageの個人画面に遷移
         const q = query(collection(db, "users"), where("email", "==", email));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          // const users = [];
+        onSnapshot(q, (querySnapshot) => {
           querySnapshot.forEach((doc) => {
+            router.push(`/features/AppPage/${doc.data().id}`);
             console.log(doc.data());
           });
         });
@@ -46,6 +53,17 @@ const page = () => {
       .catch((error) => {
         const errorCode = error.code;
         console.log({ code: errorCode });
+        // エラーになった理由を表示する処理
+        switch (errorCode) {
+          case "auth/invalid-email":
+            setErrorMessageEmail(
+              "入力されたメールアドレスは無効です。正しいメールアドレスを入力してください。"
+            );
+            break;
+          case "auth/invalid-credential":
+            setErrorMessagePassword("パスワードが登録されているものと異なります。");
+            break;
+        }
       });
   };
 
@@ -136,7 +154,7 @@ const page = () => {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="./signUp" variant="body2">
+                  <Link href="./SignUp" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

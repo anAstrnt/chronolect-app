@@ -16,11 +16,15 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 // ユーザー認証に関するインポート
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/libs/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, query, where } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const defaultTheme = createTheme();
 
 const page = () => {
+  // アカウント登録に成功したらページ遷移するためのHooks
+  const router = useRouter();
+
   // 新規で登録するユーザーの名前・メールアドレス・パスワードを格納するステート
   const [userName, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -35,18 +39,23 @@ const page = () => {
 
     // ログイン情報（email,password）にユーザー名を紐づけてストレージに保存
     await addDoc(collection(db, "users"), {
+      id: crypto.randomUUID(),
       name: userName,
       email: email,
       password: password,
-      inLogin: true,
     });
 
     // 認証機能にログイン情報（email,password）を新規登録
     await createUserWithEmailAndPassword(auth, email, password)
       // 正常にログインできたときに走る処理
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
+      .then(() => {
+        // AppPageの個人画面へ遷移
+        const q = query(collection(db, "users"), where("email", "==", email));
+        onSnapshot(q, (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            router.push(`/features/AppPage/${doc.data().id}`);
+          });
+        });
       })
       // 正常にログインできたなかった時に走る処理
       .catch((error) => {
@@ -149,7 +158,7 @@ const page = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="./signIn" variant="body2">
+                <Link href="./SignIn" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
