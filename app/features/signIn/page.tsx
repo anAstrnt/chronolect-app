@@ -22,8 +22,6 @@ import { auth, db } from "@/libs/firebase";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-import loading from "../AppPage/[PersonalPageId]/loading";
-
 const defaultTheme = createTheme();
 
 const page = () => {
@@ -82,12 +80,30 @@ const page = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url("/images/summer_top.png")',
+            position: "relative",
+            overflow: "hidden",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: "100%",
+              height: "100%",
+              backgroundImage: 'url("/images/summer_top.png")',
+              backgroundSize: "100%",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              animation: "moveBackground 10s linear infinite",
+              zIndex: -1,
+            },
+            "@keyframes moveBackground": {
+              "0%": { transform: "translate(-50%, -50%) translateY(0)" },
+              "50%": { transform: "translate(-50%, -50%) translateY(10%)" },
+              "100%": { transform: "translate(-50%, -50%) translateY(0)" },
+            },
             backgroundColor: (t) =>
               t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "left",
+            zIndex: -2,
           }}
         >
           <Box sx={{ fontSize: 36, my: 16, mx: 12 }}>
