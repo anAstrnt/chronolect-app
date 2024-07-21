@@ -3,15 +3,14 @@ import { MenuData } from "@/data/MenuData";
 import {
   Box,
   Grid,
-  ImageList,
   ImageListItem,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
 } from "@mui/material";
-import TimeDisplay from "@/components/TimeDisplay";
+import TimeDisplay from "@/app/components/TimeDisplay";
+import SignOut from "@/app/components/SignOut";
 
 interface childrenProps {
   children: ReactNode;
@@ -58,11 +57,6 @@ const layout = ({ children }: childrenProps) => {
                 }}
                 component="nav"
                 aria-labelledby="nested-list-subheader"
-                // subheader={
-                //   <ListSubheader component="div" id="nested-list-subheader">
-                //     Nested List Items
-                //   </ListSubheader>
-                // }
               >
                 <ListItemButton>
                   <ListItemIcon>{menu.icon}</ListItemIcon>
@@ -70,6 +64,7 @@ const layout = ({ children }: childrenProps) => {
                 </ListItemButton>
               </List>
             ))}
+            <SignOut />
           </Box>
         </Box>
         <TimeDisplay />
