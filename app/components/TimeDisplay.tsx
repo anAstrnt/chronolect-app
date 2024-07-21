@@ -7,14 +7,18 @@ type Props = {
   locale?: string;
 };
 
+// サイドバーの日時を管理するコンポーネント
 const TimeDisplay = ({ locale = "ja-JP" }: Props) => {
+  // 日時を格納するステート
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
+    // マウントされたときにsetIntervalで1秒毎にsetDate(new Date())を実行
     const timer = setInterval(() => {
       setDate(new Date());
     }, 1000);
 
+    // アンマウントされたときにclearIntervalでタイマーをクリアにする
     return () => clearInterval(timer);
   }, []);
 
