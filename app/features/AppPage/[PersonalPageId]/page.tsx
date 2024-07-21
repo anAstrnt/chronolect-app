@@ -9,7 +9,7 @@ import useAuth from "@/hooks/useAuth";
 
 import Loading from "./loading";
 
-const page = () => {
+const Page = () => {
   // 認証したユーザーかチェックするためのカスタムフック
   const { loading, authenticated } = useAuth();
 
@@ -42,4 +42,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

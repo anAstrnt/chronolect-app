@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Grid, LinearProgress } from "@mui/material";
 import React from "react";
 
-const loading = () => {
+const Loading = () => {
   return (
     <Box>
       <LinearProgress />
@@ -9,4 +9,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default Loading;
