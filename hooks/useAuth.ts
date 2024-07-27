@@ -1,12 +1,19 @@
+"use client";
+
 import { auth } from "@/libs/firebase";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const useAuth = () => {
+interface useAuthProps {
+  loading: boolean;
+  authenticated: boolean;
+}
+
+const useAuth = (): useAuthProps => {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubScribe = auth.onAuthStateChanged((user) => {
@@ -19,6 +26,7 @@ const useAuth = () => {
     });
     return () => unsubScribe();
   }, [router]);
+
   return { loading, authenticated };
 };
 

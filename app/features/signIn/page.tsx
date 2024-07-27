@@ -45,7 +45,7 @@ const page = () => {
         const q = query(collection(db, "users"), where("email", "==", email));
         onSnapshot(q, (querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            router.push(`/features/AppPage/${doc.data().id}`);
+            router.push(`/features/home`);
             console.log(doc.data());
           });
         });

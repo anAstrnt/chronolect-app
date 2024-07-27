@@ -4,6 +4,7 @@ import FaceIcon from "@mui/icons-material/Face";
 import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
 import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export const MenuData = [
   // 家族の情報
@@ -18,4 +19,11 @@ export const MenuData = [
   { number: 5, title: "Memo", link: "Memo", icon: <AutoAwesomeMotionIcon /> },
   // アカウント情報
   { number: 6, title: "Account", link: "account", icon: <ManageAccountsIcon /> },
+  // このアプリの説明書
+  {
+    number: 7,
+    title: "Instructions",
+    link: "instructions",
+    icon: <AutoStoriesIcon />,
+  },
 ];

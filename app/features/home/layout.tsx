@@ -41,7 +41,7 @@ const layout = ({ children }: childrenProps) => {
           <ImageListItem
             sx={{ padding: 0, width: 200, height: 200, borderRadius: "30px" }}
           >
-            <img src="/images/titlelogo.png" />
+            <img src="/images/titleLogo.png" />
           </ImageListItem>
           <Box sx={{ borderRight: "grey", padding: 0 }}>
             {MenuData.map((menu) => (
@@ -69,7 +69,7 @@ const layout = ({ children }: childrenProps) => {
         </Box>
         <TimeDisplay />
       </Grid>
-      {children}
+      <Grid sx={{ position: "fixed", top: "30px", left: "250px" }}>{children}</Grid>
     </Grid>
   );
 };

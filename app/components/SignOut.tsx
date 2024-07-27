@@ -8,12 +8,17 @@ import { List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 
 const SignOut = () => {
   const handleChangeSignOut = () => {
+    console.log("handleIn");
+
     signOut(auth)
       .then(() => {
+        console.log("signOut");
         // Sign-out successful.
       })
       .catch((error) => {
         // An error happened.
+        console.log("error");
+
         const errorCode = error.code;
         console.log({ code: errorCode });
       });
