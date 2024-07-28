@@ -2,7 +2,6 @@ import React from "react";
 import useAuth from "@/hooks/useAuth";
 import Loading from "../features/home/loading";
 import { childrenProps } from "@/types/childrenProps";
-import SignIn from "@/app/features/signIn/page";
 
 const AuthCheck = ({ children }: childrenProps) => {
   console.log("authCheck");
@@ -16,7 +15,7 @@ const AuthCheck = ({ children }: childrenProps) => {
   // 認証されていないユーザーがアクセスしようとするとはじく処理
   if (!authenticated) {
     // 認証されていない場合は何もレンダリングしない
-    return <SignIn />;
+    return null;
   }
   return <>{children}</>;
 };

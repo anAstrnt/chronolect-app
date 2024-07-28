@@ -20,7 +20,7 @@ const useAuth = (): useAuthProps => {
       if (user) {
         setAuthenticated(true);
       } else {
-        router.replace("/features/SignIn");
+        router.replace("/features/signIn");
       }
       setLoading(false);
     });
