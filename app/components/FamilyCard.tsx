@@ -27,23 +27,28 @@ const FamilyCard: React.FC<FamilyCardProps> = ({ hasUserData }) => {
     console.log("in");
   };
 
-  // サーバーサイドレンダリング（SSR）とクライアントサイドレンダリング（CSR）との間で、レンダリング結果が一致せず、エラーが発生。fetchUserNameが非同期関数のため、SSR時にundefinedが返され、CRS時にはデータが取得されるため、レンダリング結果が異なる。このエラーを解消するため、非同期処理をuseEffect内で行い、クライアントサイドでのみ実行するようにしている。
+  // サーバーサイドレンダリング（SSR）とクライアントサイドレンダリング（CSR）との間で、レンダリング結果が一致せず、エラーが発生。fetchUserDataが非同期関数のため、SSR時にundefinedが返され、CRS時にはデータが取得されるため、レンダリング結果が異なる。このエラーを解消するため、非同期処理をuseEffect内で行い、クライアントサイドでのみ実行するようにしている。
   useEffect(() => {
-    const fetchUserName = async () => {
+    const fetchUserData = async () => {
       if (hasUserData) {
         try {
           const querySnapshot = await getDocs(collection(db, "familyCard"));
           querySnapshot.forEach((doc) => {
+            // データベースから名前を取ってくる処理
             let fetchUserName = doc.data().userName;
             setUserName(fetchUserName);
+            // データベースからアバターを取ってくる処理
+            let fetchAvatar = doc.data().avatar;
+            setAvatar(fetchAvatar);
           });
         } catch (error) {
           console.error("Error fetching user data: ", error);
           setUserName("user");
+          setAvatar("/images/titleLogo.png");
         }
       }
     };
-    fetchUserName();
+    fetchUserData();
   }, [hasUserData]);
 
   return (
