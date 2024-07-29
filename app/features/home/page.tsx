@@ -11,39 +11,41 @@ const Page = () => {
   const [hasUserData, setHasUserData] = useState(false);
 
   useEffect(() => {
-      const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
-        if (!snapshot.empty) {
-          setHasUserData(true);
-        } else {
-          setHasUserData(false);
-        }
-      });
+    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
+      if (!snapshot.empty) {
+        setHasUserData(true);
+      } else {
+        setHasUserData(false);
+      }
+    });
 
     return () => unsubscribe();
   }, []);
 
   return (
     <Grid>
-      {hasUserData?(<Top/>):(
+      {hasUserData ? (
+        <Top hasUserData={hasUserData} />
+      ) : (
         <Grid
-      sx={{
-        width: "100%",
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Typography>あなたの日常をメモしておくためのアプリです。</Typography>
-      <Typography>まずは、あなたのアイコンと名前を登録してください。</Typography>
-      <Grid>
-        <FamilyCard />
-      </Grid>
-    </Grid>
+          sx={{
+            width: "100%",
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography>あなたの日常をメモしておくためのアプリです。</Typography>
+          <Typography>まずは、あなたのアイコンと名前を登録してください。</Typography>
+          <Grid>
+            <FamilyCard hasUserData={hasUserData} />
+          </Grid>
+        </Grid>
       )}
     </Grid>
   );

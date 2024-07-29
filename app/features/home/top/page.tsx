@@ -1,10 +1,14 @@
 import React from "react";
 import FamilyCardAria from "./FamilyCardAria/page";
 
-const page = () => {
+interface pageProps {
+  hasUserData: boolean;
+}
+
+const page: React.FC<pageProps> = ({ hasUserData }) => {
   return (
     <>
-      <FamilyCardAria />
+      <FamilyCardAria hasUserData={hasUserData} />
     </>
   );
 };

@@ -8,17 +8,43 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FamilyCardAdd from "./FamilyCardAdd";
+import { collection, getDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { db } from "@/libs/firebase";
 
-const FamilyCard = () => {
-  const [openInputSpace, setOpenInputSpace] = useState(false);
+interface FamilyCardProps {
+  hasUserData: boolean;
+}
+
+const FamilyCard: React.FC<FamilyCardProps> = ({ hasUserData }) => {
   const [userName, setUserName] = useState("");
+  const [openInputSpace, setOpenInputSpace] = useState(false);
   const [avatar, setAvatar] = useState("");
+
   const openUserCreateSpace = () => {
     setOpenInputSpace(!openInputSpace);
     console.log("in");
   };
+
+  // サーバーサイドレンダリング（SSR）とクライアントサイドレンダリング（CSR）との間で、レンダリング結果が一致せず、エラーが発生。fetchUserNameが非同期関数のため、SSR時にundefinedが返され、CRS時にはデータが取得されるため、レンダリング結果が異なる。このエラーを解消するため、非同期処理をuseEffect内で行い、クライアントサイドでのみ実行するようにしている。
+  useEffect(() => {
+    const fetchUserName = async () => {
+      if (hasUserData) {
+        try {
+          const querySnapshot = await getDocs(collection(db, "familyCard"));
+          querySnapshot.forEach((doc) => {
+            let fetchUserName = doc.data().userName;
+            setUserName(fetchUserName);
+          });
+        } catch (error) {
+          console.error("Error fetching user data: ", error);
+          setUserName("user");
+        }
+      }
+    };
+    fetchUserName();
+  }, [hasUserData]);
 
   return (
     <Grid
@@ -57,7 +83,7 @@ const FamilyCard = () => {
           </CardContent>
         </CardActionArea>
       </Card>
-      {openInputSpace ? (
+      {!hasUserData && openInputSpace ? (
         <FamilyCardAdd
           userName={userName}
           setUserName={setUserName}

@@ -1,20 +1,14 @@
 // "use client";
 
 import React from "react";
-import AuthCheck from "@/app/components/AuthCheck";
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  Grid,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Button, Grid, Typography } from "@mui/material";
+import FamilyCard from "@/app/components/FamilyCard";
 
-const Page = () => {
+interface PageProps {
+  hasUserData: boolean;
+}
+
+const Page: React.FC<PageProps> = ({ hasUserData }) => {
   return (
     <Grid>
       <Typography variant="h2" component="div">
@@ -24,7 +18,7 @@ const Page = () => {
         {/* <AddIcon /> */}
         Create
       </Button>
-
+      <FamilyCard hasUserData={hasUserData} />
     </Grid>
   );
 };
