@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FamilyCardAdd from "./FamilyCardAdd";
-import { collection, getDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 
 interface FamilyCardProps {
@@ -24,7 +24,6 @@ const FamilyCard: React.FC<FamilyCardProps> = ({ hasUserData }) => {
 
   const openUserCreateSpace = () => {
     setOpenInputSpace(!openInputSpace);
-    console.log("in");
   };
 
   // サーバーサイドレンダリング（SSR）とクライアントサイドレンダリング（CSR）との間で、レンダリング結果が一致せず、エラーが発生。fetchUserDataが非同期関数のため、SSR時にundefinedが返され、CRS時にはデータが取得されるため、レンダリング結果が異なる。このエラーを解消するため、非同期処理をuseEffect内で行い、クライアントサイドでのみ実行するようにしている。
