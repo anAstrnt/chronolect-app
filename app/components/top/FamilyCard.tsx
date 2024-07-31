@@ -12,15 +12,20 @@ import React, { useEffect, useState } from "react";
 import FamilyCardAdd from "./FamilyCardAdd";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/libs/firebase";
+import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 interface FamilyCardProps {
   hasUserData: boolean;
+  openInputSpace: boolean;
+  setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FamilyCard: React.FC<FamilyCardProps> = ({ hasUserData }) => {
-  const [userName, setUserName] = useState("");
-  const [openInputSpace, setOpenInputSpace] = useState(false);
-  const [avatar, setAvatar] = useState("");
+const FamilyCard: React.FC<FamilyCardProps> = ({
+  hasUserData,
+  openInputSpace,
+  setOpenInputSpace,
+}) => {
+  const { avatar, setAvatar, userName, setUserName } = useFamilyCard();
 
   const openUserCreateSpace = () => {
     setOpenInputSpace(!openInputSpace);
@@ -51,6 +56,7 @@ const FamilyCard: React.FC<FamilyCardProps> = ({ hasUserData }) => {
   }, [hasUserData]);
 
   return (
+
     <Grid
       sx={{
         width: "100%",
@@ -87,16 +93,7 @@ const FamilyCard: React.FC<FamilyCardProps> = ({ hasUserData }) => {
           </CardContent>
         </CardActionArea>
       </Card>
-      {!hasUserData && openInputSpace ? (
-        <FamilyCardAdd
-          userName={userName}
-          setUserName={setUserName}
-          avatar={avatar}
-          setAvatar={setAvatar}
-        />
-      ) : (
-        ""
-      )}
+      {!hasUserData && openInputSpace ? <FamilyCardAdd /> : ""}
     </Grid>
   );
 };

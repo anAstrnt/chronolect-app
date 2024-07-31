@@ -1,3 +1,4 @@
+import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import FamilyCardAddButton from "@/components/FamilyCardAddButton";
 import ImageUpload from "@/components/ImageUpload";
 import { db, storage } from "@/libs/firebase";
@@ -6,19 +7,8 @@ import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 
-interface FamilyCardAddProps {
-  avatar: string;
-  setAvatar: React.Dispatch<React.SetStateAction<string>>;
-  userName: string;
-  setUserName: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const FamilyCardAdd: React.FC<FamilyCardAddProps> = ({
-  userName,
-  setUserName,
-  avatar,
-  setAvatar,
-}) => {
+const FamilyCardAdd: React.FC = ({}) => {
+  const { avatar, setAvatar, userName, setUserName } = useFamilyCard();
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
 
   const sendUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,6 +38,7 @@ const FamilyCardAdd: React.FC<FamilyCardAddProps> = ({
   };
 
   return (
+
     <form onSubmit={sendUser}>
       <Grid
         sx={{
