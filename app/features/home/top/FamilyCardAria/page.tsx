@@ -11,42 +11,70 @@ interface PageProps {
   hasUserData: boolean;
 }
 
+interface users {
+  userName: string;
+  avatar: string;
+}
+
 const Page: React.FC<PageProps> = ({ hasUserData }) => {
   const [openInputSpace, setOpenInputSpace] = useState(false);
+  const [avatar, setAvatar] = useState("");
+  const [userName, setUserName] = useState("");
+  const [users, setUsers] = useState<users[]>([]);
+
+  const openFamilyCardAddSpace = () => {
+    setOpenInputSpace(!openInputSpace);
+  };
 
   return (
-    <FamilyCardProvider>
-      <Grid>
-        <Typography variant="h4" component="div">
-          家族メモ
-        </Typography>
-        <Typography variant="h6" component="div">
-          様々な場面で書類作成するときのため、家族の情報をメモしておこう。
-        </Typography>
+    <Grid>
+      <Typography variant="h4" component="div">
+        家族メモ
+      </Typography>
+      <Typography variant="h6" component="div">
+        様々な場面で書類作成するときのため、家族の情報をメモしておこう。
+      </Typography>
 
-        <Grid sx={{ display: "flex", alignItems: "center" }}>
-          <FamilyCard
-            hasUserData={hasUserData}
-            openInputSpace={openInputSpace}
-            setOpenInputSpace={setOpenInputSpace}
-          />
-          <IconButton sx={{ backgroundColor: "rgba(0,0,0,0.3)" }}>
-            <AddIcon />
-          </IconButton>
-        </Grid>
-        <FamilyCardAdd />
-
-        <Grid>
-          <Typography>誕生日</Typography>
-          <Typography>郵便番号</Typography>
-          <Typography>住所</Typography>
-          <Typography>学歴</Typography>
-          <Typography>職歴</Typography>
-          <Typography>資格</Typography>
-          <Typography>メモ</Typography>
-        </Grid>
+      <Grid sx={{ display: "flex", alignItems: "center" }}>
+        <FamilyCard
+          hasUserData={hasUserData}
+          openInputSpace={openInputSpace}
+          setOpenInputSpace={setOpenInputSpace}
+          avatar={avatar}
+          setAvatar={setAvatar}
+          userName={userName}
+          setUserName={setUserName}
+          users={users}
+          setUsers={setUsers}
+        />
+        <IconButton
+          sx={{ backgroundColor: "rgba(0,0,0,0.3)" }}
+          onClick={openFamilyCardAddSpace}
+        >
+          <AddIcon />
+        </IconButton>
       </Grid>
-    </FamilyCardProvider>
+      {openInputSpace ? (
+        <FamilyCardAdd
+          avatar={avatar}
+          setAvatar={setAvatar}
+          userName={userName}
+          setUserName={setUserName}
+        />
+      ) : (
+        ""
+      )}
+
+      <Grid>
+        <Typography>誕生日</Typography>
+        <Typography>郵便番号</Typography>
+        <Typography>住所</Typography>
+        <Typography>学歴</Typography>
+        <Typography>職歴</Typography>
+        <Typography>資格</Typography>
+        <Typography>メモ</Typography>
+      </Grid>
+    </Grid>
   );
 };
 
