@@ -47,48 +47,47 @@ const FamilyCard: React.FC<FamilyCardProps> = ({
   };
 
   // サーバーサイドレンダリング（SSR）とクライアントサイドレンダリング（CSR）との間で、レンダリング結果が一致せず、エラーが発生。fetchUserDataが非同期関数のため、SSR時にundefinedが返され、CRS時にはデータが取得されるため、レンダリング結果が異なる。このエラーを解消するため、非同期処理をuseEffect内で行い、クライアントサイドでのみ実行するようにしている。
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     if (hasUserData) {
-  //       try {
-  //         const querySnapshot = await getDocs(collection(db, "familyCard"));
-  //         querySnapshot.forEach((doc) => {
-  //           const newUsers = {
-  //             userName: doc.data().userName,
-  //             avatar: doc.data().avatar,
-  //           };
-  //           setUsers([newUsers, ...users]);
-
-  // データベースから名前を取ってくる処理
-  // let fetchUserName = doc.data().userName;
-  // setUserName(fetchUserName);
-  // // データベースからアバターを取ってくる処理
-  // let fetchAvatar = doc.data().avatar;
-  // setAvatar(fetchAvatar);
-
-  //         });
-  //       } catch (error) {
-  //         console.error("Error fetching user data: ", error);
-  //         setUserName("user");
-  //         setAvatar("/images/titleLogo.png");
-  //       }
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, [hasUserData]);
-
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-      const newUsers = snapshot.docs.map((doc) => ({
-        userName: doc.data().userName,
-        avatar: doc.data().avatar,
-      }));
-      console.log([newUsers, ...users]);
-      setUsers([newUsers, ...users]);
-    });
+    const fetchUserData = async () => {
+      if (hasUserData) {
+        try {
+          const querySnapshot = await getDocs(collection(db, "familyCard"));
+          querySnapshot.forEach((doc) => {
+            const newUsers = {
+              userName: doc.data().userName,
+              avatar: doc.data().avatar,
+            };
+            setUsers([newUsers, ...users]);
 
-    return () => unsubscribe();
+            // データベースから名前を取ってくる処理
+            // let fetchUserName = doc.data().userName;
+            // setUserName(fetchUserName);
+            // // データベースからアバターを取ってくる処理
+            // let fetchAvatar = doc.data().avatar;
+            // setAvatar(fetchAvatar);
+          });
+        } catch (error) {
+          console.error("Error fetching user data: ", error);
+          setUserName("user");
+          setAvatar("/images/titleLogo.png");
+        }
+      }
+    };
+    fetchUserData();
   }, [hasUserData]);
+
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
+  //     const newUsers = snapshot.docs.map((doc) => ({
+  //       userName: doc.data().userName,
+  //       avatar: doc.data().avatar,
+  //     }));
+  //     console.log([newUsers, ...users]);
+  //     setUsers([newUsers, ...users]);
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [hasUserData]);
 
   return (
     <Grid
@@ -100,33 +99,35 @@ const FamilyCard: React.FC<FamilyCardProps> = ({
         alignItems: "center",
       }}
     >
-      <Card sx={{ maxWidth: 200 }}>
-        <CardActionArea
-          onClick={openUserCreateSpace}
-          sx={{
-            padding: "20px 40px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Avatar
+      {users.map((user) => (
+        <Card sx={{ maxWidth: 200 }} key={user.avatar}>
+          <CardActionArea
+            onClick={openUserCreateSpace}
             sx={{
-              margin: "25px",
-              width: 56,
-              height: 56,
-              border: "2px solid rgba(0,0,0,0.2)",
-              // "&::before": { width: 64, height: 64, border: "1px solid #333" },
+              padding: "20px 40px",
+              display: "flex",
+              flexDirection: "column",
             }}
-            alt="Remy Sharp"
-            src={avatar || "/images/titleLogo.png"}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {userName || "user"}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+          >
+            <Avatar
+              sx={{
+                margin: "25px",
+                width: 56,
+                height: 56,
+                border: "2px solid rgba(0,0,0,0.2)",
+                // "&::before": { width: 64, height: 64, border: "1px solid #333" },
+              }}
+              alt="Remy Sharp"
+              src={user.avatar || "/images/titleLogo.png"}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {user.userName || "user"}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      ))}
 
       {!hasUserData && openInputSpace ? (
         <FamilyCardAdd
