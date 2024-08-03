@@ -1,13 +1,24 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
-interface FamilyCardContextProps {
+type Users = {
+  userName: string;
+  avatar: string;
+};
+
+type FamilyCardContextProps = {
   avatar: string;
   setAvatar: React.Dispatch<React.SetStateAction<string>>;
   userName: string;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
-}
+  users: Users[];
+  setUsers: React.Dispatch<React.SetStateAction<Users[]>>;
+  hasUserData: boolean;
+  setHasUserData: React.Dispatch<React.SetStateAction<boolean>>;
+  openInputSpace: boolean;
+  setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-interface FamilyCardProviderProps {
+type FamilyCardProviderProps = {
   children: ReactNode;
 }
 

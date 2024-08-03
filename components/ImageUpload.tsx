@@ -6,10 +6,10 @@ import style from "@/styles/ImageUpload.module.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/libs/firebase";
 
-interface ImageUploadProps {
+type ImageUploadProps = {
   setAvatar: React.Dispatch<React.SetStateAction<string>>;
   setAvatarImage: React.Dispatch<React.SetStateAction<File | null>>;
-}
+};
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatar, setAvatarImage }) => {
   const [sampleAvatarImage, setSampleAvatarImage] = useState<string[]>([]);

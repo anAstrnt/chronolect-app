@@ -5,22 +5,26 @@ import { Button, Grid, IconButton, Typography } from "@mui/material";
 import FamilyCard from "@/app/components/top/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
 import FamilyCardAdd from "@/app/components/top/FamilyCardAdd";
-import { FamilyCardProvider } from "@/app/context/FamilyCardProvider";
+import { FamilyCardProvider, useFamilyCard } from "@/app/context/FamilyCardProvider";
+import FirstFamilyCard from "@/app/components/top/FirstFamilyCard";
 
-interface PageProps {
-  hasUserData: boolean;
-}
+// type PageProps = {
+//   hasUserData: boolean;
+// };
 
-interface users {
-  userName: string;
-  avatar: string;
-}
+// type Users = {
+//   userName: string;
+//   avatar: string;
+// };
 
-const Page: React.FC<PageProps> = ({ hasUserData }) => {
-  const [openInputSpace, setOpenInputSpace] = useState(false);
-  const [avatar, setAvatar] = useState("");
-  const [userName, setUserName] = useState("");
-  const [users, setUsers] = useState<users[]>([]);
+const Page: React.FC = () =>
+  // { hasUserData }
+  {
+    // const [openInputSpace, setOpenInputSpace] = useState(false);
+    // const [avatar, setAvatar] = useState("");
+    // const [userName, setUserName] = useState("");
+    // const [users, setUsers] = useState<Users[]>([]);
+    const { hasUserData, openInputSpace, setOpenInputSpace } = useFamilyCard();
 
   const openFamilyCardAddSpace = () => {
     setOpenInputSpace(!openInputSpace);

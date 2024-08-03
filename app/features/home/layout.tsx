@@ -12,9 +12,9 @@ import {
 import TimeDisplay from "@/app/components/TimeDisplay";
 import SignOut from "@/app/components/SignOut";
 
-interface childrenProps {
+type childrenProps = {
   children: ReactNode;
-}
+};
 
 const layout = ({ children }: childrenProps) => {
   return (

@@ -14,22 +14,22 @@ import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
-interface users {
-  userName: string;
-  avatar: string;
-}
+// type Users = {
+//   userName: string;
+//   avatar: string;
+// };
 
-interface FamilyCardProps {
-  hasUserData: boolean;
-  openInputSpace: boolean;
-  setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
-  avatar: string;
-  setAvatar: React.Dispatch<React.SetStateAction<string>>;
-  userName: string;
-  setUserName: React.Dispatch<React.SetStateAction<string>>;
-  users: users[];
-  setUsers: React.Dispatch<React.SetStateAction<users[]>>;
-}
+type FamilyCardProps = {
+  // hasUserData: boolean;
+  // openInputSpace: boolean;
+  // setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
+  // avatar: string;
+  // setAvatar: React.Dispatch<React.SetStateAction<string>>;
+  // userName: string;
+  // setUserName: React.Dispatch<React.SetStateAction<string>>;
+  // users: Users[];
+  // setUsers: React.Dispatch<React.SetStateAction<Users[]>>;
+};
 
 const FamilyCard: React.FC<FamilyCardProps> = ({
   hasUserData,

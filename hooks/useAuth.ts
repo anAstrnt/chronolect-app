@@ -4,10 +4,10 @@ import { auth } from "@/libs/firebase";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface useAuthProps {
+type useAuthProps = {
   loading: boolean;
   authenticated: boolean;
-}
+};
 
 const useAuth = (): useAuthProps => {
   const router = useRouter();

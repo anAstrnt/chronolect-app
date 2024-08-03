@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
 import React from "react";
 
-interface FamilyCardAddButtonProps {
+type FamilyCardAddButtonProps = {
   userName: string;
   avatar: string;
-}
+};
 
 const FamilyCardAddButton: React.FC<FamilyCardAddButtonProps> = ({
   userName,

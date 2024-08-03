@@ -7,12 +7,12 @@ import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 
-interface FamilyCardAddProps {
-  avatar: string;
-  setAvatar: React.Dispatch<React.SetStateAction<string>>;
-  userName: string;
-  setUserName: React.Dispatch<React.SetStateAction<string>>;
-}
+// type FamilyCardAddProps = {
+//   avatar: string;
+//   setAvatar: React.Dispatch<React.SetStateAction<string>>;
+//   userName: string;
+//   setUserName: React.Dispatch<React.SetStateAction<string>>;
+// };
 
 const FamilyCardAdd: React.FC<FamilyCardAddProps> = ({
   avatar,
