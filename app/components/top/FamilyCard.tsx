@@ -8,42 +8,13 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import FamilyCardAdd from "./FamilyCardAdd";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
-// type Users = {
-//   userName: string;
-//   avatar: string;
-// };
-
-type FamilyCardProps = {
-  // hasUserData: boolean;
-  // openInputSpace: boolean;
-  // setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
-  // avatar: string;
-  // setAvatar: React.Dispatch<React.SetStateAction<string>>;
-  // userName: string;
-  // setUserName: React.Dispatch<React.SetStateAction<string>>;
-  // users: Users[];
-  // setUsers: React.Dispatch<React.SetStateAction<Users[]>>;
-};
-
-const FamilyCard: React.FC = (
-  {
-    // hasUserData,
-    // openInputSpace,
-    // setOpenInputSpace,
-    // avatar,
-    // setAvatar,
-    // userName,
-    // setUserName,
-    // users,
-    // setUsers,
-  }
-) => {
+const FamilyCard: React.FC = () => {
   const { users, setUsers, hasUserData, openInputSpace, setOpenInputSpace } =
     useFamilyCard();
 
@@ -91,7 +62,6 @@ const FamilyCard: React.FC = (
                   width: 56,
                   height: 56,
                   border: "2px solid rgba(0,0,0,0.2)",
-                  // "&::before": { width: 64, height: 64, border: "1px solid #333" },
                 }}
                 alt="Remy Sharp"
                 src={user.avatar || "/images/titleLogo.png"}
@@ -105,16 +75,7 @@ const FamilyCard: React.FC = (
           </Card>
         ))}
 
-      {!hasUserData && openInputSpace ? (
-        <FamilyCardAdd
-        // avatar={avatar}
-        // setAvatar={setAvatar}
-        // userName={userName}
-        // setUserName={setUserName}
-        />
-      ) : (
-        ""
-      )}
+      {!hasUserData && openInputSpace ? <FamilyCardAdd /> : ""}
     </Grid>
   );
 };

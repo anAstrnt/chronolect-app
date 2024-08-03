@@ -2,34 +2,7 @@ import { Grid, Typography } from "@mui/material";
 import React from "react";
 import FamilyCard from "./FamilyCard";
 
-// type Users = {
-//   userName: string;
-//   avatar: string;
-// };
-
-type FirstFamilyCardProps = {
-  // hasUserData: boolean;
-  // openInputSpace: boolean;
-  // setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
-  // avatar: string;
-  // setAvatar: React.Dispatch<React.SetStateAction<string>>;
-  // userName: string;
-  // setUserName: React.Dispatch<React.SetStateAction<string>>;
-  // users: Users[];
-  // setUsers: React.Dispatch<React.SetStateAction<Users[]>>;
-};
-
-const FirstFamilyCard: React.FC = ({
-  // hasUserData,
-  // openInputSpace,
-  // setOpenInputSpace,
-  // avatar,
-  // setAvatar,
-  // userName,
-  // setUserName,
-  // users,
-  // setUsers,
-}) => {
+const FirstFamilyCard: React.FC = () => {
   return (
     <Grid
       sx={{
@@ -47,17 +20,7 @@ const FirstFamilyCard: React.FC = ({
       <Typography>あなたの日常をメモしておくためのアプリです。</Typography>
       <Typography>まずは、あなたのアイコンと名前を登録してください。</Typography>
       <Grid>
-        <FamilyCard
-          // hasUserData={hasUserData}
-          // openInputSpace={openInputSpace}
-          // setOpenInputSpace={setOpenInputSpace}
-          // avatar={avatar}
-          // setAvatar={setAvatar}
-          // userName={userName}
-          // setUserName={setUserName}
-          // users={users}
-          // setUsers={setUsers}
-        />
+        <FamilyCard />
       </Grid>
     </Grid>
   );
