@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 type Users = {
@@ -20,16 +22,32 @@ type FamilyCardContextProps = {
 
 type FamilyCardProviderProps = {
   children: ReactNode;
-}
+};
 
 const FamilyCardContext = createContext<FamilyCardContextProps | undefined>(undefined);
 
 const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => {
   const [avatar, setAvatar] = useState("");
   const [userName, setUserName] = useState("");
+  const [users, setUsers] = useState<Users[]>([]);
+  const [hasUserData, setHasUserData] = useState(false);
+  const [openInputSpace, setOpenInputSpace] = useState(false);
 
   return (
-    <FamilyCardContext.Provider value={{ avatar, setAvatar, userName, setUserName }}>
+    <FamilyCardContext.Provider
+      value={{
+        avatar,
+        setAvatar,
+        userName,
+        setUserName,
+        users,
+        setUsers,
+        hasUserData,
+        setHasUserData,
+        openInputSpace,
+        setOpenInputSpace,
+      }}
+    >
       {children}
     </FamilyCardContext.Provider>
   );
@@ -37,9 +55,9 @@ const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => 
 
 const useFamilyCard = () => {
   const context = useContext(FamilyCardContext);
-  if (context === undefined) {
-    throw new Error("useFamilyCard は FamilyCardProvider 内で使用する必要があります。");
-  }
+  // if (context === undefined) {
+  //   throw new Error("useFamilyCard は FamilyCardProvider 内で使用する必要があります。");
+  // }
   return context;
 };
 

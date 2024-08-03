@@ -3,50 +3,31 @@
 import React, { useEffect, useState } from "react";
 import Top from "@/app/features/home/top/page";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import FamilyCard from "@/app/components/top/FamilyCard";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
+import FirstFamilyCard from "@/app/components/top/FirstFamilyCard";
+import { FamilyCardProvider } from "@/app/context/FamilyCardProvider";
 
 const Page = () => {
-  const [hasUserData, setHasUserData] = useState(false);
+  // const [hasUserData, setHasUserData] = useState(false);
+  // const { hasUserData, setHasUserData } = useFamilyCard();
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-      if (!snapshot.empty) {
-        setHasUserData(true);
-      } else {
-        setHasUserData(false);
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
+  //     if (!snapshot.empty) {
+  //       setHasUserData(true);
+  //     } else {
+  //       setHasUserData(false);
+  //     }
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
   return (
     <Grid>
-      {hasUserData ? (
-        <Top hasUserData={hasUserData} />
-      ) : (
-        <Grid
-          sx={{
-            width: "100%",
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography>あなたの日常をメモしておくためのアプリです。</Typography>
-          <Typography>まずは、あなたのアイコンと名前を登録してください。</Typography>
-          <Grid>
-            <FamilyCard hasUserData={hasUserData} />
-          </Grid>
-        </Grid>
-      )}
+      <Top />
+      {/* {hasUserData ? <Top /> : <FirstFamilyCard />} */}
     </Grid>
   );
 };

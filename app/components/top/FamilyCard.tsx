@@ -31,17 +31,22 @@ type FamilyCardProps = {
   // setUsers: React.Dispatch<React.SetStateAction<Users[]>>;
 };
 
-const FamilyCard: React.FC<FamilyCardProps> = ({
-  hasUserData,
-  openInputSpace,
-  setOpenInputSpace,
-  avatar,
-  setAvatar,
-  userName,
-  setUserName,
-  users,
-  setUsers,
-}) => {
+const FamilyCard: React.FC = (
+  {
+    // hasUserData,
+    // openInputSpace,
+    // setOpenInputSpace,
+    // avatar,
+    // setAvatar,
+    // userName,
+    // setUserName,
+    // users,
+    // setUsers,
+  }
+) => {
+  const { users, setUsers, hasUserData, openInputSpace, setOpenInputSpace } =
+    useFamilyCard();
+
   const openUserCreateSpace = () => {
     setOpenInputSpace(!openInputSpace);
   };
@@ -102,10 +107,10 @@ const FamilyCard: React.FC<FamilyCardProps> = ({
 
       {!hasUserData && openInputSpace ? (
         <FamilyCardAdd
-          avatar={avatar}
-          setAvatar={setAvatar}
-          userName={userName}
-          setUserName={setUserName}
+        // avatar={avatar}
+        // setAvatar={setAvatar}
+        // userName={userName}
+        // setUserName={setUserName}
         />
       ) : (
         ""

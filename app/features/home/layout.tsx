@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import TimeDisplay from "@/app/components/TimeDisplay";
 import SignOut from "@/app/components/SignOut";
+import { FamilyCardProvider } from "@/app/context/FamilyCardProvider";
 
 type childrenProps = {
   children: ReactNode;
@@ -69,7 +70,9 @@ const layout = ({ children }: childrenProps) => {
         </Box>
         <TimeDisplay />
       </Grid>
-      <Grid sx={{ position: "fixed", top: "30px", left: "250px" }}>{children}</Grid>
+      <Grid sx={{ position: "fixed", top: "30px", left: "250px" }}>
+        <FamilyCardProvider>{children}</FamilyCardProvider>
+      </Grid>
     </Grid>
   );
 };
