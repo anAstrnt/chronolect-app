@@ -26,7 +26,7 @@ type FamilyCardProviderProps = {
 
 const FamilyCardContext = createContext<FamilyCardContextProps | undefined>(undefined);
 
-const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => {
+export const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => {
   const [avatar, setAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const [users, setUsers] = useState<Users[]>([]);
@@ -53,12 +53,10 @@ const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => 
   );
 };
 
-const useFamilyCard = () => {
+export const useFamilyCard = () => {
   const context = useContext(FamilyCardContext);
-  // if (context === undefined) {
-  //   throw new Error("useFamilyCard は FamilyCardProvider 内で使用する必要があります。");
-  // }
+  if (context === undefined) {
+    throw new Error("useFamilyCard は FamilyCardProvider 内で使用する必要があります。");
+  }
   return context;
 };
-
-export { FamilyCardProvider, useFamilyCard };
