@@ -9,7 +9,7 @@ import React, { useState } from "react";
 
 const FamilyCardAdd: React.FC = () => {
   const { userName, setUserName } = useFamilyCard();
-  // imageUploadコンポーネントからがアバター画像がアップロードされたときにFileデータを格納しておくステート
+  // avatarImage：imageUploadコンポーネントからがアバター画像がアップロードされたときにFileデータを格納しておくステート。ファイルからアバター画像をアップするために格納するステート（本ステート）はsendUserのif文で画像をアップロードするために使い、それ以外はアバターのURLのみ格納するステート（avatar,setAvatar）で画像URLを管理している。
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
 
   const sendUser = async (e: React.FormEvent<HTMLFormElement>) => {

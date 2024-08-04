@@ -4,11 +4,9 @@ import FamilyCard from "@/app/components/top/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
 import FamilyCardAdd from "@/app/components/top/FamilyCardAdd";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
-import FirstFamilyCard from "@/app/components/top/FirstFamilyCard";
 
 const Page: React.FC = () => {
-  const { users, userName, hasUserData, openInputSpace, setOpenInputSpace } =
-    useFamilyCard();
+  const { openInputSpace, setOpenInputSpace } = useFamilyCard();
 
   // デバッグ用ログ
   // console.log("users:", users);
