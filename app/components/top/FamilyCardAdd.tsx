@@ -8,7 +8,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 
 const FamilyCardAdd: React.FC = () => {
-  const { userName, setUserName } = useFamilyCard();
+  const { userName, setUserName, setAvatar } = useFamilyCard();
   // avatarImage：imageUploadコンポーネントからがアバター画像がアップロードされたときにFileデータを格納しておくステート。ファイルからアバター画像をアップするために格納するステート（本ステート）はsendUserのif文で画像をアップロードするために使い、それ以外はアバターのURLのみ格納するステート（avatar,setAvatar）で画像URLを管理している。
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
 
@@ -35,6 +35,7 @@ const FamilyCardAdd: React.FC = () => {
         .catch((err) => err.message);
     }
     setAvatarImage(null);
+    setAvatar("");
     setUserName("");
   };
 

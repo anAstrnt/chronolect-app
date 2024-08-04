@@ -13,7 +13,7 @@ type ImageUploadProps = {
 
 // setAvatarImage：ユーザーが任意に選択された画像のFileデータをFamilyCardAddコンポーネントに設置したステートに格納するために渡したProps
 const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
-  const { setAvatar } = useFamilyCard();
+  const { avatar, setAvatar } = useFamilyCard();
   // サンプルのユーザーアバターの画像をFirebaseから取得し格納しておくためのステート
   const [sampleAvatarImage, setSampleAvatarImage] = useState<string[]>([]);
 
@@ -64,10 +64,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
 
   return (
     <div className={style.outerBox}>
-      <div className={style.title}>
+      <Grid sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Avatar
+          sx={{
+            margin: "25px",
+            width: 56,
+            height: 56,
+            border: "2px solid rgba(0,0,0,0.2)",
+          }}
+          alt="user"
+          src={avatar || "/images/titleLogo.png"}
+        />
         {/* <h2>画像アップローダー</h2> */}
         <p>JpegかPngの画像ファイル</p>
-      </div>
+      </Grid>
       <div className={style.imageUplodeBox}>
         <p>フォルダからアップロード</p>
         <input
