@@ -1,15 +1,10 @@
+import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import { Button } from "@mui/material";
 import React from "react";
 
-type FamilyCardAddButtonProps = {
-  userName: string;
-  avatar: string;
-};
+const FamilyCardAddButton: React.FC = () => {
+  const { avatar, userName } = useFamilyCard();
 
-const FamilyCardAddButton: React.FC<FamilyCardAddButtonProps> = ({
-  userName,
-  avatar,
-}) => {
   return (
     <Button
       type="submit"

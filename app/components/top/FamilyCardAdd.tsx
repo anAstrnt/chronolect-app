@@ -8,7 +8,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 
 const FamilyCardAdd: React.FC = () => {
-  const { avatar, setAvatar, userName, setUserName } = useFamilyCard();
+  const { userName, setUserName } = useFamilyCard();
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
 
   const sendUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,11 +63,11 @@ const FamilyCardAdd: React.FC = () => {
             <Typography sx={{ fontSize: 25, fontWeightBold: 500 }}>
               Choose your avatar
             </Typography>
-            <ImageUpload setAvatar={setAvatar} setAvatarImage={setAvatarImage} />
+            <ImageUpload setAvatarImage={setAvatarImage} />
           </Grid>
         </Grid>
         <Grid sx={{ margin: "50px" }}>
-          <FamilyCardAddButton userName={userName} avatar={avatar} />
+          <FamilyCardAddButton />
         </Grid>
       </Grid>
     </form>

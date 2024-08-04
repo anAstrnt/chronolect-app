@@ -6,30 +6,26 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import FirstFamilyCard from "@/app/components/top/FirstFamilyCard";
-import { FamilyCardProvider } from "@/app/context/FamilyCardProvider";
+import { FamilyCardProvider, useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 const Page = () => {
-  // const [hasUserData, setHasUserData] = useState(false);
-  // const { hasUserData, setHasUserData } = useFamilyCard();
+  const { hasUserData, setHasUserData } = useFamilyCard();
 
-  // useEffect(() => {
-  //   const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-  //     if (!snapshot.empty) {
-  //       setHasUserData(true);
-  //     } else {
-  //       setHasUserData(false);
-  //     }
-  //   });
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
+      if (!snapshot.empty) {
+        setHasUserData(true);
+      } else {
+        setHasUserData(false);
+      }
+    });
 
-  //   return () => unsubscribe();
-  // }, []);
+    return () => unsubscribe();
+  }, []);
 
-  return (
-    <Grid>
-      <Top />
-      {/* {hasUserData ? <Top /> : <FirstFamilyCard />} */}
-    </Grid>
-  );
+  console.log(hasUserData);
+
+  return <Grid>{hasUserData ? <Top /> : <FirstFamilyCard />}</Grid>;
 };
 
 export default Page;

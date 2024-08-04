@@ -3,15 +3,16 @@
 import { Avatar, AvatarGroup, Box, Grid, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import style from "@/styles/ImageUpload.module.css";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "@/libs/firebase";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "@/libs/firebase";
+import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 type ImageUploadProps = {
-  setAvatar: React.Dispatch<React.SetStateAction<string>>;
   setAvatarImage: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatar, setAvatarImage }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
+  const { setAvatar } = useFamilyCard();
   const [sampleAvatarImage, setSampleAvatarImage] = useState<string[]>([]);
 
   const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -15,8 +15,22 @@ import { db } from "@/libs/firebase";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 const FamilyCard: React.FC = () => {
-  const { users, setUsers, hasUserData, openInputSpace, setOpenInputSpace } =
-    useFamilyCard();
+  const {
+    avatar,
+    userName,
+    users,
+    setUsers,
+    hasUserData,
+    openInputSpace,
+    setOpenInputSpace,
+  } = useFamilyCard();
+
+  // デバッグ用ログ
+  console.log("avatar:", avatar);
+  console.log("userName:", userName);
+  console.log("users:", users);
+  console.log("hasUserData:", hasUserData);
+  console.log("openInputSpace:", openInputSpace);
 
   const openUserCreateSpace = () => {
     setOpenInputSpace(!openInputSpace);
@@ -26,27 +40,28 @@ const FamilyCard: React.FC = () => {
     if (hasUserData) {
       const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
         const newUsers = snapshot.docs.map((doc) => ({
+          id: doc.id,
           userName: doc.data().userName,
           avatar: doc.data().avatar,
         }));
-        setUsers((prevUsers) => [...prevUsers, ...newUsers]);
-        console.log([...users, ...newUsers]);
+        setUsers(newUsers);
       });
       return () => unsubscribe();
     }
-  }, [hasUserData, setUsers]);
+  }, [hasUserData]);
 
   return (
     <Grid
       sx={{
         width: "100%",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      {users === undefined ||
-        users.map((user) => (
+      <Grid sx={{ display: "flex" }}>
+        {users.map((user) => (
           <Card sx={{ maxWidth: 200, margin: "10px" }} key={user.avatar}>
             <CardActionArea
               onClick={openUserCreateSpace}
@@ -74,7 +89,7 @@ const FamilyCard: React.FC = () => {
             </CardActionArea>
           </Card>
         ))}
-
+      </Grid>
       {!hasUserData && openInputSpace ? <FamilyCardAdd /> : ""}
     </Grid>
   );

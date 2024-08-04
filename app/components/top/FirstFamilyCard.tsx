@@ -1,8 +1,13 @@
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import React from "react";
 import FamilyCard from "./FamilyCard";
+import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import FamilyCardAdd from "./FamilyCardAdd";
 
 const FirstFamilyCard: React.FC = () => {
+  const { avatar, setAvatar, userName, setUserName, openInputSpace, setOpenInputSpace } =
+    useFamilyCard();
+
   return (
     <Grid
       sx={{
@@ -20,7 +25,7 @@ const FirstFamilyCard: React.FC = () => {
       <Typography>あなたの日常をメモしておくためのアプリです。</Typography>
       <Typography>まずは、あなたのアイコンと名前を登録してください。</Typography>
       <Grid>
-        <FamilyCard />
+        <FamilyCardAdd />
       </Grid>
     </Grid>
   );
