@@ -20,7 +20,11 @@ type childrenProps = {
 const layout = ({ children }: childrenProps) => {
   return (
     <Grid
-      sx={{ display: "flex", alignItems: "center", width: "100%", minHeight: "100vh" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+      }}
     >
       <Grid
         sx={{

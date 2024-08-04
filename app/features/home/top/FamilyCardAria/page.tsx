@@ -4,6 +4,7 @@ import FamilyCard from "@/app/components/top/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
 import FamilyCardAdd from "@/app/components/top/FamilyCardAdd";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import FamilyCardDetail from "@/app/components/top/FamilyCardDetail";
 
 const Page: React.FC = () => {
   const { openInputSpace, setOpenInputSpace } = useFamilyCard();
@@ -52,15 +53,10 @@ const Page: React.FC = () => {
 
       {openInputSpace ? <FamilyCardAdd /> : ""}
 
-      <Grid>
-        <Typography>誕生日</Typography>
-        <Typography>郵便番号</Typography>
-        <Typography>住所</Typography>
-        <Typography>学歴</Typography>
-        <Typography>職歴</Typography>
-        <Typography>資格</Typography>
-        <Typography>メモ</Typography>
-      </Grid>
+      <Typography variant="h6" component="div">
+        選択されたカードの情報を表示します。
+      </Typography>
+      <FamilyCardDetail />
     </Grid>
   );
 };
