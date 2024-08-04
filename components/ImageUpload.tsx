@@ -11,16 +11,22 @@ type ImageUploadProps = {
   setAvatarImage: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
+// setAvatarImage：ユーザーが任意に選択された画像のFileデータをFamilyCardAddコンポーネントに設置したステートに格納するために渡したProps
 const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
   const { setAvatar } = useFamilyCard();
+  // サンプルのユーザーアバターの画像をFirebaseから取得し格納しておくためのステート
   const [sampleAvatarImage, setSampleAvatarImage] = useState<string[]>([]);
 
+  // フォルダから画像を選択してもらう処理
   const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files![0]) {
+      // 選択された画像データをFileデータとして格納
       const fileObject = e.target.files![0];
-      setAvatarImage(e.target.files![0]);
+      setAvatarImage(fileObject);
       setAvatar(window.URL.createObjectURL(fileObject));
-      e.target.value = "";
+      console.log(fileObject);
+      console.log(window.URL.createObjectURL(fileObject));
+      // e.target.value = "";
     }
   };
 

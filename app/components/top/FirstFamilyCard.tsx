@@ -5,8 +5,6 @@ import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import FamilyCardAdd from "./FamilyCardAdd";
 
 const FirstFamilyCard: React.FC = () => {
-  const { avatar, setAvatar, userName, setUserName, openInputSpace, setOpenInputSpace } =
-    useFamilyCard();
 
   return (
     <Grid

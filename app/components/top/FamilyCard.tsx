@@ -32,8 +32,8 @@ const FamilyCard: React.FC = () => {
   console.log("hasUserData:", hasUserData);
   console.log("openInputSpace:", openInputSpace);
 
-  const openUserCreateSpace = () => {
-    setOpenInputSpace(!openInputSpace);
+  const openUserDetail = () => {
+    console.log("ユーザーごとの詳細を表示するコンポーネントを表示する")
   };
 
   useEffect(() => {
@@ -62,9 +62,9 @@ const FamilyCard: React.FC = () => {
     >
       <Grid sx={{ display: "flex" }}>
         {users.map((user) => (
-          <Card sx={{ maxWidth: 200, margin: "10px" }} key={user.avatar}>
+          <Card sx={{ maxWidth: 200, margin: "10px" }} key={user.id}>
             <CardActionArea
-              onClick={openUserCreateSpace}
+              onClick={openUserDetail}
               sx={{
                 padding: "20px 40px",
                 display: "flex",
