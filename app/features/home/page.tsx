@@ -25,7 +25,11 @@ const Page = () => {
 
   console.log(hasUserData);
 
-  return <Grid>{hasUserData ? <Top /> : <FirstFamilyCard />}</Grid>;
+  return (
+    <Grid sx={{ width: "100%", height: "100vh", overflow: "auto" }}>
+      {hasUserData ? <Top /> : <FirstFamilyCard />}
+    </Grid>
+  );
 };
 
 export default Page;

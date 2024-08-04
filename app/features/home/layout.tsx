@@ -19,7 +19,9 @@ type childrenProps = {
 
 const layout = ({ children }: childrenProps) => {
   return (
-    <Grid sx={{ display: "flex", alignItems: "center", width: "200px", height: "100%" }}>
+    <Grid
+      sx={{ display: "flex", alignItems: "center", width: "100%", minHeight: "100vh" }}
+    >
       <Grid
         sx={{
           display: "flex",
@@ -70,7 +72,7 @@ const layout = ({ children }: childrenProps) => {
         </Box>
         <TimeDisplay />
       </Grid>
-      <Grid sx={{ position: "fixed", top: "30px", left: "250px" }}>
+      <Grid sx={{ position: "fixed", top: "30px", left: "250px", width: "100%" }}>
         <FamilyCardProvider>{children}</FamilyCardProvider>
       </Grid>
     </Grid>
