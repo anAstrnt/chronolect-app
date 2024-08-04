@@ -8,9 +8,10 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 
 const FamilyCardAdd: React.FC = () => {
-  const { userName, setUserName, setAvatar } = useFamilyCard();
+  const { userName, setUserName, avatar, setAvatar } = useFamilyCard();
   // avatarImage：imageUploadコンポーネントからがアバター画像がアップロードされたときにFileデータを格納しておくステート。ファイルからアバター画像をアップするために格納するステート（本ステート）はsendUserのif文で画像をアップロードするために使い、それ以外はアバターのURLのみ格納するステート（avatar,setAvatar）で画像URLを管理している。
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
+  const [sampleAvatarImageNum, setSampleAvatarImageNum] = useState<number>();
 
   const sendUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,6 +27,16 @@ const FamilyCardAdd: React.FC = () => {
       await uploadBytes(imageRef, avatarImage);
 
       getDownloadURL(ref(storage, `avatars/${fileName}`))
+        .then((url) => {
+          addDoc(collection(db, "familyCard"), {
+            avatar: url,
+            userName: userName,
+          });
+        })
+        .catch((err) => err.message);
+    }
+    if (avatar) {
+      getDownloadURL(ref(storage, `sample_avatar/avatar${sampleAvatarImageNum}.png`))
         .then((url) => {
           addDoc(collection(db, "familyCard"), {
             avatar: url,
@@ -65,7 +76,10 @@ const FamilyCardAdd: React.FC = () => {
             <Typography sx={{ fontSize: 25, fontWeightBold: 500 }}>
               Choose your avatar
             </Typography>
-            <ImageUpload setAvatarImage={setAvatarImage} />
+            <ImageUpload
+              setAvatarImage={setAvatarImage}
+              setSampleAvatarImageNum={setSampleAvatarImageNum}
+            />
           </Grid>
         </Grid>
         <Grid sx={{ margin: "50px" }}>

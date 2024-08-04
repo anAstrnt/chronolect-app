@@ -9,10 +9,14 @@ import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 type ImageUploadProps = {
   setAvatarImage: React.Dispatch<React.SetStateAction<File | null>>;
+  setSampleAvatarImageNum: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 
 // setAvatarImage：ユーザーが任意に選択された画像のFileデータをFamilyCardAddコンポーネントに設置したステートに格納するために渡したProps
-const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  setAvatarImage,
+  setSampleAvatarImageNum,
+}) => {
   const { avatar, setAvatar } = useFamilyCard();
   // サンプルのユーザーアバターの画像をFirebaseから取得し格納しておくためのステート
   const [sampleAvatarImage, setSampleAvatarImage] = useState<string[]>([]);
@@ -24,8 +28,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
       const fileObject = e.target.files![0];
       setAvatarImage(fileObject);
       setAvatar(window.URL.createObjectURL(fileObject));
-      console.log(fileObject);
-      console.log(window.URL.createObjectURL(fileObject));
       // e.target.value = "";
     }
   };
@@ -60,6 +62,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setAvatarImage }) => {
   const onClickSampleAvatar = (index: number) => {
     const choiceSampleAvatarImage = sampleAvatarImage[index];
     setAvatar(choiceSampleAvatarImage);
+    if (typeof index === "number") {
+      setSampleAvatarImageNum(index + 1);
+    }
   };
 
   return (
