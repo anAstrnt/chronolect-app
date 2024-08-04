@@ -23,8 +23,6 @@ const Page = () => {
     return () => unsubscribe();
   }, []);
 
-  console.log(hasUserData);
-
   return (
     <Grid sx={{ width: "100%", height: "100vh", overflow: "auto" }}>
       {hasUserData ? <Top /> : <FirstFamilyCard />}

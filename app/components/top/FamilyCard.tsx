@@ -26,14 +26,13 @@ const FamilyCard: React.FC = () => {
   } = useFamilyCard();
 
   // デバッグ用ログ
-  console.log("avatar:", avatar);
-  console.log("userName:", userName);
-  console.log("users:", users);
-  console.log("hasUserData:", hasUserData);
-  console.log("openInputSpace:", openInputSpace);
+  // console.log("avatar:", avatar);
+  // console.log("userName:", userName);
+  // console.log("users:", users);
+  // console.log("hasUserData:", hasUserData);
 
   const openUserDetail = () => {
-    console.log("ユーザーごとの詳細を表示するコンポーネントを表示する")
+    console.log("ユーザーごとの詳細を表示するコンポーネントを表示する");
   };
 
   useEffect(() => {
@@ -53,7 +52,6 @@ const FamilyCard: React.FC = () => {
   return (
     <Grid
       sx={{
-        width: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -78,7 +76,7 @@ const FamilyCard: React.FC = () => {
                   height: 56,
                   border: "2px solid rgba(0,0,0,0.2)",
                 }}
-                alt="Remy Sharp"
+                alt="user"
                 src={user.avatar || "/images/titleLogo.png"}
               />
               <CardContent>
@@ -90,7 +88,7 @@ const FamilyCard: React.FC = () => {
           </Card>
         ))}
       </Grid>
-      {!hasUserData && openInputSpace ? <FamilyCardAdd /> : ""}
+      {!hasUserData ? <FamilyCardAdd /> : ""}
     </Grid>
   );
 };

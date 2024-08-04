@@ -4,7 +4,6 @@ import Loading from "../features/home/loading";
 import { childrenProps } from "@/types/childrenProps";
 
 const AuthCheck = ({ children }: childrenProps) => {
-  console.log("authCheck");
   // 認証したユーザーかチェックするためのカスタムフック
   const { loading, authenticated } = useAuth();
 

@@ -5,7 +5,6 @@ import { onAuthStateChanged } from "firebase/auth";
 
 export default function Home() {
   const user = auth.currentUser;
-  console.log(user);
 
   return (
     <div>
