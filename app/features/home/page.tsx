@@ -5,7 +5,7 @@ import Top from "@/app/features/home/top/page";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import FirstFamilyCard from "@/app/components/top/FirstFamilyCard";
+import FirstFamilyCard from "@/app/components/top/FamilyCardAria/FirstFamilyCard";
 import { FamilyCardProvider, useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 const Page = () => {

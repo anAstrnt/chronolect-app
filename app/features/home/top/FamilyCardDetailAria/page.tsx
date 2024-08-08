@@ -3,8 +3,8 @@ import { Grid3x3TwoTone } from "@mui/icons-material";
 
 import { Grid, Input, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AcademicHistory from "./AcademicHistory";
-import WorkHistory from "./WorkHistory";
+import AcademicHistory from "../../../../components/top/FamilyCardDetailAria/AcademicHistory";
+import WorkHistory from "../../../../components/top/FamilyCardDetailAria/WorkHistory";
 import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";

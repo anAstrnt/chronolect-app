@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Grid, IconButton, Typography } from "@mui/material";
-import FamilyCard from "@/app/components/top/FamilyCard";
+import FamilyCard from "@/app/components/top/FamilyCardAria/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
-import FamilyCardAdd from "@/app/components/top/FamilyCardAdd";
+import FamilyCardAdd from "@/app/components/top/FamilyCardAria/FamilyCardAdd";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
-import FamilyCardDetail from "@/app/components/top/FamilyCardDetail";
+import FamilyCardDetail from "@/app/features/home/top/FamilyCardDetailAria/page";
 
 const Page: React.FC = () => {
   const { openInputSpace, setOpenInputSpace } = useFamilyCard();
@@ -56,7 +56,7 @@ const Page: React.FC = () => {
       <Typography variant="h6" component="div">
         選択されたカードの情報を表示します。
       </Typography>
-      <FamilyCardDetail  />
+      <FamilyCardDetail />
     </Grid>
   );
 };
