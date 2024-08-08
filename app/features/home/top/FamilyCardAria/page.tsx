@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, IconButton, Typography } from "@mui/material";
 import FamilyCard from "@/app/components/top/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
@@ -56,7 +56,7 @@ const Page: React.FC = () => {
       <Typography variant="h6" component="div">
         選択されたカードの情報を表示します。
       </Typography>
-      <FamilyCardDetail />
+      <FamilyCardDetail  />
     </Grid>
   );
 };

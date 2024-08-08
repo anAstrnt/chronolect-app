@@ -19,6 +19,8 @@ type FamilyCardContextProps = {
   setHasUserData: React.Dispatch<React.SetStateAction<boolean>>;
   openInputSpace: boolean;
   setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
+  userId: string;
+  setUserId: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type FamilyCardProviderProps = {
@@ -33,6 +35,7 @@ const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => 
   const [users, setUsers] = useState<Users[]>([]);
   const [hasUserData, setHasUserData] = useState(false);
   const [openInputSpace, setOpenInputSpace] = useState(false);
+  const [userId, setUserId] = useState("");
 
   return (
     <FamilyCardContext.Provider
@@ -47,6 +50,8 @@ const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => 
         setHasUserData,
         openInputSpace,
         setOpenInputSpace,
+        userId,
+        setUserId,
       }}
     >
       {children}

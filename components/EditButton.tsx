@@ -1,10 +1,27 @@
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
 
-const EditButton = () => {
+type EditButtonProps = {
+  changeEditDetail: boolean;
+  setChangeEditDetail: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedIndex: React.Dispatch<React.SetStateAction<number | undefined>>;
+  index: number;
+};
+
+const EditButton: React.FC<EditButtonProps> = ({
+  changeEditDetail,
+  setChangeEditDetail,
+  setSelectedIndex,
+  index,
+}) => {
+  const handleEditButtonClick = (index: number) => {
+    setSelectedIndex(index);
+    setChangeEditDetail(!changeEditDetail);
+  };
+
   return (
-    <IconButton size="small">
+    <IconButton type="button" size="small" onClick={() => handleEditButtonClick(index)}>
       <EditIcon />
     </IconButton>
   );

@@ -11,7 +11,7 @@ import {
 
 const WorkHistory = () => {
   return (
-    <Timeline position="left">
+    <Timeline position="left" sx={{ width: "300px" }}>
       <TimelineItem>
         <TimelineOppositeContent color="text.secondary">09:30 am</TimelineOppositeContent>
         <TimelineSeparator>

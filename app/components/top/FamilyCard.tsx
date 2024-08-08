@@ -15,15 +15,7 @@ import { db } from "@/libs/firebase";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 
 const FamilyCard: React.FC = () => {
-  const {
-    avatar,
-    userName,
-    users,
-    setUsers,
-    hasUserData,
-    openInputSpace,
-    setOpenInputSpace,
-  } = useFamilyCard();
+  const { users, setUsers, hasUserData, setUserId } = useFamilyCard();
 
   // デバッグ用ログ
   // console.log("avatar:", avatar);
@@ -31,8 +23,8 @@ const FamilyCard: React.FC = () => {
   // console.log("users:", users);
   // console.log("hasUserData:", hasUserData);
 
-  const openUserDetail = () => {
-    console.log("ユーザーごとの詳細を表示するコンポーネントを表示する");
+  const openUserDetail = (userId: string) => {
+    setUserId(userId);
   };
 
   useEffect(() => {
@@ -62,7 +54,7 @@ const FamilyCard: React.FC = () => {
         {users.map((user) => (
           <Card sx={{ maxWidth: 200, margin: "10px" }} key={user.id}>
             <CardActionArea
-              onClick={openUserDetail}
+              onClick={() => openUserDetail(user.id)}
               sx={{
                 padding: "20px 40px",
                 display: "flex",
