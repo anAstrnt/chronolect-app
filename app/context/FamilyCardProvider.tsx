@@ -8,6 +8,16 @@ type Users = {
   avatar: string;
 };
 
+type userDetail = {
+  detailId: string;
+  name: string;
+  birthday: string;
+  postCode: string;
+  address: string;
+  qualification: string;
+  email: string;
+};
+
 type FamilyCardContextProps = {
   avatar: string;
   setAvatar: React.Dispatch<React.SetStateAction<string>>;
@@ -21,6 +31,8 @@ type FamilyCardContextProps = {
   setOpenInputSpace: React.Dispatch<React.SetStateAction<boolean>>;
   userId: string;
   setUserId: React.Dispatch<React.SetStateAction<string>>;
+  userDetail: userDetail[];
+  setUserDetail: React.Dispatch<React.SetStateAction<userDetail[]>>;
 };
 
 type FamilyCardProviderProps = {
@@ -36,6 +48,17 @@ const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => 
   const [hasUserData, setHasUserData] = useState(false);
   const [openInputSpace, setOpenInputSpace] = useState(false);
   const [userId, setUserId] = useState("");
+  const [userDetail, setUserDetail] = useState<userDetail[]>([
+    {
+      detailId: "",
+      name: "",
+      birthday: "",
+      postCode: "",
+      address: "",
+      qualification: "",
+      email: "",
+    },
+  ]);
 
   return (
     <FamilyCardContext.Provider
@@ -52,6 +75,8 @@ const FamilyCardProvider: React.FC<FamilyCardProviderProps> = ({ children }) => 
         setOpenInputSpace,
         userId,
         setUserId,
+        userDetail,
+        setUserDetail,
       }}
     >
       {children}

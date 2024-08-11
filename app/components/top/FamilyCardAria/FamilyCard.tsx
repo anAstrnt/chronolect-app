@@ -17,12 +17,6 @@ import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 const FamilyCard: React.FC = () => {
   const { users, setUsers, hasUserData, setUserId } = useFamilyCard();
 
-  // デバッグ用ログ
-  // console.log("avatar:", avatar);
-  // console.log("userName:", userName);
-  // console.log("users:", users);
-  // console.log("hasUserData:", hasUserData);
-
   const openUserDetail = (userId: string) => {
     setUserId(userId);
   };

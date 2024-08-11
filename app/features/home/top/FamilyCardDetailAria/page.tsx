@@ -9,15 +9,15 @@ import { db } from "@/libs/firebase";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import InputButton from "@/components/InputButton";
 
-type userDetail = {
-  detailId: string;
-  name: string;
-  birthday: string;
-  postCode: string;
-  address: string;
-  qualification: string;
-  email: string;
-}[];
+// type userDetail = {
+//   detailId: string;
+//   name: string;
+//   birthday: string;
+//   postCode: string;
+//   address: string;
+//   qualification: string;
+//   email: string;
+// }[];
 
 type fieldMap = {
   [key: number]: {
@@ -29,7 +29,7 @@ type fieldMap = {
 };
 
 const FamilyCardDetail = () => {
-  const { userId } = useFamilyCard();
+  const { userId, userDetail, setUserDetail } = useFamilyCard();
   const [changeEditDetail, setChangeEditDetail] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
   const [name, setName] = useState<string>("");
@@ -38,17 +38,17 @@ const FamilyCardDetail = () => {
   const [address, setAddress] = useState<string>("");
   const [qualification, setQualification] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [userDetail, setUserDetail] = useState<userDetail>([
-    {
-      detailId: "",
-      name: "",
-      birthday: "",
-      postCode: "",
-      address: "",
-      qualification: "",
-      email: "",
-    },
-  ]);
+  // const [userDetail, setUserDetail] = useState<userDetail>([
+  //   {
+  //     detailId: "",
+  //     name: "",
+  //     birthday: "",
+  //     postCode: "",
+  //     address: "",
+  //     qualification: "",
+  //     email: "",
+  //   },
+  // ]);
 
   const fieldMap: fieldMap = {
     1: {
