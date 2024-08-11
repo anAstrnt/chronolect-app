@@ -15,23 +15,14 @@ const InputButton: React.FC<InputButtonProps> = ({
   setSelectedIndex,
   index,
 }) => {
-  const handleEditButtonClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
-  ) => {
-    e.preventDefault();
+  const handleEditButtonClick = (index: number) => {
     console.log("handle in"); // ok
     setSelectedIndex(index);
     setChangeEditDetail(!changeEditDetail);
   };
 
-  // sendIconを押してもFormのonsubmitが発火しない件を修正する
   return (
-    <IconButton
-      type="submit"
-      size="small"
-      onClick={(e) => handleEditButtonClick(e, index)}
-    >
+    <IconButton type="submit" size="small">
       <SendIcon />
     </IconButton>
   );

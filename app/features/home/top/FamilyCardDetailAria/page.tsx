@@ -1,87 +1,170 @@
 import EditButton from "@/components/EditButton";
-import { Grid3x3TwoTone } from "@mui/icons-material";
-
 import { Grid, Input, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AcademicHistory from "../../../../components/top/FamilyCardDetailAria/AcademicHistory";
 import WorkHistory from "../../../../components/top/FamilyCardDetailAria/WorkHistory";
 import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
-import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import InputButton from "@/components/InputButton";
+
+type userDetail = {
+  detailId: string;
+  name: string;
+  birthday: string;
+  postCode: string;
+  address: string;
+  qualification: string;
+  email: string;
+}[];
+
+type fieldMap = {
+  [key: number]: {
+    field: string;
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+    getUserDetail: string;
+  };
+};
 
 const FamilyCardDetail = () => {
   const { userId } = useFamilyCard();
   const [changeEditDetail, setChangeEditDetail] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
-  const [name, setName] = useState<string | undefined>();
-  const [birthday, setBirthday] = useState<string | undefined>();
-  const [postCode, setPostCode] = useState<string | undefined>();
-  const [address, setAddress] = useState<string | undefined>();
-  const [qualification, setQualification] = useState<string | undefined>();
-  const [email, setEmail] = useState<string | undefined>();
+  const [name, setName] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [postCode, setPostCode] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [qualification, setQualification] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [userDetail, setUserDetail] = useState<userDetail>([
+    {
+      detailId: "",
+      name: "",
+      birthday: "",
+      postCode: "",
+      address: "",
+      qualification: "",
+      email: "",
+    },
+  ]);
+
+  const fieldMap: fieldMap = {
+    1: {
+      field: "name",
+      value: name,
+      setValue: setName,
+      getUserDetail: userDetail[0].name,
+    },
+    2: {
+      field: "birthday",
+      value: birthday,
+      setValue: setBirthday,
+      getUserDetail: userDetail[0].birthday,
+    },
+    3: {
+      field: "postCode",
+      value: postCode,
+      setValue: setPostCode,
+      getUserDetail: userDetail[0].postCode,
+    },
+    4: {
+      field: "address",
+      value: address,
+      setValue: setAddress,
+      getUserDetail: userDetail[0].address,
+    },
+    5: {
+      field: "qualification",
+      value: qualification,
+      setValue: setQualification,
+      getUserDetail: userDetail[0].qualification,
+    },
+    6: {
+      field: "email",
+      value: email,
+      setValue: setEmail,
+      getUserDetail: userDetail[0].email,
+    },
+  };
 
   const onChangeDetail = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
   ) => {
-    switch (index + 1) {
-      case 1:
-        setName(e.target.value);
-        break;
-      case 2:
-        setBirthday(e.target.value);
-      case 3:
-        setPostCode(e.target.value);
-        break;
-      case 4:
-        setAddress(e.target.value);
-        break;
-      case 5:
-        setQualification(e.target.value);
-        break;
-      case 6:
-        setEmail(e.target.value);
-        break;
+    const selectedField = fieldMap[index + 1];
+    if (selectedField) {
+      selectedField.setValue(e.target.value);
     }
   };
 
   const onChangeValue = (index: number) => {
-    switch (index + 1) {
-      case 1:
-        return name;
-      case 2:
-        return birthday;
-      case 3:
-        return postCode;
-      case 4:
-        return address;
-      case 5:
-        return qualification;
-      case 6:
-        return email;
+    const selectedField = fieldMap[index + 1];
+    if (selectedField) {
+      return selectedField.value;
     }
   };
+
+  const fetchDetailDocs = async () => {
+    const detailCollectionRef = collection(db, "familyCard", userId, "detail");
+    try {
+      const detailSnapshot = await getDocs(detailCollectionRef);
+      detailSnapshot.forEach((doc) => {
+        setUserDetail([
+          {
+            detailId: doc.id,
+            name: doc.data().name,
+            birthday: doc.data().birthday,
+            postCode: doc.data().postCode,
+            address: doc.data().address,
+            qualification: doc.data().qualification,
+            email: doc.data().email,
+          },
+        ]);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    if (userId) {
+      fetchDetailDocs();
+    }
+  }, [userId]);
 
   const onSubmitDetailData = async (
     e: React.FormEvent<HTMLFormElement>,
     index: number
   ) => {
-    console.log("in");
     e.preventDefault();
-    // Firebaseの対象のユーザーの下位コレクションに名前等を追加する処理。まずは、どの対象ユーザーのカードがクリックされたかの情報を取ってくる。今はオンチェンジで値を取ってきてFirebaseを更新しようとしているが、サブミットで値を更新するようにする？
-    if (index + 1 === 1) {
-      console.log("name in");
 
-      const familyCardCollectionRef = await doc(
-        collection(db, "familyCard", userId, "detail")
+    const selectedField = fieldMap[index + 1];
+
+    if (selectedField && userDetail) {
+      const familyCardDocRef = await doc(
+        db,
+        "familyCard",
+        userId,
+        "detail",
+        userDetail[0].detailId
       );
-      await updateDoc(familyCardCollectionRef, {
-        name: name,
+      await updateDoc(familyCardDocRef, {
+        [selectedField.field]: selectedField.value,
       });
-      setName("");
+
+      const updateUserDetail = [...userDetail];
+      updateUserDetail[0] = {
+        ...updateUserDetail[0],
+        [selectedField.field]: selectedField.value,
+      };
+      setUserDetail(updateUserDetail);
+
+      selectedField.setValue("");
     }
+
+    setSelectedIndex(index);
+    setChangeEditDetail(!changeEditDetail);
   };
 
   return (
@@ -94,64 +177,59 @@ const FamilyCardDetail = () => {
       columns={9}
       sx={{ margin: "20px" }}
     >
-      {FamilyCardDetailData.map((data, index) => (
-        <Grid
-          item
-          xs={3}
-          sx={{
-            width: "300px",
-            margin: "5px",
-            padding: "20px",
-            border: "1px solid #fff",
-            borderRadius: "15px",
-            boxShadow: 3,
-          }}
-          key={data.number}
-        >
-          <form onSubmit={(e) => onSubmitDetailData(e, index)}>
-            <Grid sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>{data.detailTitle}</Typography>
-              {changeEditDetail &&
-              selectedIndex === index &&
-              [1, 2, 3, 4, 5, 6].includes(index + 1) ? (
-                <InputButton
-                  changeEditDetail={changeEditDetail}
-                  setChangeEditDetail={setChangeEditDetail}
-                  setSelectedIndex={setSelectedIndex}
-                  index={index}
-                />
-              ) : (
-                <EditButton
-                  changeEditDetail={changeEditDetail}
-                  setChangeEditDetail={setChangeEditDetail}
-                  setSelectedIndex={setSelectedIndex}
-                  index={index}
-                />
-              )}
-
-              {/* インプットボタンをコンポーネントで作ったので、編集画面になったら、サブミットボタンとして編集ボタンの代わりに表示するように実装する。インプットが完了し、サブミットボタンが押されたら、Firestoreにデータを格納するように実装を行う */}
-
-              <Grid sx={{ paddingLeft: "30px" }}>
-                {changeEditDetail &&
-                selectedIndex === index &&
-                [1, 2, 3, 4, 5, 6].includes(index + 1) ? (
-                  <Input
-                    name={data.name}
-                    type={data.type}
-                    value={onChangeValue(index)}
-                    onChange={(e) => onChangeDetail(e, index)}
-                  />
-                ) : (
-                  ""
-                )}
-
-                {index + 1 === 7 ? <AcademicHistory /> : ""}
-                {index + 1 === 8 ? <WorkHistory /> : ""}
-              </Grid>
+      {userId
+        ? FamilyCardDetailData.map((data, index) => (
+            <Grid
+              item
+              xs={3}
+              sx={{
+                width: "300px",
+                margin: "5px",
+                padding: "20px",
+                border: "1px solid #fff",
+                borderRadius: "15px",
+                boxShadow: 3,
+              }}
+              key={data.number}
+            >
+              <form onSubmit={(e) => onSubmitDetailData(e, index)}>
+                <Grid sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography>{data.detailTitle}</Typography>
+                  {changeEditDetail &&
+                  selectedIndex === index &&
+                  [1, 2, 3, 4, 5, 6].includes(index + 1) ? (
+                    <>
+                      <Input
+                        name={data.name}
+                        type={data.type}
+                        value={onChangeValue(index)}
+                        onChange={(e) => onChangeDetail(e, index)}
+                      />
+                      <InputButton
+                        changeEditDetail={changeEditDetail}
+                        setChangeEditDetail={setChangeEditDetail}
+                        setSelectedIndex={setSelectedIndex}
+                        index={index}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <EditButton
+                        changeEditDetail={changeEditDetail}
+                        setChangeEditDetail={setChangeEditDetail}
+                        setSelectedIndex={setSelectedIndex}
+                        index={index}
+                      />
+                      <Typography>{fieldMap[index + 1]?.getUserDetail || ""}</Typography>
+                    </>
+                  )}
+                  {index + 1 === 7 ? <AcademicHistory /> : ""}
+                  {index + 1 === 8 ? <WorkHistory /> : ""}
+                </Grid>
+              </form>
             </Grid>
-          </form>
-        </Grid>
-      ))}
+          ))
+        : ""}
     </Grid>
   );
 };
