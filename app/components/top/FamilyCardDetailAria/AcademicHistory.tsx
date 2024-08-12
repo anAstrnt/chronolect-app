@@ -10,10 +10,8 @@ import {
 } from "@mui/lab";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import dayjs from "dayjs";
-
-// type AcademicHistoryProps = {
-//   birthday: string;
-// };
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { db } from "@/libs/firebase";
 
 type academicHistoryMap = {
   [key: number]: {
@@ -33,12 +31,10 @@ type historyDate = {
   highEnd: string;
   collegeStart: string;
   collegeEnd: string;
-  gradStart: string;
-  gradEnd: string;
 };
 
 const AcademicHistory: React.FC = () => {
-  const { userDetail, setUserDetail } = useFamilyCard();
+  const { userDetail, userId } = useFamilyCard();
   const [primaryStart, setPrimaryStart] = useState<string>("");
   const [primaryEnd, setPrimaryEnd] = useState<string>("");
   const [middleStart, setMiddleStart] = useState<string>("");
@@ -47,32 +43,43 @@ const AcademicHistory: React.FC = () => {
   const [highEnd, setHighEnd] = useState<string>("");
   const [collegeStart, setCollegeStart] = useState<string>("");
   const [collegeEnd, setCollegeEnd] = useState<string>("");
-  const [historyDate, setHistoryDate] = useState<historyDate[]>();
+  const [historyDate, setHistoryDate] = useState<historyDate[]>([
+    {
+      primaryStart: "",
+      primaryEnd: "",
+      middleStart: "",
+      middleEnd: "",
+      highStart: "",
+      highEnd: "",
+      collegeStart: "",
+      collegeEnd: "",
+    },
+  ]);
 
   const academicHistoryMap: academicHistoryMap = {
     1: {
       contentStart: "小学校入学",
       contentEnd: "小学校卒業",
-      contentStartDate: primaryStart,
-      contentEndDate: primaryEnd,
+      contentStartDate: historyDate[0]?.primaryStart || "OOOO-04",
+      contentEndDate: historyDate[0]?.primaryEnd || "OOOO-03",
     },
     2: {
       contentStart: "中学校入学",
       contentEnd: "中学校卒業",
-      contentStartDate: middleStart,
-      contentEndDate: middleEnd,
+      contentStartDate: historyDate[0]?.middleStart || "OOOO-04",
+      contentEndDate: historyDate[0]?.middleEnd || "OOOO-03",
     },
     3: {
       contentStart: "高校入学",
       contentEnd: "高校卒業",
-      contentStartDate: highStart,
-      contentEndDate: highEnd,
+      contentStartDate: historyDate[0]?.highStart || "OOOO-04",
+      contentEndDate: historyDate[0]?.highEnd || "OOOO-03",
     },
     4: {
       contentStart: "大学入学",
       contentEnd: "大学卒業",
-      contentStartDate: collegeStart,
-      contentEndDate: collegeEnd,
+      contentStartDate: historyDate[0]?.collegeStart || "OOOO-04",
+      contentEndDate: historyDate[0]?.collegeEnd || "OOOO-03",
     },
   };
 
@@ -84,7 +91,6 @@ const AcademicHistory: React.FC = () => {
           birthDate.month() < 3 || (birthDate.month() === 3 && birthDate.date() < 2)
             ? birthDate.year() + 6
             : birthDate.year() + 7;
-        console.log(primaryStartYear + 6);
         const primaryStart = `${primaryStartYear}-04`;
         const primaryEnd = `${primaryStartYear + 6}-03`;
         const middleStart = `${primaryStartYear + 6}-04`;
@@ -105,6 +111,7 @@ const AcademicHistory: React.FC = () => {
           collegeEnd,
         };
       };
+
       const {
         primaryStart,
         primaryEnd,
@@ -124,9 +131,69 @@ const AcademicHistory: React.FC = () => {
       setCollegeStart(collegeStart);
       setCollegeEnd(collegeEnd);
     }
-  }, [userDetail]);
+  }, [userDetail, userDetail[0].birthday]);
 
-  // userDetail[0].birthdayに値が入ったら、学歴を自動的に計算し、firestoreのdetailサブコレクション・"academicHistory"に格納。
+  const onChangeAcademicHistory = async () => {
+    if (userId && userDetail[0].birthday) {
+      const academicHistoryRef = doc(
+        db,
+        "familyCard",
+        userId,
+        "detail",
+        "academicHistory"
+      );
+      await setDoc(academicHistoryRef, {
+        primaryStart: primaryStart,
+        primaryEnd: primaryEnd,
+        middleStart: middleStart,
+        middleEnd: middleEnd,
+        highStart: highStart,
+        highEnd: highEnd,
+        collegeStart: collegeStart,
+        collegeEnd: collegeEnd,
+      });
+    }
+  };
+  useEffect(() => {
+    onChangeAcademicHistory();
+  }, [
+    userDetail[0].birthday,
+    primaryStart,
+    primaryEnd,
+    middleStart,
+    middleEnd,
+    highStart,
+    highEnd,
+    collegeStart,
+    collegeEnd,
+  ]);
+
+  const fetchAcademicHistoryDocs = async () => {
+    const academicHistoryRef = collection(db, "familyCard", userId, "detail");
+    try {
+      const academicHistorySnapshot = await getDocs(academicHistoryRef);
+      const academicHistorys = academicHistorySnapshot.docs
+        .filter((doc) => doc.id === "academicHistory")
+        .map((doc) => ({
+          primaryStart: doc.data().primaryStart,
+          primaryEnd: doc.data().primaryEnd,
+          middleStart: doc.data().middleStart,
+          middleEnd: doc.data().middleEnd,
+          highStart: doc.data().highStart,
+          highEnd: doc.data().highEnd,
+          collegeStart: doc.data().collegeStart,
+          collegeEnd: doc.data().collegeEnd,
+        }));
+      setHistoryDate(academicHistorys);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    if (historyDate) {
+      fetchAcademicHistoryDocs();
+    }
+  }, [userId]);
 
   return (
     <Timeline position="left" sx={{ width: "300px" }}>

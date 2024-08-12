@@ -1,19 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Grid, IconButton, Typography } from "@mui/material";
 import FamilyCard from "@/app/components/top/FamilyCardAria/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
 import FamilyCardAdd from "@/app/components/top/FamilyCardAria/FamilyCardAdd";
 import { useFamilyCard } from "@/app/context/FamilyCardProvider";
-import FamilyCardDetail from "@/app/features/home/top/FamilyCardDetailAria/page";
 
 const Page: React.FC = () => {
   const { openInputSpace, setOpenInputSpace } = useFamilyCard();
-
-  // デバッグ用ログ
-  // console.log("users:", users);
-  // console.log("userName:", userName);
-  // console.log("hasUserData:", hasUserData);
-  // console.log("openInputSpace:", openInputSpace);
 
   const openFamilyCardAddSpace = () => {
     setOpenInputSpace(!openInputSpace);
@@ -23,8 +16,6 @@ const Page: React.FC = () => {
     <Grid
       sx={{
         width: "100%",
-        height: "100vh",
-        overflow: "auto",
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
@@ -50,13 +41,7 @@ const Page: React.FC = () => {
           <AddIcon />
         </IconButton>
       </Grid>
-
       {openInputSpace ? <FamilyCardAdd /> : ""}
-
-      <Typography variant="h6" component="div">
-        選択されたカードの情報を表示します。
-      </Typography>
-      <FamilyCardDetail />
     </Grid>
   );
 };

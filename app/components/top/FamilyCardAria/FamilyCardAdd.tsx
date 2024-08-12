@@ -3,9 +3,9 @@ import FamilyCardAddButton from "@/components/FamilyCardAddButton";
 import ImageUpload from "@/components/ImageUpload";
 import { db, storage } from "@/libs/firebase";
 import { Grid, TextField, Typography } from "@mui/material";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 
 const FamilyCardAdd: React.FC = () => {
   const { userId, userName, setUserName, avatar, setAvatar, setOpenInputSpace } =

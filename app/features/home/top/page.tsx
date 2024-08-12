@@ -1,21 +1,15 @@
 import React from "react";
 import FamilyCardAria from "./FamilyCardAria/page";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import FamilyCardDetailAria from "./FamilyCardDetailAria/page";
+import { Grid } from "@mui/material";
 
-// type pageProps = {
-//   hasUserData: boolean;
-// };
-
-const page: React.FC = () =>
-  // { hasUserData }
-
-  {
-    return (
-      <>
-        <FamilyCardAria />
-        {/* <FamilyCardAria hasUserData={hasUserData} /> */}
-      </>
-    );
-  };
+const page: React.FC = () => {
+  return (
+    <Grid sx={{ width: "100%", height: "100%", overflow: "auto" }}>
+      <FamilyCardAria />
+      <FamilyCardDetailAria />
+    </Grid>
+  );
+};
 
 export default page;
