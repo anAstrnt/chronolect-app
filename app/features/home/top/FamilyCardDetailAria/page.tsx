@@ -1,3 +1,5 @@
+"use client";
+
 import EditButton from "@/components/EditButton";
 import { Grid, Input, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";

@@ -12,6 +12,7 @@ import {
 import TimeDisplay from "@/app/components/TimeDisplay";
 import SignOut from "@/app/components/SignOut";
 import { FamilyCardProvider } from "@/app/context/FamilyCardProvider";
+import Link from "next/link";
 
 type childrenProps = {
   children: ReactNode;
@@ -67,8 +68,10 @@ const layout = ({ children }: childrenProps) => {
                 aria-labelledby="nested-list-subheader"
               >
                 <ListItemButton>
-                  <ListItemIcon>{menu.icon}</ListItemIcon>
-                  <ListItemText primary={menu.title} />
+                  <Link href={menu.link}>
+                    <ListItemIcon>{menu.icon}</ListItemIcon>
+                    <ListItemText primary={menu.title} />
+                  </Link>
                 </ListItemButton>
               </List>
             ))}
