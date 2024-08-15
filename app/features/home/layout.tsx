@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import { MenuData } from "@/data/MenuData";
 import {
@@ -11,8 +13,8 @@ import {
 } from "@mui/material";
 import TimeDisplay from "@/app/components/TimeDisplay";
 import SignOut from "@/app/components/SignOut";
-import { FamilyCardProvider } from "@/app/context/FamilyCardProvider";
 import Link from "next/link";
+import { RecoilRoot } from "recoil";
 
 type childrenProps = {
   children: ReactNode;
@@ -89,7 +91,7 @@ const layout = ({ children }: childrenProps) => {
           height: "100%",
         }}
       >
-        <FamilyCardProvider>{children}</FamilyCardProvider>
+        <RecoilRoot>{children}</RecoilRoot>
       </Grid>
     </Grid>
   );

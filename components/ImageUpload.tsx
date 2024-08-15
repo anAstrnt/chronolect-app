@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 import style from "@/styles/ImageUpload.module.css";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "@/libs/firebase";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import { useRecoilState } from "recoil";
+import { avatarState } from "@/app/states/avatarState";
 
 type ImageUploadProps = {
   setAvatarImage: React.Dispatch<React.SetStateAction<File | null>>;
@@ -17,7 +18,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   setAvatarImage,
   setSampleAvatarImageNum,
 }) => {
-  const { avatar, setAvatar } = useFamilyCard();
+  const [avatar, setAvatar] = useRecoilState(avatarState);
   // サンプルのユーザーアバターの画像をFirebaseから取得し格納しておくためのステート
   const [sampleAvatarImage, setSampleAvatarImage] = useState<string[]>([]);
 

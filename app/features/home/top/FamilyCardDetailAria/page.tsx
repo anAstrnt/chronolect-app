@@ -8,8 +8,10 @@ import WorkHistory from "../../../../components/top/FamilyCardDetailAria/WorkHis
 import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import InputButton from "@/components/InputButton";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userIdState } from "@/app/states/userIdState";
+import { userDetailState } from "@/app/states/userDetailState";
 
 type fieldMap = {
   [key: number]: {
@@ -21,7 +23,9 @@ type fieldMap = {
 };
 
 const FamilyCardDetail = () => {
-  const { userId, userDetail, setUserDetail } = useFamilyCard();
+  // const { userId, userDetail, setUserDetail } = useFamilyCard();
+  const userId = useRecoilValue(userIdState);
+  const [userDetail, setUserDetail] = useRecoilState(userDetailState);
   const [changeEditDetail, setChangeEditDetail] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
   const [name, setName] = useState<string>("");

@@ -1,9 +1,12 @@
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import { avatarState } from "@/app/states/avatarState";
+import { userNameState } from "@/app/states/userNameState";
 import { Button } from "@mui/material";
 import React from "react";
+import { useRecoilValue } from "recoil";
 
 const FamilyCardAddButton: React.FC = () => {
-  const { avatar, userName } = useFamilyCard();
+  const avatar = useRecoilValue(avatarState);
+  const userName = useRecoilValue(userNameState);
 
   return (
     <Button

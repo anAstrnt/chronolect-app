@@ -12,10 +12,15 @@ import React, { useEffect } from "react";
 import FamilyCardAdd from "./FamilyCardAdd";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { usersState } from "@/app/states/usersState";
+import { hasUserDataState } from "@/app/states/hasUserDataState";
+import { userIdState } from "@/app/states/userIdState";
 
 const FamilyCard: React.FC = () => {
-  const { users, setUsers, hasUserData, setUserId } = useFamilyCard();
+  const [users,setUsers]=useRecoilState(usersState)
+  const hasUserData=useRecoilValue(hasUserDataState)
+  const setUserId=useSetRecoilState(userIdState)
 
   const openUserDetail = (userId: string) => {
     setUserId(userId);

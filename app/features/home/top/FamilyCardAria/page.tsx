@@ -1,12 +1,15 @@
+"use client";
+
 import React from "react";
 import { Grid, IconButton, Typography } from "@mui/material";
 import FamilyCard from "@/app/components/top/FamilyCardAria/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
 import FamilyCardAdd from "@/app/components/top/FamilyCardAria/FamilyCardAdd";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import { useRecoilState } from "recoil";
+import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 
 const Page: React.FC = () => {
-  const { openInputSpace, setOpenInputSpace } = useFamilyCard();
+  const [openInputSpace, setOpenInputSpace] = useRecoilState(openInputSpaceState);
 
   const openFamilyCardAddSpace = () => {
     setOpenInputSpace(!openInputSpace);

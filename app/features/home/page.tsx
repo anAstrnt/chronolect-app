@@ -6,11 +6,12 @@ import { Grid } from "@mui/material";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import FirstFamilyCard from "@/app/components/top/FamilyCardAria/FirstFamilyCard";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
+import { hasUserDataState } from "@/app/states/hasUserDataState";
+import { useRecoilState } from "recoil";
 
 const Page = () => {
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
-  const { hasUserData, setHasUserData } = useFamilyCard();
+  const [hasUserData, setHasUserData] = useRecoilState(hasUserDataState);
 
   useEffect(() => {
     // FamilyCardの初期登録が完了しているか調べる処理。

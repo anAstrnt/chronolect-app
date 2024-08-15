@@ -1,7 +1,5 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import React from "react";
-import FamilyCard from "./FamilyCard";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import FamilyCardAdd from "./FamilyCardAdd";
 
 const FirstFamilyCard: React.FC = () => {

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Timeline from "@mui/lab/Timeline";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
@@ -8,10 +10,12 @@ import {
   TimelineItem,
   TimelineSeparator,
 } from "@mui/lab";
-import { useFamilyCard } from "@/app/context/FamilyCardProvider";
 import dayjs from "dayjs";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
+import { useRecoilValue } from "recoil";
+import { userIdState } from "@/app/states/userIdState";
+import { userDetailState } from "@/app/states/userDetailState";
 
 type academicHistoryMap = {
   [key: number]: {
@@ -34,7 +38,9 @@ type historyDate = {
 };
 
 const AcademicHistory: React.FC = () => {
-  const { userDetail, userId } = useFamilyCard();
+  // const { userDetail, userId } = useFamilyCard();
+  const userDetail = useRecoilValue(userDetailState);
+  const userId = useRecoilValue(userIdState);
   const [primaryStart, setPrimaryStart] = useState<string>("");
   const [primaryEnd, setPrimaryEnd] = useState<string>("");
   const [middleStart, setMiddleStart] = useState<string>("");
