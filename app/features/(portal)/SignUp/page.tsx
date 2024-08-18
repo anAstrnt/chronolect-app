@@ -16,7 +16,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 // ユーザー認証に関するインポート
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/libs/firebase";
-import { addDoc, collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 const defaultTheme = createTheme();
@@ -34,7 +40,9 @@ const page = () => {
   const [errorMessagePassword, setErrorMessagePassword] = React.useState("");
 
   // 新規ユーザーの登録処理
-  const handleSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitSignUp = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     // ログイン情報（email,password）にユーザー名を紐づけてストレージに保存
@@ -53,7 +61,7 @@ const page = () => {
         const q = query(collection(db, "users"), where("email", "==", email));
         onSnapshot(q, (querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            router.push(`/features/home}`);
+            router.push(`/features`);
           });
         });
       })
@@ -67,7 +75,9 @@ const page = () => {
             setErrorMessageEmail("メールアドレスを入力してください。");
             break;
           case "auth/email-already-in-use":
-            setErrorMessageEmail("入力されたメールアドレスはすでに使用されています。");
+            setErrorMessageEmail(
+              "入力されたメールアドレスはすでに使用されています。"
+            );
             break;
           case "auth/invalid-email":
             setErrorMessageEmail(
@@ -78,7 +88,9 @@ const page = () => {
             setErrorMessagePassword("パスワードを入力してください。");
             break;
           case "auth/weak-password":
-            setErrorMessagePassword("パスワードは６文字以上で入力してください。");
+            setErrorMessagePassword(
+              "パスワードは６文字以上で入力してください。"
+            );
             break;
         }
       });
@@ -102,7 +114,12 @@ const page = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmitSignUp} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmitSignUp}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -147,7 +164,9 @@ const page = () => {
             </Grid>
             <Button
               disabled={
-                !userName || !email || !password || password.length < 6 ? true : false
+                !userName || !email || !password || password.length < 6
+                  ? true
+                  : false
               }
               type="submit"
               fullWidth

@@ -1,14 +1,30 @@
+"use client";
+
 import { auth } from "@/libs/firebase";
-import { childrenProps } from "@/types/childrenProps";
 import { Grid } from "@mui/material";
-import { onAuthStateChanged } from "firebase/auth";
+import SignIn from "@/app/features/(portal)/SignIn/page";
+import { RecoilRoot } from "recoil";
+import { useEffect, useState } from "react";
+import { User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const user = auth.currentUser;
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>();
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    setUser(user);
+    if (user) {
+      router.push("/features");
+    }
+  }, []);
 
   return (
     <div>
-      <Grid sx={{ width: "100%" }}>{user ? "null" : "user"}</Grid>
+      <RecoilRoot>
+        <Grid sx={{ width: "100%" }}>{user ? "null" : <SignIn />}</Grid>
+      </RecoilRoot>
     </div>
   );
 }

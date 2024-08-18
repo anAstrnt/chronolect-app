@@ -45,7 +45,7 @@ const page = () => {
         const q = query(collection(db, "users"), where("email", "==", email));
         onSnapshot(q, (querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            router.push(`/features/home`);
+            router.push(`/features`);
             console.log(doc.data());
           });
         });
@@ -62,7 +62,9 @@ const page = () => {
             );
             break;
           case "auth/invalid-credential":
-            setErrorMessagePassword("パスワードが登録されているものと異なります。");
+            setErrorMessagePassword(
+              "パスワードが登録されているものと異なります。"
+            );
             break;
         }
       });
@@ -102,7 +104,9 @@ const page = () => {
               "100%": { transform: "translate(-50%, -50%) translateY(0)" },
             },
             backgroundColor: (t) =>
-              t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             zIndex: -2,
           }}
         >
@@ -134,7 +138,12 @@ const page = () => {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmitSignIn} sx={{ mt: 1 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmitSignIn}
+              sx={{ mt: 1 }}
+            >
               <TextField
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
@@ -165,7 +174,12 @@ const page = () => {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Sign In
               </Button>
               <Grid container>

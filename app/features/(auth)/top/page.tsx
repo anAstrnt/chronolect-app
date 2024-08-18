@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import FamilyCardAria from "./FamilyCardAria/page";
@@ -9,19 +9,18 @@ import { hasUserDataState } from "@/app/states/hasUserDataState";
 import FirstFamilyCard from "@/app/components/top/FamilyCardAria/FirstFamilyCard";
 
 const page: React.FC = () => {
-const hasUserData=useRecoilValue(hasUserDataState)
+  const hasUserData = useRecoilValue(hasUserDataState);
 
   return (
     <Grid sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-      {hasUserData?(
+      {hasUserData ? (
         <Grid>
           <FamilyCardAria />
-<FamilyCardDetailAria />
+          <FamilyCardDetailAria />
         </Grid>
-      ):(
+      ) : (
         <FirstFamilyCard />
       )}
-      
     </Grid>
   );
 };

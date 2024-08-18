@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Top from "@/app/features/home/top/page";
+import Top from "@/app/features/(auth)/top/page";
 import { Grid } from "@mui/material";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
@@ -23,7 +23,6 @@ const Page = () => {
         setHasUserData(false);
       }
     });
-
     return () => unsubscribe();
   }, []);
 

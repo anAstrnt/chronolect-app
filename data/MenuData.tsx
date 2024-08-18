@@ -8,22 +8,37 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export const MenuData = [
   // 家族の情報
-  { number: 1, title: "Home", link: "/features/home/top", icon: <HomeIcon /> },
+  { number: 1, title: "Home", link: "/features/top", icon: <HomeIcon /> },
   // スケジュール・やる事リスト
-  { number: 2, title: "Todo", link: "/features/home/todo", icon: <ListAltIcon /> },
+  { number: 2, title: "Todo", link: "/features/todo", icon: <ListAltIcon /> },
   // ライフプラン表
-  { number: 3, title: "Life", link: "/features/home/life", icon: <FaceIcon /> },
+  { number: 3, title: "Life", link: "/features/life", icon: <FaceIcon /> },
   // 所持品の保存
-  { number: 4, title: "Property", link: "/features/home/property", icon: <LaptopChromebookIcon /> },
+  {
+    number: 4,
+    title: "Property",
+    link: "/features/property",
+    icon: <LaptopChromebookIcon />,
+  },
   // メモ（URL・Titleをカテゴリごとに）
-  { number: 5, title: "Memo", link: "/features/home/memo", icon: <AutoAwesomeMotionIcon /> },
+  {
+    number: 5,
+    title: "Memo",
+    link: "/features/memo",
+    icon: <AutoAwesomeMotionIcon />,
+  },
   // アカウント情報
-  { number: 6, title: "Account", link: "/features/home/account", icon: <ManageAccountsIcon /> },
+  {
+    number: 6,
+    title: "Account",
+    link: "/features/account",
+    icon: <ManageAccountsIcon />,
+  },
   // このアプリの説明書
   {
     number: 7,
     title: "Instructions",
-    link: "/features/home/instructions",
+    link: "/features/instructions",
     icon: <AutoStoriesIcon />,
   },
 ];
