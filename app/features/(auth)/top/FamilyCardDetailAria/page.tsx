@@ -23,7 +23,6 @@ type fieldMap = {
 };
 
 const FamilyCardDetail = () => {
-  // const { userId, userDetail, setUserDetail } = useFamilyCard();
   const userId = useRecoilValue(userIdState);
   const [userDetail, setUserDetail] = useRecoilState(userDetailState);
   const [changeEditDetail, setChangeEditDetail] = useState<boolean>(false);
@@ -219,7 +218,9 @@ const FamilyCardDetail = () => {
                           setSelectedIndex={setSelectedIndex}
                           index={index}
                         />
-                        <Typography>{fieldMap[index + 1]?.getUserDetail}</Typography>
+                        <Typography>
+                          {fieldMap[index + 1]?.getUserDetail}
+                        </Typography>
                       </>
                     )}
                     {index + 1 === 7 ? <AcademicHistory /> : ""}
