@@ -106,7 +106,11 @@ export const TodoTitleCard = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     index: number
   ) => {
-    await deleteDoc(doc(db, "todoTitles", todoTitles[index].todoTitleId));
+    try {
+      await deleteDoc(doc(db, "todoTitles", todoTitles[index].todoTitleId));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // NOTE: 選択したtodoを削除する処理
@@ -115,12 +119,16 @@ export const TodoTitleCard = () => {
     todoTitleId: string,
     todoId: string
   ) => {
-    if (todoTitleId) {
-      await deleteDoc(doc(db, "todoTitles", todoTitleId, "todo", todoId));
+    try {
+      if (todoTitleId) {
+        await deleteDoc(doc(db, "todoTitles", todoTitleId, "todo", todoId));
+        console.log("delet comp");
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  // TODO: todoのインプット欄が連動してしまっているので、入力中のインプット欄のみアクティブにする。
   // TODO: clearの実装
   return (
     <Grid>
