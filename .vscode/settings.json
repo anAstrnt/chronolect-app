@@ -1,0 +1,32 @@
+{
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {
+      "icon": "check-circle-fill",
+      "foreground": "#fff",
+      "background": "#f206e297"
+    },
+    "NOTE": {
+      "icon": "paintbrush",
+      "foreground": "#fff",
+      "background": "#06d3f297"
+    },
+    "BUG": {
+      "icon": "bug"
+    },
+    "HACK": {
+      "icon": "tools"
+    },
+    "FIXME": {
+      "icon": "flame"
+    },
+    "XXX": {
+      "icon": "x"
+    },
+    "[ ]": {
+      "icon": "issue-draft"
+    },
+    "[x]": {
+      "icon": "issue-closed"
+    }
+  }
+}
