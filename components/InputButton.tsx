@@ -1,5 +1,5 @@
 import React from "react";
-import SendIcon from "@mui/icons-material/Send";
+import AddIcon from "@mui/icons-material/Add";
 import { IconButton } from "@mui/material";
 
 type InputButtonProps = {
@@ -23,7 +23,7 @@ const InputButton: React.FC<InputButtonProps> = ({
 
   return (
     <IconButton type="submit" size="small">
-      <SendIcon />
+      <AddIcon />
     </IconButton>
   );
 };
