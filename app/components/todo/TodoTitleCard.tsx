@@ -26,10 +26,14 @@ import {
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
+type todoType = {
+  [key: string]: string;
+};
+
 export const TodoTitleCard = () => {
   const todoTitle = useRecoilValue(todoTitleState); // NOTE:todoTitleに入力された値を格納。cardに表示するTitleを取ってくるタイミングを操作するために使用。
   const [todoTitles, setTodoTitles] = useState<todoTytles[]>([]); // NOTE: firebaseから取得したTodoTitleを格納。表示まわりやtodoの取得で使用。
-  const [todo, setTodo] = useState<string>(""); // NOTE: todoとしてインプット欄に入力された値を一時格納。
+  const [todo, setTodo] = useState<todoType>({}); // NOTE: todoとしてインプット欄に入力された値を一時格納。
   const [todosMap, setTodosMap] = useState<Map<string, TodosType[]>>(new Map()); // NOTE: firebaseからTodoを取得し、対応するtodoTitleIdに紐づけMapオブジェクトとして格納。TodoTitleIdに対応したTodoをJSXで表示するのに使用。
 
   // NOTE: 入力されたTodoをFirebaseに送信する処理。
@@ -43,12 +47,12 @@ export const TodoTitleCard = () => {
     if (todoTitleId) {
       // NOTE: 取得したtodoTitleIdに紐づけて、Firebaseにtodoをサブコレクションとして送信する処理。
       await addDoc(collection(db, "todoTitles", todoTitleId, "todo"), {
-        todo: todo,
+        todo: todo[todoTitleId],
         isDone: false,
         timeStamp: serverTimestamp(),
       });
     }
-    setTodo("");
+    setTodo({ ...todo, [todoTitleId]: "" });
   };
 
   // NOTE: cardにtodoTitleを表示するため、Firebaseから取得する処理。
@@ -66,9 +70,10 @@ export const TodoTitleCard = () => {
 
   // NOTE: インプット欄に入力されたTodoを一時取得・表示させる処理。
   const onChangeTodos = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    todoTitleId: string
   ) => {
-    setTodo(e.target.value);
+    setTodo({ ...todo, [todoTitleId]: e.target.value });
   };
 
   // NOTE: todoをFirebaseから取得し、JSXで表示させるための処理。Firebaseから何かしらtodoTitleが取得されれば処理が走る。
@@ -115,6 +120,8 @@ export const TodoTitleCard = () => {
     }
   };
 
+  // TODO: todoのインプット欄が連動してしまっているので、入力中のインプット欄のみアクティブにする。
+  // TODO: clearの実装
   return (
     <Grid>
       <Typography>Todos</Typography>
@@ -145,10 +152,10 @@ export const TodoTitleCard = () => {
                   id="todo"
                   label="Todo"
                   variant="standard"
-                  value={todo}
-                  onChange={(e) => onChangeTodos(e)}
+                  value={todo[title.todoTitleId] || ""}
+                  onChange={(e) => onChangeTodos(e, title.todoTitleId)}
                 />
-                <IconButton type="submit" disabled={!todo ? true : false}>
+                <IconButton type="submit" disabled={!todo}>
                   <AddIcon />
                 </IconButton>
               </form>
