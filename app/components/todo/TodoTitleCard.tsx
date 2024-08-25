@@ -61,6 +61,7 @@ export const TodoTitleCard = () => {
 
   // NOTE: cardにtodoTitleを表示するため、Firebaseから取得する処理。
   useEffect(() => {
+    // NOTE: sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
     const q = query(collection(db, "todoTitles"), orderBy("timestamp"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const newTitles = snapshot.docs.map((doc) => ({
@@ -69,7 +70,6 @@ export const TodoTitleCard = () => {
         isDone: doc.data().isDone,
         timestamp: doc.data().timestamp,
       }));
-      // .sort((a, b) => a.timestamp - b.timestamp);
       setTodoTitles(newTitles);
     });
     return () => unsubscribe();
@@ -88,6 +88,7 @@ export const TodoTitleCard = () => {
     if (todoTitles.length > 0) {
       // NOTE: todoTitleを個別のTitleにし、title.todoTitleIdに対応するtodoを取得。
       todoTitles.forEach((title) => {
+        // NOTE: sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
         const q = query(
           collection(db, "todoTitles", title.titleId, "todo"),
           orderBy("timeStamp")
@@ -100,7 +101,6 @@ export const TodoTitleCard = () => {
             isDone: doc.data().isDone,
             timeStamp: doc.data().timeStamp,
           }));
-          // .sort((a, b) => a.timeStamp - b.timeStamp);
           // NOTE: 取得したtodoは対応するTodoTitleの中で表示させたいので、TodoTitleIdに紐づけMapオブジェクトで管理する。
           setTodosMap((prevMap) =>
             new Map(prevMap).set(title.titleId, newTodos)
@@ -189,7 +189,7 @@ export const TodoTitleCard = () => {
                   value={todo[title.titleId] || ""}
                   onChange={(e) => onChangeTodos(e, title.titleId)}
                 />
-                <IconButton type="submit" disabled={!todo}>
+                <IconButton type="submit" disabled={!todo[title.titleId]}>
                   <AddIcon />
                 </IconButton>
               </form>
