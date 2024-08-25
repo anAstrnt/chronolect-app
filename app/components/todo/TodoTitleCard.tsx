@@ -21,6 +21,8 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  orderBy,
+  query,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -59,13 +61,15 @@ export const TodoTitleCard = () => {
 
   // NOTE: cardにtodoTitleを表示するため、Firebaseから取得する処理。
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "todoTitles"), (snapshot) => {
+    const q = query(collection(db, "todoTitles"), orderBy("timestamp"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const newTitles = snapshot.docs.map((doc) => ({
         titleId: doc.id,
         title: doc.data().title,
         isDone: doc.data().isDone,
         timestamp: doc.data().timestamp,
       }));
+      // .sort((a, b) => a.timestamp - b.timestamp);
       setTodoTitles(newTitles);
     });
     return () => unsubscribe();
@@ -84,22 +88,24 @@ export const TodoTitleCard = () => {
     if (todoTitles.length > 0) {
       // NOTE: todoTitleを個別のTitleにし、title.todoTitleIdに対応するtodoを取得。
       todoTitles.forEach((title) => {
-        const unsubscribe = onSnapshot(
+        const q = query(
           collection(db, "todoTitles", title.titleId, "todo"),
-          (snapshot) => {
-            const newTodos = snapshot.docs.map((doc) => ({
-              titleId: title.titleId,
-              todoId: doc.id,
-              todo: doc.data().todo,
-              isDone: doc.data().isDone,
-              timeStamp: doc.data().timeStamp,
-            }));
-            // NOTE: 取得したtodoは対応するTodoTitleの中で表示させたいので、TodoTitleIdに紐づけMapオブジェクトで管理する。
-            setTodosMap((prevMap) =>
-              new Map(prevMap).set(title.titleId, newTodos)
-            );
-          }
+          orderBy("timeStamp")
         );
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const newTodos = snapshot.docs.map((doc) => ({
+            titleId: title.titleId,
+            todoId: doc.id,
+            todo: doc.data().todo,
+            isDone: doc.data().isDone,
+            timeStamp: doc.data().timeStamp,
+          }));
+          // .sort((a, b) => a.timeStamp - b.timeStamp);
+          // NOTE: 取得したtodoは対応するTodoTitleの中で表示させたいので、TodoTitleIdに紐づけMapオブジェクトで管理する。
+          setTodosMap((prevMap) =>
+            new Map(prevMap).set(title.titleId, newTodos)
+          );
+        });
         return () => unsubscribe();
       });
     }
