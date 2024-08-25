@@ -1,7 +1,8 @@
 "use client";
 
 export type todoTytles = {
-  todoTitleId: string;
-  todoTitle: string;
+  titleId: string;
+  title: string;
+  isDone: boolean;
   timestamp: string;
 };
