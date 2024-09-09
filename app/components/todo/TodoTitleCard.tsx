@@ -1,7 +1,6 @@
 "use client";
 
 import { todoTitleState } from "@/app/states/todoTitleState";
-import DoneButton from "@/components/DoneButton";
 import AddIcon from "@mui/icons-material/Add";
 import { db } from "@/libs/firebase";
 import { todos as TodosType } from "@/types/todos";
