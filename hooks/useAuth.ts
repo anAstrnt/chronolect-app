@@ -11,7 +11,6 @@ type useAuthProps = {
 
 const useAuth = (): useAuthProps => {
   const router = useRouter();
-
   const [loading, setLoading] = useState<boolean>(true);
   const [authenticated, setAuthenticated] = useState<boolean>(false);
 
@@ -20,7 +19,8 @@ const useAuth = (): useAuthProps => {
       if (user) {
         setAuthenticated(true);
       } else {
-        router.replace("/features/signIn");
+        setAuthenticated(false);
+        router.push("/");
       }
       setLoading(false);
     });

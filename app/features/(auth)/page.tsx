@@ -35,21 +35,43 @@ const Page = () => {
     return () => unsubscribe();
   }, []);
 
+  // TODO: 時間によって背景画面を変更
   return (
-    // <Grid sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-    //   {hasUserData ? <Top /> : <FirstFamilyCard />}
-    // </Grid>
-    // TODO: TOP画面を変える
-    <Grid>
-      <SignOut />
-      <Grid sx={{ display: "flex" }}>
+    <Grid sx={{ height: "100%" }}>
+      <Grid sx={{ position: "relative" }}>
+        <SignOut />
+      </Grid>
+      <Grid
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
         {MenuData.map((data) => (
-          <Card sx={{ maxWidth: 345, margin: "10px", height: "300px" }}>
+          <Card
+            key={data.link}
+            sx={{
+              maxWidth: 345,
+              margin: "20px",
+              padding: "10px",
+              width: "230px",
+            }}
+          >
             <CardActionArea
               href={data.link}
-              sx={{ height: "300px", display: "flex" }}
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
             >
-              {React.cloneElement(data.icon, { sx: { fontSize: 100, mb: 2 } })}
+              <CardContent>
+                {React.cloneElement(data.icon, { sx: { fontSize: 70, mb: 2 } })}
+              </CardContent>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {data.title}

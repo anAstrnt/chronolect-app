@@ -4,7 +4,12 @@ import React from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/libs/firebase";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 
 const SignOut = () => {
   const handleChangeSignOut = () => {
@@ -33,6 +38,7 @@ const SignOut = () => {
         padding: 0,
         marginTop: "10px",
         marginBottom: "10px",
+        position: "relative",
       }}
       component="nav"
       aria-labelledby="nested-list-subheader"

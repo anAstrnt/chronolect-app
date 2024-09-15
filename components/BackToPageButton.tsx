@@ -5,7 +5,6 @@ import React from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Link from "next/link";
 
-// TODO: router処理をlinkに変更する
 const BackToPageButton = () => {
   return (
     <Link href={"/features"}>

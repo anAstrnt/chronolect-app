@@ -1,6 +1,6 @@
 import React from "react";
 import useAuth from "@/hooks/useAuth";
-import Loading from "../features/loading";
+import Loading from "../features/(auth)/loading";
 import { childrenProps } from "@/types/childrenProps";
 
 const AuthCheck = ({ children }: childrenProps) => {
