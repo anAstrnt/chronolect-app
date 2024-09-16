@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Top from "@/app/features/(auth)/top/page";
 import {
   Card,
@@ -17,6 +17,7 @@ import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { useRecoilState } from "recoil";
 import { MenuData } from "@/data/MenuData";
 import SignOut from "@/app/components/SignOut";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
@@ -37,8 +38,8 @@ const Page = () => {
 
   // TODO: 時間によって背景画面を変更
   return (
-    <Grid sx={{ height: "100%" }}>
-      <Grid sx={{ position: "relative" }}>
+    <Grid sx={{ width: "100%" }}>
+      <Grid sx={{ position: "relative", marginTop: "100px" }}>
         <SignOut />
       </Grid>
       <Grid
@@ -48,6 +49,7 @@ const Page = () => {
           justifyContent: "center",
           flexWrap: "wrap",
           alignItems: "center",
+          marginTop: "200px",
         }}
       >
         {MenuData.map((data) => (
