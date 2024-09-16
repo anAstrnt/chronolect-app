@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
-import { Grid, IconButton, Typography } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import FamilyCard from "@/app/components/familyCard/FamilyCardAria/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
 import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
@@ -42,12 +48,29 @@ const Page: React.FC = () => {
         }}
       >
         <FamilyCard />
-        <IconButton
-          sx={{ backgroundColor: "rgba(0,0,0,0.3)" }}
-          onClick={openFamilyCardAddSpace}
+        <Card
+          sx={{
+            maxWidth: 200,
+            margin: "10px",
+            opacity: "0.5",
+            height: "222px",
+            width: "200px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <AddIcon />
-        </IconButton>
+          <CardActionArea
+            onClick={openFamilyCardAddSpace}
+            sx={{
+              height: "100%",
+              width: "100%",
+              padding: "20px 40px",
+            }}
+          >
+            <AddIcon />
+          </CardActionArea>
+        </Card>
       </Grid>
       {openInputSpace ? <FamilyCardAdd /> : ""}
     </Grid>

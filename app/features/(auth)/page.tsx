@@ -20,25 +20,15 @@ import SignOut from "@/app/components/SignOut";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
-  const [hasUserData, setHasUserData] = useRecoilState(hasUserDataState);
-
-  useEffect(() => {
-    // FamilyCardの初期登録が完了しているか調べる処理。
-    // !snapshot.emptyでFirestoreのクエリスナップショットの結果が空かどうかを判定し、true（空）でないJSXで<Top /> を表示し、falseであれば、FamilyCardの初期登録画面<FirstFamilyCard />に飛ぶようにしている。
-    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-      if (!snapshot.empty) {
-        setHasUserData(true);
-      } else {
-        setHasUserData(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
   return (
-    <Grid sx={{ width: "100%" }}>
-      <Grid sx={{ position: "relative", marginTop: "100px" }}>
+    <Grid sx={{ position: "absolute", width: "100%" }}>
+      <Grid
+        sx={{
+          position: "relative",
+          top: "40px",
+          left: "150px",
+        }}
+      >
         <SignOut />
       </Grid>
       <Grid
