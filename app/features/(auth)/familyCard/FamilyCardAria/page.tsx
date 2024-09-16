@@ -2,14 +2,15 @@
 
 import React from "react";
 import { Grid, IconButton, Typography } from "@mui/material";
-import FamilyCard from "@/app/components/top/FamilyCardAria/FamilyCard";
+import FamilyCard from "@/app/components/familyCard/FamilyCardAria/FamilyCard";
 import AddIcon from "@mui/icons-material/Add";
-import FamilyCardAdd from "@/app/components/top/FamilyCardAria/FamilyCardAdd";
+import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
 import { useRecoilState } from "recoil";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 
 const Page: React.FC = () => {
-  const [openInputSpace, setOpenInputSpace] = useRecoilState(openInputSpaceState);
+  const [openInputSpace, setOpenInputSpace] =
+    useRecoilState(openInputSpaceState);
 
   const openFamilyCardAddSpace = () => {
     setOpenInputSpace(!openInputSpace);
@@ -34,7 +35,11 @@ const Page: React.FC = () => {
       </Grid>
 
       <Grid
-        sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
       >
         <FamilyCard />
         <IconButton

@@ -11,7 +11,7 @@ export const MenuData = [
   {
     number: 1,
     title: "FamilyCard",
-    link: "/features/top",
+    link: "/features/familyCard",
     icon: <HomeIcon />,
     detail:
       "家族のプロフィールや連絡先をひとまとめにして、簡単に管理・共有できるアプリです。大切な家族の情報をすぐに確認でき、スムーズなコミュニケーションをお手伝いします。",

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Top from "@/app/features/(auth)/top/page";
+import Top from "@/app/features/(auth)/familyCard/page";
 import {
   Card,
   CardActionArea,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import FirstFamilyCard from "@/app/components/top/FamilyCardAria/FirstFamilyCard";
+import FirstFamilyCard from "@/app/components/familyCard/FamilyCardAria/FirstFamilyCard";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { useRecoilState } from "recoil";
 import { MenuData } from "@/data/MenuData";
@@ -36,7 +36,6 @@ const Page = () => {
     return () => unsubscribe();
   }, []);
 
-  // TODO: 時間によって背景画面を変更
   return (
     <Grid sx={{ width: "100%" }}>
       <Grid sx={{ position: "relative", marginTop: "100px" }}>

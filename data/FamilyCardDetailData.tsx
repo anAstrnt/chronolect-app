@@ -1,5 +1,5 @@
-import AcademicHistory from "@/app/components/top/FamilyCardDetailAria/AcademicHistory";
-import WorkHistory from "@/app/components/top/FamilyCardDetailAria/WorkHistory";
+import AcademicHistory from "@/app/components/familyCard/FamilyCardDetailAria/AcademicHistory";
+import WorkHistory from "@/app/components/familyCard/FamilyCardDetailAria/WorkHistory";
 import { Input } from "@mui/material";
 
 export const FamilyCardDetailData = [

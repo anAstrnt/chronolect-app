@@ -3,8 +3,8 @@
 import EditButton from "@/components/EditButton";
 import { Grid, Input, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AcademicHistory from "../../../../components/top/FamilyCardDetailAria/AcademicHistory";
-import WorkHistory from "../../../../components/top/FamilyCardDetailAria/WorkHistory";
+import AcademicHistory from "../../../../components/familyCard/FamilyCardDetailAria/AcademicHistory";
+import WorkHistory from "../../../../components/familyCard/FamilyCardDetailAria/WorkHistory";
 import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";

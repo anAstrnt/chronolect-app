@@ -6,7 +6,7 @@ import FamilyCardDetailAria from "./FamilyCardDetailAria/page";
 import { Grid } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
-import FirstFamilyCard from "@/app/components/top/FamilyCardAria/FirstFamilyCard";
+import FirstFamilyCard from "@/app/components/familyCard/FamilyCardAria/FamilyCard";
 import BackToPageButton from "@/components/BackToPageButton";
 
 const page: React.FC = () => {
