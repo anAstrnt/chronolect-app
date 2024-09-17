@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import FamilyCardAria from "./FamilyCardAria/page";
 import FamilyCardDetailAria from "./FamilyCardDetailAria/page";
+import FamilyCardMenu from "./FamilyCardMenu/page";
 import { Grid } from "@mui/material";
 import { useRecoilState } from "recoil";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
@@ -31,11 +32,16 @@ const page: React.FC = () => {
   // TODO：familyCardが登録されていなかったときの処理を、menu画面からfamilyCardに移動してきた。次はUIを整える。
   return (
     <Grid sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-      <BackToPageButton />
       {hasUserData ? (
-        <Grid>
-          <FamilyCardAria />
-          <FamilyCardDetailAria />
+        <Grid container sx={{ width: "100%", height: "100%" }}>
+          <Grid item sx={{ width: "20%", height: "100%" }}>
+            <FamilyCardMenu />
+          </Grid>
+          <Grid item sx={{ width: "80%", height: "100%" }}>
+            <BackToPageButton />
+            <FamilyCardAria />
+            <FamilyCardDetailAria />
+          </Grid>
         </Grid>
       ) : (
         <FirstFamilyCard />
