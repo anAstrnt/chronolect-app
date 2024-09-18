@@ -20,7 +20,6 @@ const page = () => {
     setOpenInputSpace(!openInputSpace);
   };
 
-  //TODO:FamilyCardのアイコンを左に並ぶようにする UIの調整
   return (
     <Grid
       container
