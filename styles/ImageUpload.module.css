@@ -7,8 +7,9 @@
   border: none;
   padding: 36px;
   border-radius: 10px;
-  box-shadow: 0px 0px 8px gray;
-  color: gray;
+  box-shadow: 0px 0px 8px rgb(255, 255, 255);
+  color: rgb(59, 58, 58);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .outerBox h2 {

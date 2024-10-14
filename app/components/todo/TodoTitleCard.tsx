@@ -6,6 +6,7 @@ import { db } from "@/libs/firebase";
 import { todos as TodosType } from "@/types/todos";
 import { todoTytles } from "@/types/todoTytles";
 import ClearIcon from "@mui/icons-material/Clear";
+import DeleteButton from "@/components/DeleteButton";
 import {
   Card,
   CardContent,
@@ -127,34 +128,6 @@ export const TodoTitleCard = () => {
     }
   };
 
-  // NOTE: 選択したTodoTitleを削除する処理
-  const deleteTitle = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    titleId: string
-  ) => {
-    try {
-      await deleteDoc(doc(db, "todoTitles", titleId));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // NOTE: 選択したtodoを削除する処理
-  const deleteTodo = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    titleId: string,
-    todoId: string
-  ) => {
-    try {
-      if (titleId) {
-        await deleteDoc(doc(db, "todoTitles", titleId, "todo", todoId));
-        console.log("delet comp");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
     <Grid>
       <Typography>Todos</Typography>
@@ -166,19 +139,12 @@ export const TodoTitleCard = () => {
                 <Typography variant="h5" component="div">
                   {title.title}
                 </Typography>
-                <IconButton
-                  type="button"
-                  sx={{
-                    borderColor: "rgba(0,0,0,0.8)",
-                    "&:hover": {
-                      cursor: "pointer",
-                      background: "rgba(247,72,59,0.2)",
-                    },
-                  }}
-                  onClick={(e) => deleteTitle(e, title.titleId)}
-                >
-                  <ClearIcon />
-                </IconButton>
+                <DeleteButton
+                  mainCollection={"todoTitles"}
+                  mainDocId={title.titleId}
+                  collection={""}
+                  docId={""}
+                />
               </Grid>
               <form onSubmit={(e) => onSubmitTodos(e, index)}>
                 <TextField
@@ -225,19 +191,12 @@ export const TodoTitleCard = () => {
                   >
                     <DoneIcon />
                   </IconButton>
-                  <IconButton
-                    type="button"
-                    sx={{
-                      borderColor: "rgba(0,0,0,0.8)",
-                      "&:hover": {
-                        cursor: "pointer",
-                        background: "rgba(247,72,59,0.2)",
-                      },
-                    }}
-                    onClick={(e) => deleteTodo(e, title.titleId, todo.todoId)}
-                  >
-                    <ClearIcon />
-                  </IconButton>
+                  <DeleteButton
+                    mainCollection={"todoTitles"}
+                    mainDocId={title.titleId}
+                    collection={"todo"}
+                    docId={todo.todoId}
+                  />
                 </Grid>
               ))}
             </CardContent>

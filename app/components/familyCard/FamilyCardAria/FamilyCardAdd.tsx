@@ -13,9 +13,9 @@ import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 const FamilyCardAdd: React.FC = () => {
-  const [userName,setUserName]=useRecoilState(userNameState)
-  const [avatar,setAvatar]=useRecoilState(avatarState)
-  const setOpenInputSpace=useSetRecoilState(openInputSpaceState)
+  const [userName, setUserName] = useRecoilState(userNameState);
+  const [avatar, setAvatar] = useRecoilState(avatarState);
+  const setOpenInputSpace = useSetRecoilState(openInputSpaceState);
   // avatarImage：imageUploadコンポーネントからがアバター画像がアップロードされたときにFileデータを格納しておくステート。ファイルからアバター画像をアップするために格納するステート（本ステート）はsendUserのif文で画像をアップロードするために使い、それ以外はアバターのURLのみ格納するステート（avatar,setAvatar）で画像URLを管理している。
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
   const [sampleAvatarImageNum, setSampleAvatarImageNum] = useState<number>();
@@ -29,7 +29,8 @@ const FamilyCardAdd: React.FC = () => {
     // 自分で選んだ画像をアバターに登録するときの処理
     if (avatarImage) {
       // アバター画像名にランダムな文字列を結合し、ストレージに挙げる際に一意のURLになるようにしている。
-      const S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const S =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       const N = 16;
       const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
         .map((n) => S[n % S.length])
@@ -89,36 +90,32 @@ const FamilyCardAdd: React.FC = () => {
   return (
     <form onSubmit={sendUser}>
       <Grid
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
+        container
+        flexDirection="column"
+        alignItems="center"
+        sx={{ width: "100%" }}
       >
-        <Grid sx={{ display: "flex" }}>
-          <Grid>
-            <Typography sx={{ fontSize: 25, fontWeightBold: 500 }}>User Name</Typography>
-            <TextField
-              id="standard-basic"
-              label="name"
-              variant="standard"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              sx={{ margin: "40px 20px 0 0", width: "300px" }}
-            />
-          </Grid>
-          <Grid>
-            <Typography sx={{ fontSize: 25, fontWeightBold: 500 }}>
-              Choose your avatar
-            </Typography>
-            <ImageUpload
-              setAvatarImage={setAvatarImage}
-              setSampleAvatarImageNum={setSampleAvatarImageNum}
-            />
+        <Grid item>
+          <Grid container alignItems="center">
+            <Grid item sx={{ margin: "40px" }}>
+              <TextField
+                id="standard-basic"
+                label="name"
+                variant="standard"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                sx={{ margin: "40px 20px 0 0", width: "300px" }}
+              />
+            </Grid>
+            <Grid item sx={{ margin: "40px" }}>
+              <ImageUpload
+                setAvatarImage={setAvatarImage}
+                setSampleAvatarImageNum={setSampleAvatarImageNum}
+              />
+            </Grid>
           </Grid>
         </Grid>
-        <Grid sx={{ margin: "50px" }}>
+        <Grid item sx={{ margin: "50px" }}>
           <FamilyCardAddButton />
         </Grid>
       </Grid>

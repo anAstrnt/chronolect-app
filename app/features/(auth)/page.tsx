@@ -1,23 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Top from "@/app/features/(auth)/familyCard/page";
+import React from "react";
 import {
   Card,
   CardActionArea,
   CardContent,
-  CardMedia,
   Grid,
   Typography,
 } from "@mui/material";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/libs/firebase";
-import FirstFamilyCard from "@/app/components/familyCard/FamilyCardAria/FirstFamilyCard";
-import { hasUserDataState } from "@/app/states/hasUserDataState";
-import { useRecoilState } from "recoil";
 import { MenuData } from "@/data/MenuData";
 import SignOut from "@/app/components/SignOut";
-import { useRouter } from "next/navigation";
 
 const Page = () => {
   return (

@@ -18,9 +18,9 @@ import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { userIdState } from "@/app/states/userIdState";
 
 const FamilyCard: React.FC = () => {
-  const [users,setUsers]=useRecoilState(usersState)
-  const hasUserData=useRecoilValue(hasUserDataState)
-  const setUserId=useSetRecoilState(userIdState)
+  const [users, setUsers] = useRecoilState(usersState);
+  const hasUserData = useRecoilValue(hasUserDataState);
+  const setUserId = useSetRecoilState(userIdState);
 
   const openUserDetail = (userId: string) => {
     setUserId(userId);
@@ -28,14 +28,17 @@ const FamilyCard: React.FC = () => {
 
   useEffect(() => {
     if (hasUserData) {
-      const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-        const newUsers = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          userName: doc.data().userName,
-          avatar: doc.data().avatar,
-        }));
-        setUsers(newUsers);
-      });
+      const unsubscribe = onSnapshot(
+        collection(db, "familyCard"),
+        (snapshot) => {
+          const newUsers = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            userName: doc.data().userName,
+            avatar: doc.data().avatar,
+          }));
+          setUsers(newUsers);
+        }
+      );
       return () => unsubscribe();
     }
   }, [hasUserData]);
@@ -51,8 +54,16 @@ const FamilyCard: React.FC = () => {
     >
       <Grid sx={{ display: "flex" }}>
         {users.map((user) => (
-          <Card sx={{ maxWidth: 200, margin: "10px" }} key={user.id}>
-            <CardActionArea
+          <Grid
+            sx={{
+              maxWidth: 200,
+              margin: "10px",
+              border: "none",
+              backgroundColor: "white",
+            }}
+            key={user.id}
+          >
+            <Grid
               onClick={() => openUserDetail(user.id)}
               sx={{
                 padding: "20px 40px",
@@ -75,8 +86,8 @@ const FamilyCard: React.FC = () => {
                   {user.userName || "user"}
                 </Typography>
               </CardContent>
-            </CardActionArea>
-          </Card>
+            </Grid>
+          </Grid>
         ))}
       </Grid>
       {!hasUserData ? <FamilyCardAdd /> : ""}

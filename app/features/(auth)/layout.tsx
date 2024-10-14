@@ -27,14 +27,11 @@ const layout = ({ children }: childrenProps) => {
     }
   }, []);
 
-  console.log(background);
-
   return (
     <RecoilRoot>
       <AuthCheck>
         <Grid
           container
-          // justifyContent="center"
           sx={{
             width: "100%",
             minHeight: "100vh",

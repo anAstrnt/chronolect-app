@@ -8,78 +8,47 @@ import {
   TimelineItem,
   TimelineSeparator,
 } from "@mui/lab";
+import { Grid, Typography } from "@mui/material";
 
 const WorkHistory = () => {
   return (
-    <Timeline position="left" sx={{ width: "300px" }}>
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">09:30 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>小学校入学</TimelineContent>
-      </TimelineItem>
+    <Grid container sx={{ margin: "20px 0 20px 0" }}>
+      <Grid container justifyContent="space-around">
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "200px",
+            margin: "10px 0 10px 0",
+          }}
+        >
+          <Grid item sx={{ marginRight: "10px" }}>
+            {/* <Typography>{item.contentStart}</Typography> */}
+          </Grid>
+          {/* <Grid item>{item.contentStartDate}</Grid> */}
+        </Grid>
 
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">09:30 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-        </TimelineSeparator>
-        <TimelineContent>小学校卒業</TimelineContent>
-      </TimelineItem>
+        <Grid item sx={{ display: "flex", margin: "10px 0 10px 0" }}>
+          <Typography>ー</Typography>
+        </Grid>
 
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">10:00 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>中学校入学</TimelineContent>
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">09:30 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-        </TimelineSeparator>
-        <TimelineContent>中学校卒業</TimelineContent>
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">12:00 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>大学入学</TimelineContent>
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">09:30 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-        </TimelineSeparator>
-        <TimelineContent>大学卒業</TimelineContent>
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">9:00 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>大学院入学</TimelineContent>
-      </TimelineItem>
-
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">09:30 am</TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-        </TimelineSeparator>
-        <TimelineContent>大学院卒業</TimelineContent>
-      </TimelineItem>
-    </Timeline>
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "200px",
+            margin: "10px 0 10px 0",
+          }}
+        >
+          <Grid item sx={{ marginRight: "10px" }}>
+            {/* <Typography>{item.contentEnd}</Typography> */}
+          </Grid>
+          {/* <Grid item>{item.contentEndDate}</Grid> */}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
