@@ -18,7 +18,15 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { qualificationDate } from "@/types/qualificationData";
 
-const Qualification = () => {
+type QualificationProps = {
+  selectedIndex: number | undefined;
+  detailIndex: number;
+};
+
+const Qualification: React.FC<QualificationProps> = ({
+  selectedIndex,
+  detailIndex,
+}) => {
   const userId = useRecoilValue(userIdState);
   const changeEditDetail = useRecoilValue(changeEditDetailState);
   const changeQualifications = useRecoilValue(changeQualificationsState);
@@ -133,7 +141,7 @@ const Qualification = () => {
 
   return (
     <Grid container sx={{ width: "100%" }}>
-      {changeEditDetail ? ( // changeEditDetailがtrueの場合は入力フォームを表示
+      {changeEditDetail && selectedIndex === detailIndex ? ( // changeEditDetailがtrueの場合は入力フォームを表示
         <Grid sx={{ width: "100%" }}>
           {qualification.map(
             (

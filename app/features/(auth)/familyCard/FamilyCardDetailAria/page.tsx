@@ -9,11 +9,12 @@ import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import InputButton from "@/components/InputButton";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
 import { userDetailState } from "@/app/states/userDetailState";
 import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qualification";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
+import { birthdayState } from "@/app/states/birthdayState";
 
 type fieldMap = {
   [key: number]: {
@@ -28,8 +29,9 @@ const FamilyCardDetail = () => {
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
   );
+  const setBirthday = useSetRecoilState(birthdayState);
+
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
-  const [birthday, setBirthday] = useState<string | undefined>();
 
   // FamilyCardDetailに表示する各種のデータを使いまわしたいので、オブジェクトとして管理
   // JSXで値をmapで回しているので、indexを取得し、それぞれのfieldに紐づけられるようにしている。
@@ -246,6 +248,7 @@ const FamilyCardDetail = () => {
                             backgroundColor: "rgba(0, 0, 0, 0.1)",
                           },
                         }}
+                        placeholder={data.placeholder}
                       />
                     ) : (
                       <Typography sx={{ fontSize: "1.2rem" }}>
@@ -253,9 +256,19 @@ const FamilyCardDetail = () => {
                       </Typography>
                     )}
 
-                    {index + 1 === 6 ? <Qualification /> : ""}
+                    {index + 1 === 6 ? (
+                      <Qualification
+                        selectedIndex={selectedIndex}
+                        detailIndex={index}
+                      />
+                    ) : (
+                      ""
+                    )}
                     {index + 1 === 7 ? (
-                      <AcademicHistory birthday={birthday} />
+                      <AcademicHistory
+                        selectedIndex={selectedIndex}
+                        detailIndex={index}
+                      />
                     ) : (
                       ""
                     )}
