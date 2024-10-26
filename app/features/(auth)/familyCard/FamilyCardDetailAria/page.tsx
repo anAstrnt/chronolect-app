@@ -189,10 +189,8 @@ const FamilyCardDetail = () => {
     >
       <Grid
         container
-        // spacing={2}
         direction="row"
         justifyContent="center"
-        alignItems="flex-start"
         sx={{
           width: "50%",
           maxWidth: "1000px",

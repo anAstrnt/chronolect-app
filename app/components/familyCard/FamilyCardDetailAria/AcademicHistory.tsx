@@ -5,17 +5,13 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
-import { Grid, Input, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
 import { calcSchoolDates } from "@/components/calcSchoolDates";
-
-type academicHistoryItemsTypes = {
-  contentStart: string;
-  contentEnd: string;
-  contentStartDate: string;
-  contentEndDate: string;
-};
+import { academicHistoryItemsState } from "@/app/states/academicHistoryItemsState";
+import { academicHistoryItemsTypes } from "@/types/academicHistoryItemTypes";
+import AcademicInputComp from "@/components/AcademicInputComp";
 
 type AcademicHistoryProps = {
   selectedIndex: number | undefined;
@@ -35,9 +31,10 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     changeEditDetailState
   ); // 値をテキストから編集に切り替えるためのステート
   const birthday = useRecoilValue(birthdayState);
-  const [academicHistoryItems, setAcademicHistoryItems] = useState<
-    academicHistoryItemsTypes[]
-  >([]);
+  const [academicHistoryItems, setAcademicHistoryItems] = useRecoilState(
+    academicHistoryItemsState
+  );
+
   const [previousBirthday, setPreviousBirthday] =
     useState<previousBirethdayType>();
 
@@ -115,9 +112,17 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     key: keyof academicHistoryItemsTypes,
     value: string
   ) => {
-    const updateHistory = [...academicHistoryItems];
-    updateHistory[index][key] = value;
+    console.log("ind");
+    const updateHistory = academicHistoryItems.map((item, i) => {
+      if (i === index) {
+        return { ...item, [key]: value };
+      }
+      return item;
+    });
     setAcademicHistoryItems(updateHistory);
+    // const updateHistory = [...academicHistoryItems];
+    // updateHistory[index][key] = value;
+    // setAcademicHistoryItems(updateHistory);
   };
 
   // 手動編集後にエンターキーを押したらFirestoreへの保存処理がかかる
@@ -156,7 +161,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     <Grid container sx={{ margin: "20px 0 20px 0" }}>
       {/* 誕生日が未入力のときは、メッセージ表示。入力があるときは学歴リスト表示 */}
       {!previousBirthday?.birthday ? (
-        <Grid item xs={12}>
+        <Grid item xs={12} justifyContent="center">
           <Typography>
             誕生日を入力すれば、自動で学歴が表示されます。
           </Typography>
@@ -176,24 +181,12 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
               >
                 <Grid item sx={{ marginRight: "10px" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <Input
-                      value={item.contentStart}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index + 1,
-                          "contentStart",
-                          e.target.value
-                        )
+                    <AcademicInputComp
+                      inputValue={item.contentStart}
+                      handleKeyDown={handleKeyDown}
+                      onChangeAcademicValue={(e) =>
+                        handleInputChange(index, "contentStart", e.target.value)
                       }
-                      onKeyDown={handleKeyDown} // エンターキーのイベントを追加
-                      disableUnderline
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.1)",
-                        },
-                      }}
                     />
                   ) : (
                     <Typography>{item.contentStart}</Typography>
@@ -201,24 +194,16 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                 </Grid>
                 <Grid item>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <Input
-                      value={item.contentStartDate}
-                      onChange={(e) =>
+                    <AcademicInputComp
+                      inputValue={item.contentStartDate}
+                      handleKeyDown={handleKeyDown}
+                      onChangeAcademicValue={(e) =>
                         handleInputChange(
                           index,
                           "contentStartDate",
                           e.target.value
                         )
                       }
-                      onKeyDown={handleKeyDown} // エンターキーのイベントを追加
-                      disableUnderline
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.1)",
-                        },
-                      }}
                     />
                   ) : (
                     <Typography>{item.contentStartDate}</Typography>
@@ -239,20 +224,12 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
               >
                 <Grid item sx={{ marginRight: "10px" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <Input
-                      value={item.contentEnd}
-                      onChange={(e) =>
+                    <AcademicInputComp
+                      inputValue={item.contentEnd}
+                      handleKeyDown={handleKeyDown}
+                      onChangeAcademicValue={(e) =>
                         handleInputChange(index, "contentEnd", e.target.value)
                       }
-                      onKeyDown={handleKeyDown} // エンターキーのイベントを追加
-                      disableUnderline
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.1)",
-                        },
-                      }}
                     />
                   ) : (
                     <Typography>{item.contentEnd}</Typography>
@@ -260,24 +237,16 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                 </Grid>
                 <Grid item>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <Input
-                      value={item.contentEndDate}
-                      onChange={(e) =>
+                    <AcademicInputComp
+                      inputValue={item.contentEndDate}
+                      handleKeyDown={handleKeyDown}
+                      onChangeAcademicValue={(e) =>
                         handleInputChange(
                           index,
                           "contentEndDate",
                           e.target.value
                         )
                       }
-                      onKeyDown={handleKeyDown} // エンターキーのイベントを追加
-                      disableUnderline
-                      sx={{
-                        width: "100%",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.1)",
-                        },
-                      }}
                     />
                   ) : (
                     <Typography>{item.contentEndDate}</Typography>
