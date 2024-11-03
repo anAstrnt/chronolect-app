@@ -9,7 +9,6 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { workHistoryItemsTypes } from "@/types/workHistoryItemTypes";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { blueGrey, grey } from "@mui/material/colors";
 
 type workHistoryProps = {
   selectedIndex: number | undefined;
@@ -20,27 +19,28 @@ const WorkHistory: React.FC<workHistoryProps> = ({
   selectedIndex,
   detailIndex,
 }) => {
-  const userId = useRecoilValue(userIdState);
+  const userId = useRecoilValue(userIdState); // 選択されたUserのIdを取ってくるステート
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
-  );
+  ); // 編集モードを切り替えをするステート
   const [workHistoryItems, setWorkHistoryItems] = useRecoilState(
     workHistoryItemsState
-  );
+  ); // 現在の職歴データを保持するためのステート。この状態は、Userが職歴を編集したり、新しい職歴を追加したりする際に変更される。
   const [originalWorkHistory, setOriginalWorkHistory] = useState<
     workHistoryItemsTypes[]
-  >([]); // 元のworkHistoryデータ
+  >([]); // Firestoreから取得した職歴データの初期状態を保持。この状態は、Userが職歴を編集する前のデータを保持するために使用する。
   const [company, setCompany] = useState<string>("");
   const [employmentDate, setEmploymentDate] = useState<string>("");
   const [resignationDate, setResignationDate] = useState<string>("");
 
-  // Firestoreからデータ取得
+  // userを切り替えたらFirestoreからデータ取得
   useEffect(() => {
     if (userId) {
       fetchWorkHistoryFromFirebase();
     }
   }, [userId]);
 
+  // Firestoreからデータ取得する処理
   const fetchWorkHistoryFromFirebase = async () => {
     try {
       const workHistoryRef = doc(
@@ -53,22 +53,24 @@ const WorkHistory: React.FC<workHistoryProps> = ({
       const workHistoryDoc = await getDoc(workHistoryRef);
 
       if (workHistoryDoc.exists()) {
+        // workHistoryが存在していたら走る処理
         const data = workHistoryDoc.data();
         const historyData = Array.isArray(data.history) ? data.history : [];
         setWorkHistoryItems(historyData);
-        setOriginalWorkHistory(historyData); // 元のデータを保存
+        // setOriginalWorkHistory(historyData);
         console.log(data);
       } else {
+        // workHistoryが存在していなかったら走る処理
         console.log("No data found");
         setWorkHistoryItems([]);
-        setOriginalWorkHistory([]);
+        // setOriginalWorkHistory([]);
       }
     } catch (error) {
       console.error("Error fetching work history: ", error);
     }
   };
 
-  // 値の編集を更新する
+  // 編集フォームへ入力された値を表示、workHistoryItemsへ格納する。
   const handleInputChange = (
     index: number,
     key: keyof workHistoryItemsTypes,
@@ -93,14 +95,14 @@ const WorkHistory: React.FC<workHistoryProps> = ({
     if (!company && !employmentDate && !resignationDate) return;
 
     try {
-      // 新しいエントリーを作成
+      // 新規入力フォームへの値の格納があった場合は、newEntryに格納
       const newEntry = {
         company: company || "",
         employmentDate: employmentDate || "",
         resignationDate: resignationDate || "",
       };
 
-      // 既存の職歴アイテムに新しいエントリーを追加
+      // 既存の職歴（登録済みのデータの編集後の値を含む）に新しいworkHistoryItemsとしてnewWorkHistoryItemsに格納
       const newWorkHistoryItems = [...workHistoryItems, newEntry];
 
       await setDoc(
@@ -108,16 +110,24 @@ const WorkHistory: React.FC<workHistoryProps> = ({
         { history: newWorkHistoryItems },
         { merge: true }
       );
-      setOriginalWorkHistory(workHistoryItems);
+      setOriginalWorkHistory(workHistoryItems); // Firestoreに保存した後、originalWorkHistoryを更新することで、次回の変更があった際に正しく変更を検出できるようにしている。
       setCompany("");
       setEmploymentDate("");
       setResignationDate("");
-      fetchWorkHistoryFromFirebase();
+      fetchWorkHistoryFromFirebase(); // 保存処理が終わったらFirestoreから最新のデータを取ってくる。
       console.log("Data saved successfully");
     } catch (error) {
       console.error("Error saving to Firestore:", error);
     }
   };
+
+  // 編集モード解除時に、Firestoreへの保存処理かける。
+  // ただし、変更があるかのチェック（hasChanges()）をかけ、userIdを選択した初回に意図せず保存処理がかからないようにしている。
+  useEffect(() => {
+    if (!changeEditDetail && hasChanges()) {
+      saveToFirestore();
+    }
+  }, [changeEditDetail]);
 
   // 変更があるかチェック
   const hasChanges = () => {
@@ -130,16 +140,9 @@ const WorkHistory: React.FC<workHistoryProps> = ({
     );
   };
 
-  // 編集完了時にデータを保存
-  useEffect(() => {
-    if (!changeEditDetail && hasChanges()) {
-      saveToFirestore();
-    }
-  }, [changeEditDetail]);
-
-  // 新規エントリーの追加
+  // 値の編集フォームや新規入力フォームで編集したあとEnterキーを押した際、新しい値でworkHistoryItemsを更新する処理
   const addNewHistoryEntry = () => {
-    if (!company && !employmentDate && !resignationDate) return;
+    if (!company && !employmentDate && !resignationDate) return; // 新規フォームが全てからの場合は更新しない
 
     const newEntry = {
       company,
@@ -147,15 +150,17 @@ const WorkHistory: React.FC<workHistoryProps> = ({
       resignationDate,
     };
 
-    const updatedHistory = [...workHistoryItems, newEntry];
-    setWorkHistoryItems(updatedHistory);
-    setCompany("");
-    setEmploymentDate("");
-    setResignationDate("");
-    setChangeEditDetail(false);
+    const updatedHistory = [...workHistoryItems, newEntry]; // 新しい値のworkHistoryItemsを構成
+    setWorkHistoryItems(updatedHistory); // 新しい値でworkHistoryItemsを更新
+    setCompany(""); // 新規入力フォームの入力値リセット
+    setEmploymentDate(""); // 新規入力フォームの入力値リセット
+    setResignationDate(""); // 新規入力フォームの入力値リセット
+    setChangeEditDetail(false); // 編集フォームの解除
   };
 
+  // 任意のworkHistoryItems内のオブジェクトを削除する処理
   const handleDelete = async (index: number) => {
+    // historyのキーを持つ配列のindex番目のオブジェクト以外をFilterで残し、updatedHistoryに格納。workHistoryItemsの新しい値とする。（削除処理）
     const updatedHistory = workHistoryItems.filter((_, i) => i !== index);
     setWorkHistoryItems(updatedHistory);
 
