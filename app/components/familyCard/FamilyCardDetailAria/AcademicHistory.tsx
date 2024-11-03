@@ -11,14 +11,14 @@ import { birthdayState } from "@/app/states/birthdayState";
 import { calcSchoolDates } from "@/components/calcSchoolDates";
 import { academicHistoryItemsState } from "@/app/states/academicHistoryItemsState";
 import { academicHistoryItemsTypes } from "@/types/academicHistoryItemTypes";
-import AcademicInputComp from "@/components/AcademicInputComp";
+import InputFormComp from "@/components/InputFormComp";
 
 type AcademicHistoryProps = {
   selectedIndex: number | undefined;
   detailIndex: number;
 };
 
-type previousBirethdayType = {
+type PreviousBirthdayType = {
   birthday: string;
 };
 
@@ -29,23 +29,25 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
   const userId = useRecoilValue(userIdState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
-  ); // 値をテキストから編集に切り替えるためのステート
+  );
   const birthday = useRecoilValue(birthdayState);
   const [academicHistoryItems, setAcademicHistoryItems] = useRecoilState(
     academicHistoryItemsState
   );
-
+  // Firestoreから取得した初期のデータを保持
+  const [fetchHistoryItems, setFetchHistoryItems] = useState<
+    academicHistoryItemsTypes[]
+  >([]);
   const [previousBirthday, setPreviousBirthday] =
-    useState<previousBirethdayType>();
+    useState<PreviousBirthdayType>();
 
-  // ユーザーが選択されたらFirestoreからデータを取ってくる処理を実行
+  // 初期データをFirestoreから取得
   useEffect(() => {
     if (userId) {
       fetchAcademicHistoryFromFirebase();
     }
-  }, [userId, birthday]);
+  }, [userId]);
 
-  // Firebaseから学歴データを取得する処理
   const fetchAcademicHistoryFromFirebase = async () => {
     try {
       const academicHistoryRef = doc(
@@ -56,15 +58,12 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
         "academicHistory"
       );
       const academicHistoryDoc = await getDoc(academicHistoryRef);
-
       if (academicHistoryDoc.exists()) {
-        // データを取得できた場合
         const data = academicHistoryDoc.data();
-        await setAcademicHistoryItems(data.history);
-        await setPreviousBirthday(data.birthday);
+        setAcademicHistoryItems(data.history);
+        setFetchHistoryItems(data.history); // 初期データとして保持
+        setPreviousBirthday(data.birthday);
       } else {
-        // データがない場合
-        console.log("Not fetching Date");
         setPreviousBirthday({ birthday: "" });
       }
     } catch (error) {
@@ -72,8 +71,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     }
   };
 
-  // 誕生日が新規登録された時・誕生日が更新された時に学歴を自動計算する処理。
-  // リダイレクトしたときや手動計算したときに処理が走らないように、birthday !== previousBirthday?.birthdayをつけています。
+  // 誕生日が更新されたときに学歴を自動計算し、Firestoreに保存
   useEffect(() => {
     if (birthday && birthday !== previousBirthday?.birthday) {
       const schoolDates = calcSchoolDates(birthday);
@@ -82,10 +80,8 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     } else if (!birthday) {
       setAcademicHistoryItems([]);
     }
-    return;
   }, [birthday]);
 
-  // 誕生日から学歴を自動計算したときに、その値をFirestoreに登録する処理
   const saveAcademicHistoryToFirebase = async (
     calcHistoryDates: academicHistoryItemsTypes[]
   ) => {
@@ -99,104 +95,112 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
       );
       await setDoc(academicHistoryRef, {
         history: calcHistoryDates,
-        birthday: { birthday: birthday },
+        birthday: { birthday },
       });
     } catch (error) {
-      console.log("error:", error);
+      console.error("Error saving academic history:", error);
     }
   };
 
-  // 学歴を手動編集する時に、フォームに入力した文字をステートに格納しつつ表示させる処理
+  // 入力変更時のステート更新
   const handleInputChange = (
     index: number,
     key: keyof academicHistoryItemsTypes,
     value: string
   ) => {
-    console.log("ind");
-    const updateHistory = academicHistoryItems.map((item, i) => {
-      if (i === index) {
-        return { ...item, [key]: value };
-      }
-      return item;
-    });
-    setAcademicHistoryItems(updateHistory);
-    // const updateHistory = [...academicHistoryItems];
-    // updateHistory[index][key] = value;
-    // setAcademicHistoryItems(updateHistory);
-  };
-
-  // 手動編集後にエンターキーを押したらFirestoreへの保存処理がかかる
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSave();
-    }
-  };
-  const handleSave = async () => {
-    if (changeEditDetail) {
-      await onSaveHistoryToFirebase();
-    }
-  };
-
-  // Firestoreのデータを更新する処理
-  const onSaveHistoryToFirebase = async () => {
-    const academicHistoryRef = doc(
-      db,
-      "familyCard",
-      userId,
-      "detail",
-      "academicHistory"
+    const updatedHistory = academicHistoryItems.map((item, i) =>
+      i === index ? { ...item, [key]: value } : item
     );
-    try {
-      await updateDoc(academicHistoryRef, {
-        history: academicHistoryItems,
-        birthday: { birthday: birthday },
-      });
-      setChangeEditDetail(false);
-    } catch (error) {
-      console.log("error:", error);
-    }
+    setAcademicHistoryItems(updatedHistory);
   };
+
+  // Firestoreデータの保存処理
+  const onSaveHistoryToFirebase = async () => {
+    if (
+      JSON.stringify(fetchHistoryItems) !== JSON.stringify(academicHistoryItems)
+    ) {
+      try {
+        const academicHistoryRef = doc(
+          db,
+          "familyCard",
+          userId,
+          "detail",
+          "academicHistory"
+        );
+        await updateDoc(academicHistoryRef, {
+          history: academicHistoryItems,
+          birthday: { birthday },
+        });
+        setFetchHistoryItems(academicHistoryItems); // 最新データを初期データとして更新
+      } catch (error) {
+        console.error("Error updating academic history:", error);
+      }
+    }
+    setChangeEditDetail(false);
+  };
+
+  // 編集モードが解除されたときにデータを保存
+  useEffect(() => {
+    if (!changeEditDetail) {
+      onSaveHistoryToFirebase();
+    }
+  }, [changeEditDetail]);
 
   return (
-    <Grid container sx={{ margin: "20px 0 20px 0" }}>
-      {/* 誕生日が未入力のときは、メッセージ表示。入力があるときは学歴リスト表示 */}
+    <Grid
+      container
+      sx={{ margin: "20px 0 20px 0", justifyContent: "center", width: "100%" }}
+    >
       {!previousBirthday?.birthday ? (
         <Grid item xs={12} justifyContent="center">
-          <Typography>
+          <Typography textAlign="center">
             誕生日を入力すれば、自動で学歴が表示されます。
           </Typography>
         </Grid>
       ) : (
         academicHistoryItems.map((item, index) => (
-          <Grid key={index}>
-            <Grid container justifyContent="space-around">
+          <Grid item key={index} sx={{ width: "100%" }}>
+            <Grid
+              container
+              justifyContent="space-around"
+              sx={{ width: "100%" }}
+            >
               <Grid
                 item
+                xs={5.5}
                 sx={{
                   display: "flex",
                   justifyContent: "center",
-                  width: "200px",
-                  margin: "10px 0 10px 0",
+                  width: "100%",
+                  margin: "10px 0",
                 }}
               >
-                <Grid item sx={{ marginRight: "10px" }}>
+                <Grid item xs={8} sx={{ marginRight: "10px" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <AcademicInputComp
+                    <InputFormComp
+                      type={"text"}
                       inputValue={item.contentStart}
-                      handleKeyDown={handleKeyDown}
+                      handleKeyDown={(e) =>
+                        e.key === "Enter" && onSaveHistoryToFirebase()
+                      }
                       onChangeAcademicValue={(e) =>
                         handleInputChange(index, "contentStart", e.target.value)
                       }
                     />
                   ) : (
-                    <Typography>{item.contentStart}</Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                      {item.contentStart}
+                    </Typography>
                   )}
                 </Grid>
-                <Grid item>
+                <Grid item xs={4}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <AcademicInputComp
+                    <InputFormComp
+                      type={"month"}
                       inputValue={item.contentStartDate}
-                      handleKeyDown={handleKeyDown}
+                      handleKeyDown={(e) =>
+                        e.key === "Enter" && onSaveHistoryToFirebase()
+                      }
                       onChangeAcademicValue={(e) =>
                         handleInputChange(
                           index,
@@ -206,40 +210,61 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                       }
                     />
                   ) : (
-                    <Typography>{item.contentStartDate}</Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                      {item.contentStartDate}
+                    </Typography>
                   )}
                 </Grid>
               </Grid>
-              <Grid item sx={{ display: "flex", margin: "10px 0 10px 0" }}>
-                <Typography>ー</Typography>
+              <Grid
+                item
+                xs={1}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  margin: "10px 0",
+                }}
+              >
+                <Typography sx={{ width: "100%", textAlign: "center" }}>
+                  ー
+                </Typography>
               </Grid>
               <Grid
                 item
+                xs={5.5}
                 sx={{
                   display: "flex",
                   justifyContent: "center",
-                  width: "200px",
-                  margin: "10px 0 10px 0",
+                  width: "100%",
+                  margin: "10px 0",
                 }}
               >
-                <Grid item sx={{ marginRight: "10px" }}>
+                <Grid item xs={8} sx={{ marginRight: "10px" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <AcademicInputComp
+                    <InputFormComp
+                      type={"text"}
                       inputValue={item.contentEnd}
-                      handleKeyDown={handleKeyDown}
+                      handleKeyDown={(e) =>
+                        e.key === "Enter" && onSaveHistoryToFirebase()
+                      }
                       onChangeAcademicValue={(e) =>
                         handleInputChange(index, "contentEnd", e.target.value)
                       }
                     />
                   ) : (
-                    <Typography>{item.contentEnd}</Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                      {item.contentEnd}
+                    </Typography>
                   )}
                 </Grid>
-                <Grid item>
+                <Grid item xs={4}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
-                    <AcademicInputComp
+                    <InputFormComp
+                      type={"month"}
                       inputValue={item.contentEndDate}
-                      handleKeyDown={handleKeyDown}
+                      handleKeyDown={(e) =>
+                        e.key === "Enter" && onSaveHistoryToFirebase()
+                      }
                       onChangeAcademicValue={(e) =>
                         handleInputChange(
                           index,
@@ -249,7 +274,9 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                       }
                     />
                   ) : (
-                    <Typography>{item.contentEndDate}</Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                      {item.contentEndDate}
+                    </Typography>
                   )}
                 </Grid>
               </Grid>

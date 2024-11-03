@@ -224,12 +224,12 @@ const FamilyCardDetail = () => {
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <Typography sx={{ flexShrink: 0, width: "70px" }}>
                       {data.detailTitle}
                     </Typography>
                   </Grid>
-                  <Grid item xs={8}>
+                  <Grid item xs={10}>
                     {changeEditDetail &&
                     selectedIndex === index &&
                     [1, 2, 3, 4, 5].includes(index + 1) ? (
@@ -249,7 +249,9 @@ const FamilyCardDetail = () => {
                         placeholder={data.placeholder}
                       />
                     ) : (
-                      <Typography sx={{ fontSize: "1.2rem" }}>
+                      <Typography
+                        sx={{ fontSize: "1.2rem", textAlign: "center" }}
+                      >
                         {fieldMap[index + 1]?.getUserDetail()}
                       </Typography>
                     )}
@@ -270,11 +272,18 @@ const FamilyCardDetail = () => {
                     ) : (
                       ""
                     )}
-                    {index + 1 === 8 ? <WorkHistory /> : ""}
+                    {index + 1 === 8 ? (
+                      <WorkHistory
+                        selectedIndex={selectedIndex}
+                        detailIndex={index}
+                      />
+                    ) : (
+                      ""
+                    )}
                   </Grid>
                   <Grid
                     item
-                    xs={2}
+                    xs={1}
                     sx={{ display: "flex", justifyContent: "flex-end" }}
                   >
                     {changeEditDetail &&

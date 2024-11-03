@@ -1,16 +1,20 @@
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useRecoilState } from "recoil";
 import { changeQualificationsState } from "@/app/states/changeQualificationsState";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import { workHistoryItemsTypes } from "@/types/workHistoryItemTypes";
 
 type deleteButtonProps = {
   mainCollection: string;
   mainDocId: string;
   collection: string;
   docId: string;
+  // item?: workHistoryItemsTypes;
 };
 
 const DeleteButton: React.FC<deleteButtonProps> = ({
@@ -18,6 +22,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   mainDocId,
   collection,
   docId,
+  // item,
 }) => {
   const [changeQualifications, setChangeQualifications] = useRecoilState(
     changeQualificationsState
@@ -35,7 +40,34 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
             doc(db, mainCollection, mainDocId, collection, docId)
           );
           setChangeQualifications(!changeQualifications);
+          // switch (docId) {
+          //   case "workHistory":
+          //     const workHistoryRef = doc(
+          //       db,
+          //       mainCollection,
+          //       mainDocId,
+          //       collection,
+          //       docId
+          //     );
+          //     const objectToRemove = {
+          //       company: item?.company || "",
+          //       employmentDate: item?.employmentDate || "",
+          //       resignationDate: item?.resignationDate || "",
+          //     };
+          //     console.log(workHistoryRef);
+          //     console.log(objectToRemove);
+          //     try {
+          //       await updateDoc(workHistoryRef, {
+          //         history:
+          //           firebase.firestore.FieldValue.arrayRemove(objectToRemove), // 指定したオブジェクトを削除
+          //       });
+          //     } catch (err) {
+          //       console.error("削除に失敗しました:", err);
+          //     }
+          //     break;
+          // }
           break;
+
         case "todoTitles":
           switch (collection) {
             case "":

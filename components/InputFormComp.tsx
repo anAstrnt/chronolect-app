@@ -1,20 +1,22 @@
 import { Input } from "@mui/material";
 import React from "react";
 
-type AcademicInputCompProps = {
+type InputFormCompProps = {
+  type: string;
   inputValue: string;
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onChangeAcademicValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const AcademicInputComp: React.FC<AcademicInputCompProps> = ({
+const InputFormComp: React.FC<InputFormCompProps> = ({
+  type,
   inputValue,
   handleKeyDown,
   onChangeAcademicValue,
 }) => {
-  console.log(onChangeAcademicValue);
   return (
     <Input
+      type={type}
       value={inputValue}
       onKeyDown={handleKeyDown}
       onChange={onChangeAcademicValue}
@@ -30,4 +32,4 @@ const AcademicInputComp: React.FC<AcademicInputCompProps> = ({
   );
 };
 
-export default AcademicInputComp;
+export default InputFormComp;
