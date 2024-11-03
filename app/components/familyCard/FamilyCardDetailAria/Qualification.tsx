@@ -69,6 +69,7 @@ const Qualification: React.FC<QualificationProps> = ({
   const onAddQualification = async () => {
     if (userId && qualificationYear && qualificationDetail) {
       // 入力フォームに値が入力されていたら追加処理を走らせる
+      console.log("in in in");
       const newQualificationRef = doc(
         collection(db, "familyCard", userId, "detail"),
         "qualification_" + new Date().getTime() // docに登録するIdの頭に"qualification_"をつけ、情報取得のときにフィルターで差別化できるようにしてある
@@ -86,24 +87,28 @@ const Qualification: React.FC<QualificationProps> = ({
 
   // 資格情報を編集したあと、更新する処理。Enterキーを押した際（handleKeyDown）、またはcreateButtonを押した際に発火。
   const onEditQualification = async () => {
-    if (editingQualificationId && qualificationYear && qualificationDetail) {
-      //特定の資格情報の入力フォームが開かれている時のみ処理を走らせる
-      const qualificationRef = doc(
-        db,
-        "familyCard",
-        userId,
-        "detail",
-        editingQualificationId
-      );
-      await updateDoc(qualificationRef, {
-        year: qualificationYear,
-        detail: qualificationDetail,
-      });
-      fetchQualificationDocs(); // データを再取得
-      setEditingQualificationId(null); // 編集モードを解除
-      setQualificationYear(""); // フィールドをクリア
-      setQualificationDetail(""); // フィールドをクリア
-      setChangeEditStart(false); // 入力フォームの表示を終了
+    try {
+      if (editingQualificationId && qualificationYear && qualificationDetail) {
+        //特定の資格情報の入力フォームが開かれている時のみ処理を走らせる
+        const qualificationRef = doc(
+          db,
+          "familyCard",
+          userId,
+          "detail",
+          editingQualificationId
+        );
+        await updateDoc(qualificationRef, {
+          year: qualificationYear,
+          detail: qualificationDetail,
+        });
+        fetchQualificationDocs(); // データを再取得
+        setEditingQualificationId(null); // 編集モードを解除
+        setQualificationYear(""); // フィールドをクリア
+        setQualificationDetail(""); // フィールドをクリア
+        setChangeEditStart(false); // 入力フォームの表示を終了
+      }
+    } catch (err) {
+      console.log("error:", err);
     }
   };
 
@@ -137,7 +142,12 @@ const Qualification: React.FC<QualificationProps> = ({
       setQualificationYear(""); // 入力フィールドをクリア
       setQualificationDetail(""); // 入力フィールドをクリア
     }
-  }, [userId, changeEditStart]);
+  }, [changeEditStart]);
+
+  // 編集モードが終了し、新規の値が入力されていたときは、Firestoreに保存処理をかける
+  useEffect(() => {
+    onAddQualification();
+  }, [changeEditDetail]);
 
   return (
     <Grid container sx={{ width: "100%" }}>
@@ -284,12 +294,12 @@ const Qualification: React.FC<QualificationProps> = ({
         // 大元の編集モードが終了した時にテキストのみを表示している
         qualification.map((item) => (
           <Grid key={item.id} sx={{ width: "100%" }}>
-            <Grid container sx={{ width: "100%" }}>
-              <Grid item sx={{ marginRight: "10px" }}>
-                <Typography>{item.year}</Typography>
+            <Grid container justifyContent="center" sx={{ width: "100%" }}>
+              <Grid item xs={3} sx={{ marginRight: "10px" }}>
+                <Typography textAlign="center">{item.year}</Typography>
               </Grid>
-              <Grid item>
-                <Typography>{item.detail}</Typography>
+              <Grid item xs={8}>
+                <Typography textAlign="left">{item.detail}</Typography>
               </Grid>
             </Grid>
           </Grid>

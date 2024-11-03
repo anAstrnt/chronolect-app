@@ -97,6 +97,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
         history: calcHistoryDates,
         birthday: { birthday },
       });
+      fetchAcademicHistoryFromFirebase();
     } catch (error) {
       console.error("Error saving academic history:", error);
     }
@@ -158,13 +159,69 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
           </Typography>
         </Grid>
       ) : (
-        academicHistoryItems.map((item, index) => (
-          <Grid item key={index} sx={{ width: "100%" }}>
+        <Grid item sx={{ width: "100%" }}>
+          <Grid container sx={{ width: "100%" }}>
             <Grid
+              item
+              sx={{
+                width: "100%",
+                backgroundColor: "rgba(224,224,224,0.25)",
+                borderRadius: "10px",
+                marginBottom: "5px",
+              }}
+            >
+              <Typography textAlign="center">学校名</Typography>
+            </Grid>
+            <Grid item container sx={{ width: "100%" }}>
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  backgroundColor: "rgba(224,224,224,0.25)",
+                  borderRadius: "10px",
+                }}
+              >
+                <Typography textAlign="center">入学</Typography>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  backgroundColor: "rgba(224,224,224,0.25)",
+                  borderRadius: "10px",
+                }}
+              >
+                <Typography textAlign="center">卒業</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          {academicHistoryItems.map((item, index) => (
+            // <Grid item key={index} sx={{ width: "100%" }}>
+            <Grid
+              key={index}
+              item
               container
               justifyContent="space-around"
               sx={{ width: "100%" }}
             >
+              <Grid item xs={12} sx={{ marginRight: "10px" }}>
+                {changeEditDetail && selectedIndex === detailIndex ? (
+                  <InputFormComp
+                    type={"text"}
+                    inputValue={item.school}
+                    handleKeyDown={(e) =>
+                      e.key === "Enter" && onSaveHistoryToFirebase()
+                    }
+                    onChangeAcademicValue={(e) =>
+                      handleInputChange(index, "school", e.target.value)
+                    }
+                  />
+                ) : (
+                  <Typography sx={{ textAlign: "center" }}>
+                    {item.school}
+                  </Typography>
+                )}
+              </Grid>
               <Grid
                 item
                 xs={5.5}
@@ -175,7 +232,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                   margin: "10px 0",
                 }}
               >
-                <Grid item xs={8} sx={{ marginRight: "10px" }}>
+                {/* <Grid item xs={8} sx={{ marginRight: "10px" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
                     <InputFormComp
                       type={"text"}
@@ -192,7 +249,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                       {item.contentStart}
                     </Typography>
                   )}
-                </Grid>
+                </Grid> */}
                 <Grid item xs={4}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
                     <InputFormComp
@@ -239,7 +296,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                   margin: "10px 0",
                 }}
               >
-                <Grid item xs={8} sx={{ marginRight: "10px" }}>
+                {/* <Grid item xs={8} sx={{ marginRight: "10px" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
                     <InputFormComp
                       type={"text"}
@@ -256,7 +313,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                       {item.contentEnd}
                     </Typography>
                   )}
-                </Grid>
+                </Grid> */}
                 <Grid item xs={4}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
                     <InputFormComp
@@ -281,8 +338,9 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        ))
+            // </Grid>
+          ))}
+        </Grid>
       )}
     </Grid>
   );
