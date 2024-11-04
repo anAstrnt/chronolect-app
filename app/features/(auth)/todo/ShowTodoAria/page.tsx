@@ -4,7 +4,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <Grid>
+    <Grid container sx={{ width: "100%" }}>
       <TodoTitleCard />
     </Grid>
   );

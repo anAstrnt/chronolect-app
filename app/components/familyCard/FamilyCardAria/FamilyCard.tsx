@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Avatar,
-  Card,
-  CardActionArea,
-  CardContent,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Avatar, CardContent, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import FamilyCardAdd from "./FamilyCardAdd";
 import { collection, onSnapshot } from "firebase/firestore";
