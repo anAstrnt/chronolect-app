@@ -61,32 +61,14 @@ const page = () => {
 
           {userId ? (
             <Grid item sx={{ width: "100%" }}>
-              <Grid
-                item
-                container
-                alignItems="center"
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  margin: "100px 0 0 150px",
-                  zIndex: openInputSpace ? 1 : 2,
-                  visibility: openInputSpace ? "hidden" : "visible",
-                }}
-              >
-                <Grid item>
-                  <SelectedUserIcon />
-                </Grid>
-              </Grid>
               <Grid container sx={{ width: "100%" }}>
                 <Grid
                   item
                   sx={{
                     position: "absolute",
-                    top: 100,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                     zIndex: openInputSpace ? 2 : 1,
                     visibility: openInputSpace ? "visible" : "hidden",
                   }}
@@ -130,19 +112,36 @@ const page = () => {
               </Grid>
             </Grid>
           ) : (
-            <Grid
-              item
-              sx={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography>
-                Selecting an icon will display information.
-              </Typography>
+            <Grid container justifyContent="center">
+              <Grid
+                item
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: openInputSpace ? 1 : 2,
+                  visibility: openInputSpace ? "hidden" : "visible",
+                }}
+              >
+                <Typography>
+                  Selecting an icon will display information.
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: openInputSpace ? 2 : 1,
+                  visibility: openInputSpace ? "visible" : "hidden",
+                }}
+              >
+                <FamilyCardAdd />
+              </Grid>
             </Grid>
           )}
         </Grid>

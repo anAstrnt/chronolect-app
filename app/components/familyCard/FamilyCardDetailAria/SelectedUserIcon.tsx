@@ -16,6 +16,8 @@ const SelectedUserIcon = () => {
     <Grid
       container
       flexDirection="column"
+      // justifyContent="center"
+      alignItems="center"
       sx={{
         width: "100%",
         height: "100%",
@@ -24,8 +26,8 @@ const SelectedUserIcon = () => {
       <Grid item>
         <Avatar
           sx={{
-            width: 120,
-            height: 120,
+            width: "120px",
+            height: "120px",
             marginBottom: "10px",
           }}
           alt={selectedUser.userName}
@@ -33,7 +35,7 @@ const SelectedUserIcon = () => {
         />
       </Grid>
       <Grid item>
-        <Typography variant="subtitle2" align="center">
+        <Typography variant="subtitle2" textAlign="center">
           {selectedUser.userName}
         </Typography>
       </Grid>

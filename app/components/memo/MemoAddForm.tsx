@@ -1,22 +1,20 @@
 "use client";
 
-import { Grid } from "@mui/material";
+import { Grid, IconButton, Input } from "@mui/material";
 import React, { useEffect } from "react";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  serverTimestamp,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { memoState } from "@/app/states/memoState";
 import { urlState } from "@/app/states/urlState";
 import { previewState } from "@/app/states/previewState";
 import { savePreviewsState } from "@/app/states/savedPreviewsState";
 import { previewData } from "@/types/previewData";
+import AddIcon from "@mui/icons-material/Add";
+import { userIdState } from "@/app/states/userIdState";
 
 const MemoAddForm = () => {
+  const userId = useRecoilValue(userIdState);
   const [memo, setMemo] = useRecoilState(memoState); // NOTE:memoに入力された値を格納。
   const [url, setUrl] = useRecoilState(urlState);
   const [preview, setPreview] = useRecoilState(previewState);
@@ -45,7 +43,7 @@ const MemoAddForm = () => {
       const savePreview = async () => {
         try {
           // Firestore にプレビューデータを保存
-          await addDoc(collection(db, "previews"), preview);
+          await addDoc(collection(db, "memo", userId, "previews"), preview);
           // UIに表示させるpreviewを最新のものに更新する
           setSavedPreviews([...savedPreviews, preview]);
           setPreview(null); // 保存後にプレビューをクリア
@@ -60,20 +58,31 @@ const MemoAddForm = () => {
   }, [preview]);
 
   return (
-    <Grid>
-      <input
+    <Grid
+      container
+      sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+    >
+      <Input
         type="text"
         value={memo}
         onChange={(e) => setMemo(e.target.value)}
         placeholder="Enter a memo"
+        sx={{ width: "200px", marginRight: "30px" }}
       />
-      <input
+      <Input
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="Enter a URL"
+        sx={{ width: "500px", marginRight: "30px" }}
       />
-      <button onClick={fetchPreview}>Show Link Preview</button>
+      <IconButton
+        onClick={fetchPreview}
+        disabled={!memo || !url}
+        sx={{ backgroundColor: "rgba(255,255,255,0.7)" }}
+      >
+        <AddIcon />
+      </IconButton>
     </Grid>
   );
 };

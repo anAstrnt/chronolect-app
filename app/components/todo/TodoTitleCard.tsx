@@ -140,73 +140,96 @@ export const TodoTitleCard = () => {
   };
 
   return (
-    <Grid sx={{ display: "flex" }}>
+    <Grid
+      sx={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}
+    >
       {todoTitles.map((title, index) => (
-        <Card sx={{ maxWidth: 300, margin: "10px" }} key={title.titleId}>
-          <CardContent>
-            <Grid sx={{ display: "flex", alignItems: "center" }}>
-              <Typography variant="h5" component="div">
-                {title.title}
-              </Typography>
-              <DeleteButton
-                mainCollection={"todos"}
-                mainDocId={userId}
-                collection={"title"}
-                docId={title.titleId}
-              />
-            </Grid>
-            <form onSubmit={(e) => onSubmitTodos(e, index)}>
-              <TextField
-                id="todo"
-                label="Todo"
-                variant="standard"
-                value={todo[title.titleId] || ""}
-                onChange={(e) => onChangeTodos(e, title.titleId)}
-              />
-              <IconButton type="submit" disabled={!todo[title.titleId]}>
-                <AddIcon />
-              </IconButton>
-            </form>
-            {todosMap.get(title.titleId)?.map((todo) => (
-              <Grid
-                sx={{ display: "flex", alignItems: "center" }}
-                key={todo.todoId}
-              >
-                <Typography
-                  sx={{
-                    textDecoration: todo.isDone ? "line-through" : "none",
-                    color: todo.isDone ? "text.disabled" : "text.primary",
-                  }}
-                >
-                  {todo.todo}
+        <Grid
+          item
+          key={title.titleId}
+          sx={{
+            flex: "0 1 auto",
+            display: "flex", // Flexboxを使用
+            flexDirection: "column",
+          }}
+        >
+          <Card
+            sx={{
+              minWidth: 200,
+              maxWidth: 500,
+              margin: "10px",
+            }}
+          >
+            <CardContent sx={{ flexGrow: 1 }}>
+              <Grid sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="h5" component="div">
+                  {title.title}
                 </Typography>
-                <IconButton
-                  type="button"
-                  sx={{
-                    borderColor: "rgba(0,0,0,0.8)",
-                    "&:hover": {
-                      cursor: "pointer",
-                      background: "rgba(61,196,59,0.2)",
-                    },
-                  }}
-                  onClick={(e) =>
-                    onChangeDoneTodo(e, title.titleId, todo.todoId, todo.isDone)
-                  }
-                >
-                  <DoneIcon />
-                </IconButton>
                 <DeleteButton
                   mainCollection={"todos"}
                   mainDocId={userId}
                   collection={"title"}
                   docId={title.titleId}
-                  collection2={"todo"}
-                  docId2={todo.todoId}
                 />
               </Grid>
-            ))}
-          </CardContent>
-        </Card>
+              <form onSubmit={(e) => onSubmitTodos(e, index)}>
+                <TextField
+                  id="todo"
+                  label="Todo"
+                  variant="standard"
+                  value={todo[title.titleId] || ""}
+                  onChange={(e) => onChangeTodos(e, title.titleId)}
+                />
+                <IconButton type="submit" disabled={!todo[title.titleId]}>
+                  <AddIcon />
+                </IconButton>
+              </form>
+              {todosMap.get(title.titleId)?.map((todo) => (
+                <Grid
+                  sx={{ display: "flex", alignItems: "center" }}
+                  key={todo.todoId}
+                >
+                  <Typography
+                    sx={{
+                      textDecoration: todo.isDone ? "line-through" : "none",
+                      color: todo.isDone ? "text.disabled" : "text.primary",
+                    }}
+                  >
+                    {todo.todo}
+                  </Typography>
+                  <IconButton
+                    type="button"
+                    sx={{
+                      borderColor: "rgba(0,0,0,0.8)",
+                      "&:hover": {
+                        cursor: "pointer",
+                        background: "rgba(61,196,59,0.2)",
+                      },
+                    }}
+                    onClick={(e) =>
+                      onChangeDoneTodo(
+                        e,
+                        title.titleId,
+                        todo.todoId,
+                        todo.isDone
+                      )
+                    }
+                  >
+                    <DoneIcon />
+                  </IconButton>
+                  <DeleteButton
+                    mainCollection={"todos"}
+                    mainDocId={userId}
+                    collection={"title"}
+                    docId={title.titleId}
+                    collection2={"todo"}
+                    docId2={todo.todoId}
+                  />
+                </Grid>
+              ))}
+            </CardContent>
+          </Card>
+        </Grid>
       ))}
     </Grid>
   );

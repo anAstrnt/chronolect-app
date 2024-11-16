@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <RecoilRoot>
       {/* ルートページにアクセスしたときに認証の有無を判断し、認証されている場合はfeaturesにリダイレクトし、認証されていない場合はSignInのページを表示させる */}
-      <Grid sx={{ width: "100%" }}>
+      <Grid container sx={{ width: "100%", height: "100%" }}>
         {user === null ? <SignIn /> : <Loading />}
       </Grid>
     </RecoilRoot>

@@ -28,22 +28,25 @@ const layout = ({ children }: childrenProps) => {
   }, []);
 
   return (
-    <RecoilRoot>
-      <AuthCheck>
-        <Grid
-          container
-          sx={{
-            width: "100%",
-            minHeight: "100vh",
-            backgroundImage: `${background}`,
-          }}
-        >
-          <Grid item sx={{ width: "100%" }}>
-            {children}
+    <Grid container sx={{ width: "100%", height: "100%" }}>
+      <RecoilRoot>
+        <AuthCheck>
+          <Grid
+            container
+            sx={{
+              width: "100%",
+              height: "auto",
+              minHeight: "100%",
+              backgroundImage: `${background}`,
+            }}
+          >
+            <Grid item sx={{ width: "100%", height: "auto" }}>
+              {children}
+            </Grid>
           </Grid>
-        </Grid>
-      </AuthCheck>
-    </RecoilRoot>
+        </AuthCheck>
+      </RecoilRoot>
+    </Grid>
   );
 };
 

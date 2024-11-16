@@ -13,58 +13,56 @@ import SignOut from "@/app/components/SignOut";
 
 const Page = () => {
   return (
-    <Grid sx={{ position: "absolute", width: "100%" }}>
-      <Grid
-        sx={{
-          position: "relative",
-          top: "40px",
-          left: "150px",
-        }}
-      >
+    <Grid
+      container
+      flexDirection="column"
+      sx={{ width: "100%", height: "100%" }}
+    >
+      <Grid item sx={{ position: "absolute", zIndex: 2 }}>
         <SignOut />
       </Grid>
       <Grid
-        sx={{
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          flexWrap: "wrap",
-          alignItems: "center",
-          marginTop: "200px",
-        }}
+        item
+        container
+        alignItems="center"
+        justifyContent="center"
+        sx={{ width: "100%", height: "100%" }}
       >
         {MenuData.map((data) => (
-          <Card
-            key={data.link}
-            sx={{
-              maxWidth: 345,
-              margin: "20px",
-              padding: "10px",
-              width: "230px",
-            }}
-          >
-            <CardActionArea
-              href={data.link}
+          <Grid item key={data.link}>
+            <Card
               sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
+                maxWidth: 345,
+                margin: "20px",
+                padding: "10px",
+                width: "230px",
               }}
             >
-              <CardContent>
-                {React.cloneElement(data.icon, { sx: { fontSize: 70, mb: 2 } })}
-              </CardContent>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {data.title}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {data.detail}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+              <CardActionArea
+                href={data.link}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <CardContent>
+                  {React.cloneElement(data.icon, {
+                    sx: { fontSize: 70, mb: 2 },
+                  })}
+                </CardContent>
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {data.title}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {data.detail}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
         ))}
       </Grid>
     </Grid>

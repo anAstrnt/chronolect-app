@@ -18,11 +18,18 @@ const page: React.FC<HeaderProps> = ({ title }) => {
         width: "100%",
         height: "50px",
         background: "rgba(0,0,0,0.3)",
+        zIndex: 2000,
       }}
     >
       <Grid
         container
-        sx={{ width: "100%", position: "absolute", left: "15px", top: "5px" }}
+        sx={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          left: "15px",
+          top: "5px",
+        }}
       >
         <BackToPageButton />
       </Grid>
