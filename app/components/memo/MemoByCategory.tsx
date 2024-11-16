@@ -10,10 +10,11 @@ import { addCategoryState } from "@/app/states/addCategoryState";
 import { db } from "@/libs/firebase";
 
 const MemoByCategory = () => {
-  const [categorys, setCategorys] = useRecoilState(memoCategorysState);
-  const addCategory = useRecoilValue(addCategoryState);
+  const [categorys, setCategorys] = useRecoilState(memoCategorysState); // Firestoreから取得したカテゴリー情報を格納し、画面上に表示させるためのステート
+  const addCategory = useRecoilValue(addCategoryState); // <CategoryAddForm/>でカテゴリーが追加されたらFirestoreからの取得処理が走るようにするためのステート
   const userId = useRecoilValue(userIdState);
 
+  // NOTE: Firestoreからcategoryデータを取ってくる処理
   const fetchCategorys = async () => {
     try {
       const memoCategoryRef = collection(db, "memo", userId, "category");
@@ -28,7 +29,6 @@ const MemoByCategory = () => {
       console.log("error:", error);
     }
   };
-
   useEffect(() => {
     fetchCategorys();
   }, [userId, addCategory]);

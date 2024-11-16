@@ -15,15 +15,17 @@ type categorySelectType = {
 
 const CategorySelect: React.FC<categorySelectType> = ({ previewId }) => {
   const userId = useRecoilValue(userIdState);
-  const [choiceCategoryInValue, setChoiceCategoryInValue] = useState("");
-  const categorys = useRecoilValue(memoCategorysState);
+  const [choiceCategoryInValue, setChoiceCategoryInValue] = useState(""); // セレクターで選択したカテゴリーを格納
+  const categorys = useRecoilValue(memoCategorysState); // このステートを使い、Firestoreに登録されているカテゴリーをセレクターに表示
   const [changePreviews, setChangePreviews] =
-    useRecoilState(changePreviewsState);
+    useRecoilState(changePreviewsState); // <MemoSlider/>内で最新のメモデータを取ってくる
 
+  // NOTE:<MenuItem value={category.categoryName}>のvalueに設定した値を、Previewsのcategoryに登録するため、選択したカテゴリをchoiceCategoryInValueステートに格納
   const choiceCategory = (event: SelectChangeEvent) => {
     setChoiceCategoryInValue(event.target.value);
   };
 
+  // NOTE: choiceCategoryInValueに値が入ったら、FirestoreのPreviewにもカテゴリーのデータを追加する
   const changeMemoCategoryToFirebase = async () => {
     if (choiceCategoryInValue) {
       try {
@@ -35,7 +37,6 @@ const CategorySelect: React.FC<categorySelectType> = ({ previewId }) => {
       }
     }
   };
-
   useEffect(() => {
     changeMemoCategoryToFirebase();
   }, [choiceCategoryInValue]);

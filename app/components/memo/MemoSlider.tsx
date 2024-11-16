@@ -33,8 +33,8 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
   const glideContainerRef = useRef<HTMLDivElement | null>(null);
   const changePreviews = useRecoilValue(changePreviewsState);
 
+  // NOTE: Firestore から保存されたPreviewデータを取得
   useEffect(() => {
-    // Firestore から保存されたプレビューデータを取得
     const unsubscribe = onSnapshot(
       collection(db, "memo", userId, "previews"),
       (snapshot) => {
@@ -54,6 +54,7 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
     return () => unsubscribe();
   }, [userId, changePreviews]);
 
+  // NOTE: Glid.jsでスライダーを実装
   useEffect(() => {
     if (savedPreviews.length > 0 && glideContainerRef.current) {
       // glideContainerRefの参照を使いどのHTMLを操作するか指定しGliderライブラリに渡すことで、ライブラリがその要素の中でスライダーを動かすことができる
@@ -65,6 +66,7 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
       glideRef.current.mount();
     }
     return () => {
+      // userIdが切り替わるとき、glideRefのデータがなかったり、前のRefが残っているとエラーが出るため、if文とnull代入をする
       if (glideRef.current) {
         glideRef.current.destroy();
         glideRef.current = null;

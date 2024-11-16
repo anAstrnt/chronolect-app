@@ -1,4 +1,4 @@
-import { Grid, IconButton, Input, TextField } from "@mui/material";
+import { Grid, IconButton, TextField } from "@mui/material";
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -10,9 +10,10 @@ import { addCategoryState } from "@/app/states/addCategoryState";
 
 const CategoryAddForm = () => {
   const userId = useRecoilValue(userIdState); // 選択されたUserのIdを取ってくるステート
-  const [addCategory, setAddCategory] = useRecoilState(addCategoryState);
-  const [categoryName, setCategoryName] = useRecoilState(categoryNameState);
+  const [addCategory, setAddCategory] = useRecoilState(addCategoryState); // カテゴリーがFirestoreに追加された時に、booleanをフックに<MemoByCategory/>のfetchCategorys();でFirestoreから最新のカテゴリーデータを取ってくる
+  const [categoryName, setCategoryName] = useRecoilState(categoryNameState); // TextFieldに入力されたデータを格納するステート
 
+  // NOTE: Firestoreにカテゴリーデータを保存する処理
   const addCategoryNameToFirebase = async () => {
     try {
       const memoCategoryRef = doc(collection(db, "memo", userId, "category"));
@@ -32,7 +33,6 @@ const CategoryAddForm = () => {
           label="Add Category"
           variant="outlined"
           value={categoryName}
-          // placeholder="Category Add"
           onChange={(e) => setCategoryName(e.target.value)}
         />
         <IconButton

@@ -15,12 +15,12 @@ import { userIdState } from "@/app/states/userIdState";
 
 const MemoAddForm = () => {
   const userId = useRecoilValue(userIdState);
-  const [memo, setMemo] = useRecoilState(memoState); // NOTE:memoに入力された値を格納。
+  const [memo, setMemo] = useRecoilState(memoState);
   const [url, setUrl] = useRecoilState(urlState);
-  const [preview, setPreview] = useRecoilState(previewState);
-  const [savedPreviews, setSavedPreviews] = useRecoilState(savePreviewsState);
+  const [preview, setPreview] = useRecoilState(previewState); // api/previewから取ってきたURLのプレビューデータとメモ、タイムスタンプを格納する単発ステート。ついでに、Firestoreへの保存処理の発火装置。
+  const [savedPreviews, setSavedPreviews] = useRecoilState(savePreviewsState); // Firestoreに保存した複数のpreviewを格納しているステート
 
-  // クライアントからサーバーにリクエストを送信し、返ってきたレスポンスを状態として管理して、画面上に表示させるための処理
+  // NOTE: クライアントからサーバーにリクエストを送信し、返ってきたレスポンスを状態として管理して、画面上に表示させるための処理
   const fetchPreview = async () => {
     try {
       // /api/previewのエンドポイントにエンコードしたURLを送信し、レスポンスを受け取る
@@ -37,7 +37,7 @@ const MemoAddForm = () => {
     }
   };
 
-  // previewのstateがセットされたタイミングで、firestoreにpreviewの情報を保存する
+  // NOTE: previewのstateがセットされたタイミングで、firestoreにpreviewの情報を保存する
   useEffect(() => {
     if (preview) {
       const savePreview = async () => {
