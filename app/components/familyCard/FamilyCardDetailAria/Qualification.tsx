@@ -42,18 +42,16 @@ const Qualification: React.FC<QualificationProps> = ({
   const fetchQualificationDocs = async () => {
     if (!userId) return;
     const QualificationRef = query(
-      collection(db, "familyCard", userId, "detail"),
+      collection(db, "familyCard", userId, "qualification"),
       orderBy("year") // 年月が若い順に並べ替え
     );
     try {
       const qualificationRefSnapshot = await getDocs(QualificationRef);
-      const qualificationRefs = qualificationRefSnapshot.docs
-        .filter((doc) => doc.id.startsWith("qualification_")) // IDがqualification_で始まるドキュメントをフィルタリング
-        .map((doc) => ({
-          id: doc.id,
-          year: doc.data().year,
-          detail: doc.data().detail,
-        }));
+      const qualificationRefs = qualificationRefSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        year: doc.data().year,
+        detail: doc.data().detail,
+      }));
       setQualification(qualificationRefs);
     } catch (error) {
       console.error(error);
@@ -69,10 +67,8 @@ const Qualification: React.FC<QualificationProps> = ({
   const onAddQualification = async () => {
     if (userId && qualificationYear && qualificationDetail) {
       // 入力フォームに値が入力されていたら追加処理を走らせる
-      console.log("in in in");
       const newQualificationRef = doc(
-        collection(db, "familyCard", userId, "detail"),
-        "qualification_" + new Date().getTime() // docに登録するIdの頭に"qualification_"をつけ、情報取得のときにフィルターで差別化できるようにしてある
+        collection(db, "familyCard", userId, "qualification")
       );
       await setDoc(newQualificationRef, {
         year: qualificationYear,
@@ -94,7 +90,7 @@ const Qualification: React.FC<QualificationProps> = ({
           db,
           "familyCard",
           userId,
-          "detail",
+          "qualification",
           editingQualificationId
         );
         await updateDoc(qualificationRef, {
@@ -146,7 +142,7 @@ const Qualification: React.FC<QualificationProps> = ({
 
   // 編集モードが終了し、新規の値が入力されていたときは、Firestoreに保存処理をかける
   useEffect(() => {
-    onAddQualification();
+    handleSave();
   }, [changeEditDetail]);
 
   return (
@@ -241,7 +237,7 @@ const Qualification: React.FC<QualificationProps> = ({
                     <DeleteButton
                       mainCollection={"familyCard"}
                       mainDocId={userId}
-                      collection={"detail"}
+                      collection={"qualification"}
                       docId={item.id}
                     />
                   </Grid>

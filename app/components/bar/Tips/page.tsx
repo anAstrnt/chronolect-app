@@ -30,8 +30,6 @@ const page: React.FC<tipsCompProps> = ({ title }) => {
     setOpen(!open);
   };
 
-  console.log(title);
-
   const tipsDetail = () => {
     if (title === "Family Card") {
       return [
