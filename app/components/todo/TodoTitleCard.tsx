@@ -172,15 +172,31 @@ export const TodoTitleCard = () => {
                   docId={title.titleId}
                 />
               </Grid>
-              <form onSubmit={(e) => onSubmitTodos(e, index)}>
+              <form
+                onSubmit={(e) => onSubmitTodos(e, index)}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <TextField
                   id="todo"
                   label="Todo"
                   variant="standard"
                   value={todo[title.titleId] || ""}
                   onChange={(e) => onChangeTodos(e, title.titleId)}
+                  fullWidth
                 />
-                <IconButton type="submit" disabled={!todo[title.titleId]}>
+                <IconButton
+                  type="submit"
+                  disabled={!todo[title.titleId]}
+                  sx={{
+                    width: "30px",
+                    height: "30px",
+                    backgroundColor: "rgba(0,0,0,0.1)",
+                  }}
+                >
                   <AddIcon />
                 </IconButton>
               </form>

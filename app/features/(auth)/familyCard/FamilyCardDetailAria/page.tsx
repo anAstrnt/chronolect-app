@@ -15,6 +15,7 @@ import { userDetailState } from "@/app/states/userDetailState";
 import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qualification";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
+import DeleteButton from "@/components/DeleteButton";
 
 type fieldMap = {
   [key: number]: {
@@ -187,6 +188,22 @@ const FamilyCardDetail = () => {
         padding: "80px 20px 20px 40px",
       }}
     >
+      <Grid
+        item
+        sx={{
+          position: "absolute",
+          top: "80px",
+          right: "50px",
+          backgroundColor: "rgba(255,255,255,0.3)",
+        }}
+      >
+        <DeleteButton
+          mainCollection="familyCard"
+          mainDocId={userId}
+          collection="detail"
+          docId={userDetail.detailId}
+        />
+      </Grid>
       <Grid
         container
         direction="row"

@@ -42,6 +42,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
     try {
       // TODO：familyCardのdeleteを調整する
       if (mainCollection === "familyCard") {
+        // if()
         await deleteDoc(doc(db, mainCollection, mainDocId, collection, docId));
         setChangeQualifications(!changeQualifications);
       }

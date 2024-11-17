@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import FamilyCardDetailAria from "./FamilyCardDetailAria/page";
-import FamilyCardMenu from "./FamilyCardMenu/page";
-import FamilyCardHeader from "./FamilyCardHeader/page";
 import { Grid } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
@@ -14,6 +12,8 @@ import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCard
 import BackToPageButton from "@/components/BackToPageButton";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import SelectedUserIcon from "@/app/components/familyCard/FamilyCardDetailAria/SelectedUserIcon";
+import Header from "@/app/components/bar/Header/page";
+import Side from "@/app/components/bar/Side/page";
 
 const page: React.FC = () => {
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
@@ -51,9 +51,7 @@ const page: React.FC = () => {
       sx={{
         width: "100%",
         height: "100%",
-        // TODO: 色々修正が終わったらコメントアウトを外す
         overflow: "auto",
-        // overflow: "hidden",
         position: "absolute",
       }}
     >
@@ -73,7 +71,7 @@ const page: React.FC = () => {
               zIndex: 1000,
             }}
           >
-            <FamilyCardHeader />
+            <Header title={"Family Card"} />
           </Grid>
 
           <Grid item sx={{ flexGrow: 1 }}>
@@ -89,7 +87,7 @@ const page: React.FC = () => {
                   zIndex: 900,
                 }}
               >
-                <FamilyCardMenu />
+                <Side />
               </Grid>
 
               <Grid
@@ -153,7 +151,15 @@ const page: React.FC = () => {
           alignItems="center"
           sx={{ width: "100%", height: "100%" }}
         >
-          <Grid item sx={{ marginRight: "150px" }}>
+          <Grid
+            item
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "200px",
+              transform: "translate(-50%,0)",
+            }}
+          >
             <BackToPageButton />
           </Grid>
           <Grid

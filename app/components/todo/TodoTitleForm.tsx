@@ -32,9 +32,20 @@ const TodoTitleForm = () => {
   return (
     <Grid
       container
-      sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+      sx={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+      }}
     >
-      <form onSubmit={onSubmitTodoTitle}>
+      <form
+        onSubmit={onSubmitTodoTitle}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <TextField
           id="todo-title"
           label="Todo Title"
@@ -45,7 +56,11 @@ const TodoTitleForm = () => {
             onChangeTodoTitle(e)
           }
         />
-        <IconButton type="submit" disabled={!todoTitle ? true : false}>
+        <IconButton
+          type="submit"
+          disabled={!todoTitle ? true : false}
+          sx={{ backgroundColor: "rgba(255,255,255,0.7)", marginLeft: "30px" }}
+        >
           <AddIcon />
         </IconButton>
       </form>

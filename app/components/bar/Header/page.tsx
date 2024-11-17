@@ -3,6 +3,7 @@
 import BackToPageButton from "@/components/BackToPageButton";
 import { Grid, Typography } from "@mui/material";
 import React from "react";
+import Tips from "@/app/components/bar/Tips/page";
 
 type HeaderProps = {
   title: string;
@@ -22,10 +23,9 @@ const page: React.FC<HeaderProps> = ({ title }) => {
       }}
     >
       <Grid
+        item
         container
         sx={{
-          width: "100%",
-          height: "100%",
           position: "absolute",
           left: "15px",
           top: "5px",
@@ -33,15 +33,26 @@ const page: React.FC<HeaderProps> = ({ title }) => {
       >
         <BackToPageButton />
       </Grid>
-      <Grid item>
-        <Typography sx={{ letterSpacing: "8px", color: "white" }}>
-          Chronolect
-        </Typography>
-      </Grid>
-      <Grid container sx={{ position: "absolute", left: "80px", top: "12px" }}>
-        <Typography sx={{ letterSpacing: "8px", color: "white" }}>
-          {title}
-        </Typography>
+      <Grid
+        item
+        container
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ margin: "0 100px" }}
+      >
+        <Grid item>
+          <Typography sx={{ letterSpacing: "8px", color: "white" }}>
+            {title}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography sx={{ letterSpacing: "8px", color: "white" }}>
+            Chronolect
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Tips title={title} />
+        </Grid>
       </Grid>
     </Grid>
   );
