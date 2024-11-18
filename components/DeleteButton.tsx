@@ -1,15 +1,9 @@
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
-import {
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
+import { deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { changeQualificationsState } from "@/app/states/changeQualificationsState";
 import { collection as collectionRef } from "firebase/firestore";
 import "firebase/compat/firestore";
@@ -17,9 +11,6 @@ import { addCategoryState } from "@/app/states/addCategoryState";
 import { changePreviewsState } from "@/app/states/changePreviewsState";
 import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";
 import { userIdState } from "@/app/states/userIdState";
-import { fetchFamilyCardState } from "@/app/states/fetchFamilyCardState";
-import { hasUserDataState } from "@/app/states/hasUserDataState";
-// import { fetchAcademicHistoryState } from "@/app/states/fetchAcdemicHistoryState";
 
 type deleteButtonProps = {
   mainCollection: string;
@@ -48,13 +39,6 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   const [fetchWorkHistory, setFetchWorkHistory] = useRecoilState(
     fetchWorkHistoryState
   );
-  // const [fetchFamilyCard, setFetchFamilyCard] =
-  //   useRecoilState(fetchFamilyCardState);
-  // const setHasUserData = useSetRecoilState(hasUserDataState);
-
-  // const [fetchAcademicHistory, setFetchAcademicHistory] = useRecoilState(
-  //   fetchAcademicHistoryState
-  // );
 
   const delelteAction = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -95,10 +79,6 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
           const userDoc = await getDoc(doc(db, mainCollection, mainDocId));
           await deleteDoc(userDoc.ref);
           window.location.reload();
-          // setFetchFamilyCard(!fetchFamilyCard);
-          // setChangeQualifications(!changeQualifications);
-          // setFetchWorkHistory(!fetchWorkHistory);
-          // setFetchAcademicHistory(!fetchAcademicHistory);
         }
         if (collection === "qualification") {
           await deleteDoc(

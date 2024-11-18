@@ -6,13 +6,7 @@ import React, { useEffect, useState } from "react";
 import AcademicHistory from "../../../../components/familyCard/FamilyCardDetailAria/AcademicHistory";
 import WorkHistory from "../../../../components/familyCard/FamilyCardDetailAria/WorkHistory";
 import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
-import {
-  collection,
-  doc,
-  getDocs,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import InputButton from "@/components/InputButton";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -22,8 +16,6 @@ import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qual
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
 import DeleteButton from "@/components/DeleteButton";
-import { hasUserDataState } from "@/app/states/hasUserDataState";
-import { fetchFamilyCardState } from "@/app/states/fetchFamilyCardState";
 
 type fieldMap = {
   [key: number]: {
@@ -33,7 +25,7 @@ type fieldMap = {
 };
 
 const FamilyCardDetail = () => {
-  const [userId, setUserId] = useRecoilState(userIdState);
+  const userId = useRecoilValue(userIdState);
   const [userDetail, setUserDetail] = useRecoilState(userDetailState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
@@ -41,7 +33,6 @@ const FamilyCardDetail = () => {
   const setBirthday = useSetRecoilState(birthdayState);
   const [changeBirthday, setChangeBirthday] = useState<boolean>();
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
-  const fetchFamilyCard = useRecoilValue(fetchFamilyCardState);
 
   // FamilyCardDetailに表示する各種のデータを使いまわしたいので、オブジェクトとして管理
   // JSXで値をmapで回しているので、indexを取得し、それぞれのfieldに紐づけられるようにしている。
@@ -186,10 +177,6 @@ const FamilyCardDetail = () => {
   useEffect(() => {
     setChangeEditDetail(false);
   }, [userId]);
-
-  useEffect(() => {
-    setUserId("");
-  }, [fetchFamilyCard]);
 
   return (
     <Grid

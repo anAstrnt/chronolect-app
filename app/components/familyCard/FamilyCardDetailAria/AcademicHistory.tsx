@@ -90,8 +90,6 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
           return dateA - dateB;
         });
 
-        console.log(historyData);
-
         setAcademicHistoryItems(historyData);
         setFetchHistoryItems(historyData); // 初期データとして保持
       } else {

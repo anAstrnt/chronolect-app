@@ -14,7 +14,6 @@ import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import SelectedUserIcon from "@/app/components/familyCard/FamilyCardDetailAria/SelectedUserIcon";
 import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
-import { fetchFamilyCardState } from "@/app/states/fetchFamilyCardState";
 
 const page: React.FC = () => {
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
