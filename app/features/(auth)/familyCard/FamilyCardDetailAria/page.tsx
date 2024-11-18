@@ -6,7 +6,13 @@ import React, { useEffect, useState } from "react";
 import AcademicHistory from "../../../../components/familyCard/FamilyCardDetailAria/AcademicHistory";
 import WorkHistory from "../../../../components/familyCard/FamilyCardDetailAria/WorkHistory";
 import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import InputButton from "@/components/InputButton";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -16,6 +22,8 @@ import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qual
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
 import DeleteButton from "@/components/DeleteButton";
+import { hasUserDataState } from "@/app/states/hasUserDataState";
+import { fetchFamilyCardState } from "@/app/states/fetchFamilyCardState";
 
 type fieldMap = {
   [key: number]: {
@@ -25,14 +33,15 @@ type fieldMap = {
 };
 
 const FamilyCardDetail = () => {
-  const userId = useRecoilValue(userIdState);
+  const [userId, setUserId] = useRecoilState(userIdState);
   const [userDetail, setUserDetail] = useRecoilState(userDetailState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
   );
   const setBirthday = useSetRecoilState(birthdayState);
-
+  const [changeBirthday, setChangeBirthday] = useState<boolean>();
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
+  const fetchFamilyCard = useRecoilValue(fetchFamilyCardState);
 
   // FamilyCardDetailに表示する各種のデータを使いまわしたいので、オブジェクトとして管理
   // JSXで値をmapで回しているので、indexを取得し、それぞれのfieldに紐づけられるようにしている。
@@ -114,6 +123,7 @@ const FamilyCardDetail = () => {
           [selectedField.field]: currentValue,
         };
         setUserDetail(updateUserDetail);
+        setChangeBirthday(!changeBirthday);
       }
     }
 
@@ -171,11 +181,15 @@ const FamilyCardDetail = () => {
     if (userDetail?.birthday) {
       setBirthday(userDetail.birthday);
     }
-  }, [userDetail?.birthday]);
+  }, [changeBirthday]);
 
   useEffect(() => {
     setChangeEditDetail(false);
   }, [userId]);
+
+  useEffect(() => {
+    setUserId("");
+  }, [fetchFamilyCard]);
 
   return (
     <Grid
@@ -184,8 +198,8 @@ const FamilyCardDetail = () => {
       alignItems="center"
       sx={{
         width: "100%",
-        height: "100vh",
-        padding: "80px 20px 20px 40px",
+        height: userId ? "auto" : "100vh",
+        padding: "80px 20px",
       }}
     >
       <Grid
@@ -194,7 +208,6 @@ const FamilyCardDetail = () => {
           position: "absolute",
           top: "80px",
           right: "50px",
-          backgroundColor: "rgba(255,255,255,0.3)",
         }}
       >
         <DeleteButton
@@ -210,6 +223,7 @@ const FamilyCardDetail = () => {
         justifyContent="center"
         sx={{
           width: "50%",
+          height: userId ? "auto" : "100%",
           maxWidth: "1000px",
           margin: "auto",
         }}
@@ -329,7 +343,9 @@ const FamilyCardDetail = () => {
               alignItems: "center",
             }}
           >
-            <Typography>Selecting an icon will display information.</Typography>
+            <Typography sx={{ textAlign: "center" }}>
+              Selecting an icon will display information.
+            </Typography>
           </Grid>
         )}
       </Grid>

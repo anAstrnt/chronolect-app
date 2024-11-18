@@ -6,7 +6,7 @@ import { userNameState } from "@/app/states/userNameState";
 import FamilyCardAddButton from "@/components/FamilyCardAddButton";
 import ImageUpload from "@/components/ImageUpload";
 import { db, storage } from "@/libs/firebase";
-import { Grid, TextField, Typography } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
@@ -85,6 +85,7 @@ const FamilyCardAdd: React.FC = () => {
     setAvatar("");
     setUserName("");
     setOpenInputSpace(false);
+    window.location.reload();
   };
 
   return (

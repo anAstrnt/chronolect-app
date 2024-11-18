@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Grid, IconButton, Input, Typography } from "@mui/material";
+import { Grid, Input, Typography } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { workHistoryItemsState } from "@/app/states/workHistoryItemsState";
 import InputFormComp from "@/components/InputFormComp";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  setDoc,
-} from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { workHistoryItemsTypes } from "@/types/workHistoryItemTypes";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteButton from "@/components/DeleteButton";
+import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";
 
 type workHistoryProps = {
   selectedIndex: number | undefined;
@@ -27,6 +21,7 @@ const WorkHistory: React.FC<workHistoryProps> = ({
   detailIndex,
 }) => {
   const userId = useRecoilValue(userIdState); // 選択されたUserのIdを取ってくるステート
+  const fetchWorkHistory = useRecoilValue(fetchWorkHistoryState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
   ); // 編集モードを切り替えをするステート
@@ -102,24 +97,55 @@ const WorkHistory: React.FC<workHistoryProps> = ({
       // 既存のデータを更新する場合
       await Promise.all(
         workHistoryItems.map(async (item) => {
-          // 既存のデータを更新
-          const docRef = doc(workHistoryCollectionRef, item.id);
-          await setDoc(docRef, {
-            company: item.company,
-            employmentDate: item.employmentDate,
-            resignationDate: item.resignationDate,
-          });
+          if (item.id) {
+            // 既存のデータを更新
+            const docRef = doc(workHistoryCollectionRef, item.id);
+            await setDoc(docRef, {
+              company: item.company,
+              employmentDate: item.employmentDate,
+              resignationDate: item.resignationDate,
+            });
+          }
         })
       );
 
-      // 新しいデータを追加する場合
+      // 新規のデータ登録をする場合
+      if (workHistoryItems.length === 0) {
+        // Enterで保存しようとした場合
+        if (workHistoryItems[0]) {
+          await addDoc(workHistoryCollectionRef, workHistoryItems[0]);
+        }
+        // 追加ボタンで保存しようとした場合
+        if (company || employmentDate || resignationDate) {
+          const newEntry = {
+            company: company || "",
+            employmentDate: employmentDate || "",
+            resignationDate: resignationDate || "",
+          };
+          await addDoc(workHistoryCollectionRef, newEntry);
+          setCompany("");
+          setEmploymentDate("");
+          setResignationDate("");
+          fetchWorkHistoryFromFirebase();
+          return;
+        }
+      }
+
+      // すでにデータが有る状態で、新しいデータを追加する場合(Enterで保存しようとした場合)
+      if (workHistoryItems.length > 0) {
+        const lastItem = workHistoryItems[workHistoryItems.length - 1];
+        if (!lastItem.id) {
+          await addDoc(workHistoryCollectionRef, lastItem);
+        }
+      }
+
+      // すでにデータが有る状態で、新しいデータを追加する場合(追加ボタンで保存しようとした場合)
       if (company || employmentDate || resignationDate) {
         const newEntry = {
           company: company || "",
           employmentDate: employmentDate || "",
           resignationDate: resignationDate || "",
         };
-
         await addDoc(workHistoryCollectionRef, newEntry);
       }
 
@@ -135,7 +161,10 @@ const WorkHistory: React.FC<workHistoryProps> = ({
 
   // 編集モード解除時に、Firestoreへの保存処理かける。
   useEffect(() => {
-    saveToFirestore();
+    const lastItem = workHistoryItems[workHistoryItems.length - 1];
+    if (!lastItem?.id || company || employmentDate || resignationDate) {
+      saveToFirestore();
+    }
   }, [changeEditDetail]);
 
   // 値の編集フォームや新規入力フォームで編集したあとEnterキーを押した際、新しい値でworkHistoryItemsを更新する処理
@@ -156,22 +185,12 @@ const WorkHistory: React.FC<workHistoryProps> = ({
     setChangeEditDetail(false); // 編集フォームの解除
   };
 
-  // 任意のworkHistoryItems内のオブジェクトを削除する処理
-  const handleDelete = async (docId: string) => {
-    try {
-      // "workHistory" サブコレクション内のドキュメントを削除
-      const docRef = doc(db, "familyCard", userId, "workHistory", docId);
-      await deleteDoc(docRef);
-
-      fetchWorkHistoryFromFirebase(); // 最新データ取得
-      console.log("Item deleted successfully");
-    } catch (error) {
-      console.error("Error deleting item:", error);
-    }
-  };
+  useEffect(() => {
+    fetchWorkHistoryFromFirebase();
+  }, [fetchWorkHistory]);
 
   return (
-    <Grid container sx={{ margin: "20px 0 20px 0" }}>
+    <Grid container sx={{ margin: "20px 0" }}>
       <Grid container sx={{ width: "100%" }}>
         <Grid
           item
@@ -212,7 +231,6 @@ const WorkHistory: React.FC<workHistoryProps> = ({
           container
           justifyContent="space-around"
           alignItems="center"
-          // flexDirection="column"
           key={index}
           sx={{ width: "100%" }}
         >
@@ -319,11 +337,12 @@ const WorkHistory: React.FC<workHistoryProps> = ({
 
           {changeEditDetail && selectedIndex === detailIndex ? (
             <Grid item xs={1} sx={{ width: "100%" }}>
-              <IconButton
-                onClick={() => handleDelete(workHistoryItems[index].id || "")}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
+              <DeleteButton
+                mainCollection="familyCard"
+                mainDocId={userId}
+                collection="workHistory"
+                docId={item.id || ""}
+              />
             </Grid>
           ) : (
             ""

@@ -119,7 +119,8 @@ const Qualification: React.FC<QualificationProps> = ({
   const handleSave = () => {
     if (editingQualificationId) {
       onEditQualification(); // 編集モード中なら編集を保存
-    } else {
+    }
+    if (!editingQualificationId && !changeEditDetail) {
       onAddQualification(); // 新規追加モードなら追加
     }
   };
@@ -142,7 +143,9 @@ const Qualification: React.FC<QualificationProps> = ({
 
   // 編集モードが終了し、新規の値が入力されていたときは、Firestoreに保存処理をかける
   useEffect(() => {
-    handleSave();
+    if (!changeEditDetail && qualificationYear && qualificationDetail) {
+      handleSave();
+    }
   }, [changeEditDetail]);
 
   return (

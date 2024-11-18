@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
@@ -50,19 +59,41 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
 
   const fetchAcademicHistoryFromFirebase = async () => {
     try {
-      const academicHistoryRef = doc(
+      const academicHistoryRef = collection(
         db,
         "familyCard",
         userId,
-        "detail",
         "academicHistory"
       );
-      const academicHistoryDoc = await getDoc(academicHistoryRef);
-      if (academicHistoryDoc.exists()) {
-        const data = academicHistoryDoc.data();
-        setAcademicHistoryItems(data.history);
-        setFetchHistoryItems(data.history); // 初期データとして保持
-        setPreviousBirthday(data.birthday);
+      const birthdayRef = doc(academicHistoryRef, "birthday");
+      const academicHistoryDoc = await getDocs(academicHistoryRef);
+      const birthdayDoc = await getDoc(birthdayRef);
+      if (academicHistoryDoc) {
+        const historyData = academicHistoryDoc.docs
+          .filter((doc) => doc.id !== "birthday")
+          .map((doc) => ({
+            id: doc.id,
+            school: doc.data().school,
+            contentStartDate: doc.data().contentStartDate,
+            contentEndDate: doc.data().contentEndDate,
+          }));
+        if (birthdayDoc.exists()) {
+          const birthdayData = {
+            birthday: birthdayDoc.data().birthday,
+          };
+          setPreviousBirthday(birthdayData);
+        }
+
+        historyData.sort((a, b) => {
+          const dateA = new Date(a.contentStartDate).getTime();
+          const dateB = new Date(b.contentStartDate).getTime();
+          return dateA - dateB;
+        });
+
+        console.log(historyData);
+
+        setAcademicHistoryItems(historyData);
+        setFetchHistoryItems(historyData); // 初期データとして保持
       } else {
         setPreviousBirthday({ birthday: "" });
       }
@@ -86,17 +117,25 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     calcHistoryDates: academicHistoryItemsTypes[]
   ) => {
     try {
-      const academicHistoryRef = doc(
+      const academicHistoryRef = collection(
         db,
         "familyCard",
         userId,
-        "detail",
         "academicHistory"
       );
-      await setDoc(academicHistoryRef, {
-        history: calcHistoryDates,
-        birthday: { birthday },
+      const academicHistorySnapshot = await getDocs(academicHistoryRef);
+      const deleteAcademicPromises = academicHistorySnapshot.docs.map(
+        (doc) => deleteDoc(doc.ref) // todoDoc.ref=todoDocのドキュメント参照。ドキュメントの削除や更新ができる。
+      );
+      await Promise.all(deleteAcademicPromises);
+      calcHistoryDates.map(async (date) => {
+        await addDoc(academicHistoryRef, date);
       });
+
+      const birthdayRef = doc(academicHistoryRef, "birthday");
+      if (birthday) {
+        await setDoc(birthdayRef, { birthday: birthday });
+      }
       fetchAcademicHistoryFromFirebase();
     } catch (error) {
       console.error("Error saving academic history:", error);
@@ -116,23 +155,27 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
   };
 
   // Firestoreデータの保存処理
-  const onSaveHistoryToFirebase = async () => {
+  const handleSaveToFirebase = async (item: academicHistoryItemsTypes) => {
     if (
       JSON.stringify(fetchHistoryItems) !== JSON.stringify(academicHistoryItems)
     ) {
       try {
-        const academicHistoryRef = doc(
-          db,
-          "familyCard",
-          userId,
-          "detail",
-          "academicHistory"
-        );
-        await updateDoc(academicHistoryRef, {
-          history: academicHistoryItems,
-          birthday: { birthday },
-        });
-        setFetchHistoryItems(academicHistoryItems); // 最新データを初期データとして更新
+        if (item.id) {
+          const academicHistoryRef = doc(
+            db,
+            "familyCard",
+            userId,
+            "academicHistory",
+            item.id
+          );
+          await updateDoc(academicHistoryRef, {
+            school: item.school,
+            contentStartDate: item.contentStartDate,
+            contentEndDate: item.contentEndDate,
+          });
+          setFetchHistoryItems(academicHistoryItems); // 最新データを初期データとして更新
+        } else {
+        }
       } catch (error) {
         console.error("Error updating academic history:", error);
       }
@@ -140,11 +183,29 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     setChangeEditDetail(false);
   };
 
-  // 編集モードが解除されたときにデータを保存
+  const allSaveToFirebase = async () => {
+    if (!userId) return;
+
+    academicHistoryItems.map(async (item) => {
+      if (item.id) {
+        const academicHistoryRef = doc(
+          db,
+          "familyCard",
+          userId,
+          "academicHistory",
+          item.id
+        );
+        await updateDoc(academicHistoryRef, {
+          school: item.school,
+          contentStartDate: item.contentStartDate,
+          contentEndDate: item.contentEndDate,
+        });
+      }
+    });
+  };
+
   useEffect(() => {
-    if (!changeEditDetail) {
-      onSaveHistoryToFirebase();
-    }
+    allSaveToFirebase();
   }, [changeEditDetail]);
 
   return (
@@ -196,7 +257,6 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
             </Grid>
           </Grid>
           {academicHistoryItems.map((item, index) => (
-            // <Grid item key={index} sx={{ width: "100%" }}>
             <Grid
               key={index}
               item
@@ -204,13 +264,13 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
               justifyContent="space-around"
               sx={{ width: "100%" }}
             >
-              <Grid item xs={12} sx={{ marginRight: "10px" }}>
+              <Grid item xs={12} sx={{ width: "100%", marginRight: "10px" }}>
                 {changeEditDetail && selectedIndex === detailIndex ? (
                   <InputFormComp
                     type={"text"}
                     inputValue={item.school}
                     handleKeyDown={(e) =>
-                      e.key === "Enter" && onSaveHistoryToFirebase()
+                      e.key === "Enter" && handleSaveToFirebase(item)
                     }
                     onChangeAcademicValue={(e) =>
                       handleInputChange(index, "school", e.target.value)
@@ -232,31 +292,13 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                   margin: "10px 0",
                 }}
               >
-                {/* <Grid item xs={8} sx={{ marginRight: "10px" }}>
-                  {changeEditDetail && selectedIndex === detailIndex ? (
-                    <InputFormComp
-                      type={"text"}
-                      inputValue={item.contentStart}
-                      handleKeyDown={(e) =>
-                        e.key === "Enter" && onSaveHistoryToFirebase()
-                      }
-                      onChangeAcademicValue={(e) =>
-                        handleInputChange(index, "contentStart", e.target.value)
-                      }
-                    />
-                  ) : (
-                    <Typography sx={{ textAlign: "center" }}>
-                      {item.contentStart}
-                    </Typography>
-                  )}
-                </Grid> */}
-                <Grid item xs={4}>
+                <Grid item sx={{ width: "100%" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
                     <InputFormComp
                       type={"month"}
                       inputValue={item.contentStartDate}
                       handleKeyDown={(e) =>
-                        e.key === "Enter" && onSaveHistoryToFirebase()
+                        e.key === "Enter" && handleSaveToFirebase(item)
                       }
                       onChangeAcademicValue={(e) =>
                         handleInputChange(
@@ -296,31 +338,13 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                   margin: "10px 0",
                 }}
               >
-                {/* <Grid item xs={8} sx={{ marginRight: "10px" }}>
-                  {changeEditDetail && selectedIndex === detailIndex ? (
-                    <InputFormComp
-                      type={"text"}
-                      inputValue={item.contentEnd}
-                      handleKeyDown={(e) =>
-                        e.key === "Enter" && onSaveHistoryToFirebase()
-                      }
-                      onChangeAcademicValue={(e) =>
-                        handleInputChange(index, "contentEnd", e.target.value)
-                      }
-                    />
-                  ) : (
-                    <Typography sx={{ textAlign: "center" }}>
-                      {item.contentEnd}
-                    </Typography>
-                  )}
-                </Grid> */}
-                <Grid item xs={4}>
+                <Grid item sx={{ width: "100%" }}>
                   {changeEditDetail && selectedIndex === detailIndex ? (
                     <InputFormComp
                       type={"month"}
                       inputValue={item.contentEndDate}
                       handleKeyDown={(e) =>
-                        e.key === "Enter" && onSaveHistoryToFirebase()
+                        e.key === "Enter" && handleSaveToFirebase(item)
                       }
                       onChangeAcademicValue={(e) =>
                         handleInputChange(
@@ -338,7 +362,6 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
                 </Grid>
               </Grid>
             </Grid>
-            // </Grid>
           ))}
         </Grid>
       )}

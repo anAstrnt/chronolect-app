@@ -14,13 +14,13 @@ import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import SelectedUserIcon from "@/app/components/familyCard/FamilyCardDetailAria/SelectedUserIcon";
 import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
+import { fetchFamilyCardState } from "@/app/states/fetchFamilyCardState";
 
 const page: React.FC = () => {
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
   const [hasUserData, setHasUserData] = useRecoilState(hasUserDataState);
   // loading状況を格納するステート
   const [isLoading, setIsLoading] = useState(true);
-
   const openInputSpace = useRecoilValue(openInputSpaceState);
 
   // FamilyCardの初期登録が完了しているか調べる処理。
@@ -133,7 +133,7 @@ const page: React.FC = () => {
                     top: 0,
                     left: 0,
                     width: "100%",
-                    height: "100%",
+                    height: "auto",
                     zIndex: openInputSpace ? 1 : 2,
                     visibility: openInputSpace ? "hidden" : "visible",
                   }}

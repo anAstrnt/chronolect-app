@@ -16,11 +16,12 @@ const InputFormComp: React.FC<InputFormCompProps> = ({
 }) => {
   return (
     <Input
+      fullWidth
       type={type}
       value={inputValue}
       onKeyDown={handleKeyDown}
       onChange={onChangeAcademicValue}
-      disableUnderline
+      // disableUnderline
       sx={{
         width: "100%",
         backgroundColor: "rgba(0, 0, 0, 0.05)",
