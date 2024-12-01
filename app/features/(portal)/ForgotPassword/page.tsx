@@ -1,15 +1,22 @@
 "use client";
 
-import { auth } from "@/libs/firebase";
-import { Button, Grid, Input, Typography } from "@mui/material";
-import { sendPasswordResetEmail } from "firebase/auth";
-import Link from "next/link";
 import React, { useState } from "react";
+// NOTE:UIに関するインポート
+import { Button, Grid, Input, Typography } from "@mui/material";
+// NOTE:ユーザー認証に関するインポート
+import { auth } from "@/libs/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
+// NOTE:画面遷移するためのインポート
+import Link from "next/link";
 
+//NOTE:パスワードを忘れたユーザーにパスワード再設定メールを送信するコンポーネント
 const page = () => {
+  // NOTE:ユーザーが入力したパスワード再設定メールを送るためのメールアドレスを格納するためのステート
   const [email, setEmail] = useState("");
+  // NOTE:メールの送信が失敗したときにエラーメッセージを受け取るステート
   const [message, setMessage] = useState("");
 
+  // NOTE:ユーザーがメールアドレスを入力し送信ボタンが押すと、パスワード再設定メールを送信する処理
   const sendEmail = async () => {
     try {
       await sendPasswordResetEmail(auth, email);

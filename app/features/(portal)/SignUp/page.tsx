@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-// UIに関するインポート
+// NOTE:UIに関するインポート
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,27 +13,27 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// ユーザー認証に関するインポート
+const defaultTheme = createTheme();
+// NOTE:ユーザー認証に関するインポート
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/libs/firebase";
+// NOTE:画面遷移するためのインポート
 import { useRouter } from "next/navigation";
 
-const defaultTheme = createTheme();
-
+//NOTE:新規ユーザー登録をするためのコンポーネント
 const page = () => {
-  // アカウント登録に成功したらページ遷移するためのHooks
+  // NOTE:アカウント登録に成功したらページ遷移するためのHooks
   const router = useRouter();
 
-  // 新規で登録するユーザーの名前・メールアドレス・パスワードを格納するステート
+  // NOTE:新規で登録するユーザーの名前・メールアドレス・パスワードを格納するステート
   const [userName, setUserName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  // ログインを失敗したときにエラーメッセージを受け取るステート
+  // NOTE:ログインを失敗したときにエラーメッセージを受け取るステート
   const [errorMessageEmail, setErrorMessageEmail] = React.useState("");
   const [errorMessagePassword, setErrorMessagePassword] = React.useState("");
-  const [dataSendDone, setDataSendDone] = React.useState<boolean>(false);
 
-  // 新規ユーザーの登録処理
+  // NOTE:新規ユーザーの登録処理
   const handleSubmitSignUp = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -45,7 +45,6 @@ const page = () => {
       .then(() => {
         // AppPageの個人画面へ遷移
         router.push(`/features`);
-        setDataSendDone(true);
       })
       // 正常にログインできてなかった時に走る処理
       .catch((error) => {
@@ -78,13 +77,10 @@ const page = () => {
       });
   };
 
-  React.useEffect(() => {
-    setDataSendDone(false);
-  }, [dataSendDone]);
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
+        {/*ブラウザのデフォルトスタイルをリセットし、MUIのテーマに基づいた基本的なスタイルを適用*/}
         <CssBaseline />
         <Box
           sx={{

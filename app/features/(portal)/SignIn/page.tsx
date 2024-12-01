@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-// UIに関するインポート
+// NOTE:UIに関するインポート
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,23 +16,24 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typewriter from "typewriter-effect";
-// ユーザー認証に関するインポート
+const defaultTheme = createTheme();
+// NOTE:ユーザー認証に関するインポート
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/libs/firebase";
+// NOTE:画面遷移するためのインポート
 import { useRouter } from "next/navigation";
 
-const defaultTheme = createTheme();
-
+//NOTE:登録済みのユーザーがログインをするためのコンポーネント
 const page = () => {
   const router = useRouter();
-  // ログインするメールアドレス・パスワードを格納するステート
+  // NOTE:ログインするメールアドレス・パスワードを格納するステート
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  // ログインを失敗したときにエラーメッセージを受け取るステート
+  // NOTE:ログインを失敗したときにエラーメッセージを受け取るステート
   const [errorMessageEmail, setErrorMessageEmail] = React.useState("");
   const [errorMessagePassword, setErrorMessagePassword] = React.useState("");
 
-  // sign―inのボタンが押されたときに走る処理（ログイン）
+  // NOTE:sign―inのボタンが押されたときに走る処理（ログイン）
   const handleSubmitSignIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
@@ -63,6 +64,7 @@ const page = () => {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ width: "100%", height: "100vh" }}>
+        {/*ブラウザのデフォルトスタイルをリセットし、MUIのテーマに基づいた基本的なスタイルを適用*/}
         <CssBaseline />
         <Grid
           item
