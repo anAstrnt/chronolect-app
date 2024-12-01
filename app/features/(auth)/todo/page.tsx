@@ -6,28 +6,55 @@ import ShowTodoAria from "./ShowTodoAria/page";
 import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
 import { Grid, Typography } from "@mui/material";
-import SelectedUserIcon from "@/app/components/familyCard/FamilyCardDetailAria/SelectedUserIcon";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
-import { db } from "@/libs/firebase";
+import { auth, db } from "@/libs/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
 import { userIdState } from "@/app/states/userIdState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 const page = () => {
   const openInputSpace = useRecoilValue(openInputSpaceState);
-  const userId = useRecoilValue(userIdState);
+  const [userId, setUserId] = useRecoilState(userIdState);
   const setHasUserData = useSetRecoilState(hasUserDataState);
+  const user = auth.currentUser;
+  const familyCardId = useRecoilValue(familyCardIdState);
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      console.error("User is not logged in.");
+    }
+  }, []);
 
   // FamilyCardの初期登録が完了しているか調べる処理。
   useEffect(() => {
-    // !snapshot.emptyでFirestoreのクエリスナップショットの結果が空かどうかを判定し、true（空）でないJSXで<Top /> を表示し、falseであれば、FamilyCardの登録画面<FamilyCardAdd />に飛ぶようにしている。
-    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-      setHasUserData(!snapshot.empty);
-    });
-    return () => unsubscribe();
-  }, []);
+    if (userId) {
+      const docRef = collection(db, "familyCards", userId, "familyCard");
+      const unsubscribe = onSnapshot(
+        docRef,
+        (snapshot) => {
+          // スナップショットが空かどうかを確認
+          if (snapshot.empty) {
+            setHasUserData(false); // データがない場合
+            console.log("No documents found.");
+          } else {
+            setHasUserData(true); // データがある場合
+            console.log("Documents found.");
+          }
+        },
+        (error) => {
+          console.error("Error fetching documents:", error);
+        }
+      );
+      return () => unsubscribe();
+    } else {
+      console.log("User is not.");
+    }
+  }, [userId]);
 
   return (
     <Grid container direction="column" sx={{ width: "100%", height: "100%" }}>
@@ -59,7 +86,7 @@ const page = () => {
             <Side />
           </Grid>
 
-          {userId ? (
+          {familyCardId ? (
             <Grid item sx={{ width: "100%" }}>
               <Grid container sx={{ width: "100%" }}>
                 <Grid

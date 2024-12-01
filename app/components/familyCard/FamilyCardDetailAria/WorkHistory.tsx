@@ -10,6 +10,7 @@ import { db } from "@/libs/firebase";
 import { workHistoryItemsTypes } from "@/types/workHistoryItemTypes";
 import DeleteButton from "@/components/DeleteButton";
 import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type workHistoryProps = {
   selectedIndex: number | undefined;
@@ -21,6 +22,7 @@ const WorkHistory: React.FC<workHistoryProps> = ({
   detailIndex,
 }) => {
   const userId = useRecoilValue(userIdState); // 選択されたUserのIdを取ってくるステート
+  const familyCardId = useRecoilValue(familyCardIdState);
   const fetchWorkHistory = useRecoilValue(fetchWorkHistoryState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
@@ -34,18 +36,20 @@ const WorkHistory: React.FC<workHistoryProps> = ({
 
   // userを切り替えたらFirestoreからデータ取得
   useEffect(() => {
-    if (userId) {
+    if (userId && familyCardId) {
       fetchWorkHistoryFromFirebase();
     }
-  }, [userId]);
+  }, [userId, familyCardId]);
 
   // Firestoreからデータ取得する処理
   const fetchWorkHistoryFromFirebase = async () => {
     try {
       const workHistoryCollectionRef = collection(
         db,
-        "familyCard",
+        "familyCards",
         userId,
+        "familyCard",
+        familyCardId,
         "workHistory"
       );
 
@@ -89,8 +93,10 @@ const WorkHistory: React.FC<workHistoryProps> = ({
     try {
       const workHistoryCollectionRef = collection(
         db,
-        "familyCard",
+        "familyCards",
         userId,
+        "familyCard",
+        familyCardId,
         "workHistory"
       );
 
@@ -338,8 +344,10 @@ const WorkHistory: React.FC<workHistoryProps> = ({
           {changeEditDetail && selectedIndex === detailIndex ? (
             <Grid item xs={1} sx={{ width: "100%" }}>
               <DeleteButton
+                topCollection="familyCards"
+                topDocId={userId}
                 mainCollection="familyCard"
-                mainDocId={userId}
+                mainDocId={familyCardId}
                 collection="workHistory"
                 docId={item.id || ""}
               />

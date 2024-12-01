@@ -9,6 +9,8 @@ type HeaderProps = {
   title: string;
 };
 
+// NOTE:FamilyCard.Todo.Memoの上部に表示させるコンポーネント
+// NOTE:今いるコンポーネント名を表示・Tipsの表示・メニューへ戻るボタンの表示をしている。
 const page: React.FC<HeaderProps> = ({ title }) => {
   return (
     <Grid

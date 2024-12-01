@@ -8,6 +8,7 @@ import { db } from "@/libs/firebase";
 import { userIdState } from "@/app/states/userIdState";
 import { doc, updateDoc } from "firebase/firestore";
 import { changePreviewsState } from "@/app/states/changePreviewsState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type categorySelectType = {
   previewId: string;
@@ -19,6 +20,7 @@ const CategorySelect: React.FC<categorySelectType> = ({ previewId }) => {
   const categorys = useRecoilValue(memoCategorysState); // このステートを使い、Firestoreに登録されているカテゴリーをセレクターに表示
   const [changePreviews, setChangePreviews] =
     useRecoilState(changePreviewsState); // <MemoSlider/>内で最新のメモデータを取ってくる
+  const familyCardId = useRecoilValue(familyCardIdState);
 
   // NOTE:<MenuItem value={category.categoryName}>のvalueに設定した値を、Previewsのcategoryに登録するため、選択したカテゴリをchoiceCategoryInValueステートに格納
   const choiceCategory = (event: SelectChangeEvent) => {
@@ -29,7 +31,15 @@ const CategorySelect: React.FC<categorySelectType> = ({ previewId }) => {
   const changeMemoCategoryToFirebase = async () => {
     if (choiceCategoryInValue) {
       try {
-        const previewRef = doc(db, "memo", userId, "previews", previewId);
+        const previewRef = doc(
+          db,
+          "setMemoUser",
+          userId,
+          "memo",
+          familyCardId,
+          "previews",
+          previewId
+        );
         await updateDoc(previewRef, { category: choiceCategoryInValue });
         setChangePreviews(!changePreviews);
       } catch (err) {

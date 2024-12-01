@@ -20,6 +20,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import CategorySelect from "./CategorySelect";
 import DeleteButton from "@/components/DeleteButton";
 import { changePreviewsState } from "@/app/states/changePreviewsState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type MemoSliderType = {
   selectCategory: string;
@@ -32,11 +33,12 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
   const glideRef = useRef<Glide | null>(null);
   const glideContainerRef = useRef<HTMLDivElement | null>(null);
   const changePreviews = useRecoilValue(changePreviewsState);
+  const familyCardId = useRecoilValue(familyCardIdState);
 
   // NOTE: Firestore から保存されたPreviewデータを取得
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "memo", userId, "previews"),
+      collection(db, "setMemoUser", userId, "memo", familyCardId, "previews"),
       (snapshot) => {
         const previews = snapshot.docs.map((doc) => ({
           previewTitleId: doc.id,
@@ -52,7 +54,7 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
       }
     );
     return () => unsubscribe();
-  }, [userId, changePreviews]);
+  }, [userId, familyCardId, changePreviews]);
 
   // NOTE: Glid.jsでスライダーを実装
   useEffect(() => {
@@ -72,7 +74,7 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
         glideRef.current = null;
       }
     };
-  }, [savedPreviews, userId]);
+  }, [savedPreviews, userId, familyCardId]);
 
   return (
     <div
@@ -126,8 +128,10 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
                     }}
                   >
                     <DeleteButton
+                      topCollection="setMemoUser"
+                      topDocId={userId}
                       mainCollection="memo"
-                      mainDocId={userId}
+                      mainDocId={familyCardId}
                       collection="previews"
                       docId={p.previewTitleId || ""}
                     />

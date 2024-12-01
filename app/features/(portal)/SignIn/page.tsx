@@ -18,8 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typewriter from "typewriter-effect";
 // ユーザー認証に関するインポート
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/libs/firebase";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { auth } from "@/libs/firebase";
 import { useRouter } from "next/navigation";
 
 const defaultTheme = createTheme();
@@ -38,17 +37,8 @@ const page = () => {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       // 正常にログインできたときに走る処理
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        // AppPageの個人画面に遷移
-        const q = query(collection(db, "users"), where("email", "==", email));
-        onSnapshot(q, (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            router.push(`/features`);
-            console.log(doc.data());
-          });
-        });
+      .then(() => {
+        router.push(`/features`);
       })
       // 正常にログインできてなかった時に走る処理
       .catch((error) => {
@@ -72,7 +62,7 @@ const page = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main">
+      <Grid container component="main" sx={{ width: "100%", height: "100vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -89,9 +79,9 @@ const page = () => {
               position: "absolute",
               top: "50%",
               left: "50%",
-              width: "100%",
-              height: "100%",
-              backgroundImage: 'url("/images/summer_top.png")',
+              width: "500px",
+              height: "500px",
+              backgroundImage: 'url("/images/chronolect.png")',
               backgroundSize: "100%",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -103,10 +93,6 @@ const page = () => {
               "50%": { transform: "translate(-50%, -50%) translateY(10%)" },
               "100%": { transform: "translate(-50%, -50%) translateY(0)" },
             },
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
             zIndex: -2,
           }}
         >
@@ -183,14 +169,14 @@ const page = () => {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
+                <Grid item xs sx={{ margin: "10px" }}>
+                  <Link href="/features/ForgotPassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
-                <Grid item>
-                  <Link href="./SignUp" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                <Grid item sx={{ margin: "10px" }}>
+                  <Link href="/features/SignUp" variant="body2">
+                    {"Don't have an account?"}
                   </Link>
                 </Grid>
               </Grid>

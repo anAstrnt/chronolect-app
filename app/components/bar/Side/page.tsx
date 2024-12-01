@@ -9,28 +9,39 @@ import AddIcon from "@mui/icons-material/Add";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/libs/firebase";
+import { auth, db } from "@/libs/firebase";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
+// NOTE: FamilyCard・Todo・Memo欄のサイドバーとして表示させるコンポーネント
+// NOTE: ユーザーの切替をすることができます。
 const page = () => {
-  const hasUserData = useRecoilValue(hasUserDataState);
-  const [users, setUsers] = useRecoilState(usersState);
-  const setUserId = useSetRecoilState(userIdState);
+  const hasUserData = useRecoilValue(hasUserDataState); // ユーザーデータが存在するかどうかを示すステート
+  const [users, setUsers] = useRecoilState(usersState); // 現在のユーザーリストを保持するステート
+  const [userId, setUserId] = useRecoilState(userIdState); // 現在選択されているユーザーのIDを格納するためのステート
+  const setFamilyCardId = useSetRecoilState(familyCardIdState);
   const [openInputSpace, setOpenInputSpace] =
-    useRecoilState(openInputSpaceState);
+    useRecoilState(openInputSpaceState); // 入力スペースが開いているかどうかを示すステート
 
-  const openUserDetail = (userId: string) => {
-    setUserId(userId);
-    setOpenInputSpace(false);
+  // NOTE: ユーザーアイコンを押すと走る処理。ユーザーごとのページが画面中央に表示される。
+  const openUserDetail = (familyCardId: string) => {
+    if (familyCardId) {
+      setFamilyCardId(familyCardId);
+      setOpenInputSpace(false);
+    } else {
+      console.log("not choice user.");
+    }
   };
 
+  // NOTE: Sideバーのプラスボタンを押すと、ユーザーの登録ができる処理。FamilyCardでユーザーを登録するのと同じ効果が得られる。
   const openFamilyCardAddSpace = () => {
     setOpenInputSpace(!openInputSpace);
   };
 
+  // NOTE: ユーザーのデータが有れば（FamilyCardで何かしらユーザー情報が登録されていたら）、ユーザー情報を一覧でSideバーに表示させるための処理
   useEffect(() => {
     if (hasUserData) {
       const unsubscribe = onSnapshot(
-        collection(db, "familyCard"),
+        collection(db, "familyCards", userId, "familyCard"),
         (snapshot) => {
           const newUsers = snapshot.docs.map((doc) => ({
             id: doc.id,
@@ -65,6 +76,7 @@ const page = () => {
           marginTop: "70px",
         }}
       >
+        {/* ユーザーアイコンの表示 */}
         {users.map((user) => (
           <Grid item key={user.id} sx={{ marginBottom: "10px" }}>
             <Button
@@ -95,6 +107,8 @@ const page = () => {
             </Button>
           </Grid>
         ))}
+
+        {/* ユーザーの追加ボタンの表示 */}
         <Grid item>
           <IconButton
             sx={{

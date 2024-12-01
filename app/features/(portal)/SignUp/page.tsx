@@ -15,14 +15,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 // ユーザー認証に関するインポート
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/libs/firebase";
-import {
-  addDoc,
-  collection,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { auth } from "@/libs/firebase";
 import { useRouter } from "next/navigation";
 
 const defaultTheme = createTheme();
@@ -38,32 +31,21 @@ const page = () => {
   // ログインを失敗したときにエラーメッセージを受け取るステート
   const [errorMessageEmail, setErrorMessageEmail] = React.useState("");
   const [errorMessagePassword, setErrorMessagePassword] = React.useState("");
+  const [dataSendDone, setDataSendDone] = React.useState<boolean>(false);
 
   // 新規ユーザーの登録処理
   const handleSubmitSignUp = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-
-    // ログイン情報（email,password）にユーザー名を紐づけてストレージに保存
-    await addDoc(collection(db, "users"), {
-      id: crypto.randomUUID(),
-      name: userName,
-      email: email,
-      password: password,
-    });
-
+    if (!email && !password) return;
     // 認証機能にログイン情報（email,password）を新規登録
     await createUserWithEmailAndPassword(auth, email, password)
       // 正常にログインできたときに走る処理
       .then(() => {
         // AppPageの個人画面へ遷移
-        const q = query(collection(db, "users"), where("email", "==", email));
-        onSnapshot(q, (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            router.push(`/features`);
-          });
-        });
+        router.push(`/features`);
+        setDataSendDone(true);
       })
       // 正常にログインできてなかった時に走る処理
       .catch((error) => {
@@ -95,6 +77,10 @@ const page = () => {
         }
       });
   };
+
+  React.useEffect(() => {
+    setDataSendDone(false);
+  }, [dataSendDone]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -177,7 +163,7 @@ const page = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="./signIn" variant="body2">
+                <Link href="/features/SignIn" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

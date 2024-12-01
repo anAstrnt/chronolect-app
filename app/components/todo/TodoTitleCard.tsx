@@ -28,6 +28,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import DoneIcon from "@mui/icons-material/Done";
 import { userIdState } from "@/app/states/userIdState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type todoType = {
   [key: string]: string;
@@ -39,6 +40,7 @@ export const TodoTitleCard = () => {
   const [todoTitles, setTodoTitles] = useState<todoTytles[]>([]); // NOTE: firebaseから取得したTodoTitleを格納。表示まわりやtodoの取得で使用。
   const [todo, setTodo] = useState<todoType>({}); // NOTE: todoとしてインプット欄に入力された値を一時格納。
   const [todosMap, setTodosMap] = useState<Map<string, TodosType[]>>(new Map()); // NOTE: firebaseからTodoを取得し、対応するtodoTitleIdに紐づけMapオブジェクトとして格納。TodoTitleIdに対応したTodoをJSXで表示するのに使用。
+  const familyCardId = useRecoilValue(familyCardIdState);
 
   // NOTE: 入力されたTodoをFirebaseに送信する処理。
   const onSubmitTodos = async (
@@ -50,11 +52,23 @@ export const TodoTitleCard = () => {
     const titleId = todoTitles[index]?.titleId;
     if (titleId) {
       // NOTE: 取得したtodoTitleIdに紐づけて、Firebaseにtodoをサブコレクションとして送信する処理。
-      await addDoc(collection(db, "todos", userId, "title", titleId, "todo"), {
-        todo: todo[titleId],
-        isDone: false,
-        timeStamp: serverTimestamp(),
-      });
+      await addDoc(
+        collection(
+          db,
+          "setTodoUser",
+          userId,
+          "todos",
+          familyCardId,
+          "title",
+          titleId,
+          "todo"
+        ),
+        {
+          todo: todo[titleId],
+          isDone: false,
+          timeStamp: serverTimestamp(),
+        }
+      );
     }
     setTodo({ ...todo, [titleId]: "" });
   };
@@ -63,7 +77,7 @@ export const TodoTitleCard = () => {
   useEffect(() => {
     // NOTE: sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
     const q = query(
-      collection(db, "todos", userId, "title"),
+      collection(db, "setTodoUser", userId, "todos", familyCardId, "title"),
       orderBy("timestamp")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -76,7 +90,7 @@ export const TodoTitleCard = () => {
       setTodoTitles(newTitles);
     });
     return () => unsubscribe();
-  }, [title, userId]);
+  }, [title, userId, familyCardId]);
 
   // NOTE: インプット欄に入力されたTodoを一時取得・表示させる処理。
   const onChangeTodos = (
@@ -93,7 +107,16 @@ export const TodoTitleCard = () => {
       todoTitles.forEach((title) => {
         // NOTE: sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
         const q = query(
-          collection(db, "todos", userId, "title", title.titleId, "todo"),
+          collection(
+            db,
+            "setTodoUser",
+            userId,
+            "todos",
+            familyCardId,
+            "title",
+            title.titleId,
+            "todo"
+          ),
           orderBy("timeStamp")
         );
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -124,8 +147,10 @@ export const TodoTitleCard = () => {
     try {
       const todoDocRef = await doc(
         db,
-        "todos",
+        "setTodoUser",
         userId,
+        "todos",
+        familyCardId,
         "title",
         titleId,
         "todo",
@@ -166,8 +191,10 @@ export const TodoTitleCard = () => {
                   {title.title}
                 </Typography>
                 <DeleteButton
+                  topCollection="setTodoUser"
+                  topDocId={userId}
                   mainCollection={"todos"}
-                  mainDocId={userId}
+                  mainDocId={familyCardId}
                   collection={"title"}
                   docId={title.titleId}
                 />
@@ -234,8 +261,10 @@ export const TodoTitleCard = () => {
                     <DoneIcon />
                   </IconButton>
                   <DeleteButton
+                    topCollection="setTodoUser"
+                    topDocId={userId}
                     mainCollection={"todos"}
-                    mainDocId={userId}
+                    mainDocId={familyCardId}
                     collection={"title"}
                     docId={title.titleId}
                     collection2={"todo"}

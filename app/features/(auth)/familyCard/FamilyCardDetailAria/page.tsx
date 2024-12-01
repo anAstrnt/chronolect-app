@@ -16,6 +16,7 @@ import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qual
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
 import DeleteButton from "@/components/DeleteButton";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type fieldMap = {
   [key: number]: {
@@ -33,6 +34,7 @@ const FamilyCardDetail = () => {
   const setBirthday = useSetRecoilState(birthdayState);
   const [changeBirthday, setChangeBirthday] = useState<boolean>();
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
+  const familyCardId = useRecoilValue(familyCardIdState);
 
   // FamilyCardDetailに表示する各種のデータを使いまわしたいので、オブジェクトとして管理
   // JSXで値をmapで回しているので、indexを取得し、それぞれのfieldに紐づけられるようにしている。
@@ -78,7 +80,7 @@ const FamilyCardDetail = () => {
   const onChangeValue = (index: number) => {
     const selectedField = fieldMap[index + 1];
     if (selectedField) {
-      return selectedField.getUserDetail();
+      return selectedField.getUserDetail() || "";
     }
   };
 
@@ -96,11 +98,13 @@ const FamilyCardDetail = () => {
     if (selectedField && userDetail) {
       const currentValue = selectedField.getUserDetail();
       // 入力値が空でない場合のみ更新を行う
-      if (currentValue !== "") {
+      if (currentValue !== "" && familyCardId) {
         const familyCardDocRef = await doc(
           db,
-          "familyCard",
+          "familyCards",
           userId,
+          "familyCard",
+          familyCardId,
           "detail",
           userDetail.detailId
         );
@@ -125,24 +129,25 @@ const FamilyCardDetail = () => {
 
   // Firestoreからサブコレクション"detail"の値を取得。userDetailのステートに格納し、各所で使えるようにしています。
   const fetchDetailDocs = async () => {
-    const detailCollectionRef = collection(db, "familyCard", userId, "detail");
+    const detailCollectionRef = collection(
+      db,
+      "familyCards",
+      userId,
+      "familyCard",
+      familyCardId,
+      "detail"
+    );
     try {
       // サブコレクション"detail"のrefから参照し取得。docsの自動生成docsIdのみを取得したいので、filterをかけています。
       const detailSnapshot = await getDocs(detailCollectionRef);
-      const userDetails = detailSnapshot.docs
-        .filter(
-          (doc) =>
-            // doc.id !== "qualification" && "academicHistory" && "workHistory"
-            doc.id !== "academicHistory"
-        )
-        .map((doc) => ({
-          detailId: doc.id,
-          name: doc.data().name,
-          birthday: doc.data().birthday,
-          postCode: doc.data().postCode,
-          address: doc.data().address,
-          email: doc.data().email,
-        }));
+      const userDetails = detailSnapshot.docs.map((doc) => ({
+        detailId: doc.id,
+        name: doc.data().name,
+        birthday: doc.data().birthday,
+        postCode: doc.data().postCode,
+        address: doc.data().address,
+        email: doc.data().email,
+      }));
 
       // 配列の最初の要素を取得し、それをuserDetailとして設定
       if (userDetails.length > 0) {
@@ -163,10 +168,10 @@ const FamilyCardDetail = () => {
     }
   };
   useEffect(() => {
-    if (userId) {
+    if (userId && familyCardId) {
       fetchDetailDocs();
     }
-  }, [userId]);
+  }, [userId, familyCardId]);
 
   useEffect(() => {
     if (userDetail?.birthday) {
@@ -176,7 +181,7 @@ const FamilyCardDetail = () => {
 
   useEffect(() => {
     setChangeEditDetail(false);
-  }, [userId]);
+  }, [userId, familyCardId]);
 
   return (
     <Grid
@@ -185,7 +190,7 @@ const FamilyCardDetail = () => {
       alignItems="center"
       sx={{
         width: "100%",
-        height: userId ? "auto" : "100vh",
+        height: familyCardId ? "auto" : "100vh",
         padding: "80px 20px",
       }}
     >
@@ -197,12 +202,16 @@ const FamilyCardDetail = () => {
           right: "50px",
         }}
       >
-        <DeleteButton
-          mainCollection="familyCard"
-          mainDocId={userId}
-          collection="detail"
-          docId={userDetail.detailId}
-        />
+        {familyCardId && (
+          <DeleteButton
+            topCollection="familyCards"
+            topDocId={userId}
+            mainCollection="familyCard"
+            mainDocId={familyCardId}
+            collection="detail"
+            docId={userDetail.detailId}
+          />
+        )}
       </Grid>
       <Grid
         container
@@ -210,12 +219,12 @@ const FamilyCardDetail = () => {
         justifyContent="center"
         sx={{
           width: "50%",
-          height: userId ? "auto" : "100%",
+          height: familyCardId ? "auto" : "100%",
           maxWidth: "1000px",
           margin: "auto",
         }}
       >
-        {userId ? (
+        {familyCardId ? (
           FamilyCardDetailData.map((data, index) => (
             <Grid
               item
@@ -247,7 +256,11 @@ const FamilyCardDetail = () => {
                       {data.detailTitle}
                     </Typography>
                   </Grid>
-                  <Grid item xs={10}>
+                  <Grid
+                    item
+                    xs={10}
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
                     {changeEditDetail &&
                     selectedIndex === index &&
                     [1, 2, 3, 4, 5].includes(index + 1) ? (
@@ -259,6 +272,8 @@ const FamilyCardDetail = () => {
                         fullWidth
                         disableUnderline
                         sx={{
+                          width: "85%",
+                          paddingLeft: "10px",
                           backgroundColor: "rgba(0, 0, 0, 0.05)",
                           "&:hover": {
                             backgroundColor: "rgba(0, 0, 0, 0.1)",

@@ -33,6 +33,7 @@ const Page = () => {
             <Card
               sx={{
                 maxWidth: 345,
+                height: 320,
                 margin: "20px",
                 padding: "10px",
                 width: "230px",

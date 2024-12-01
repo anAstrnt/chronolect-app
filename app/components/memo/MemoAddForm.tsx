@@ -12,6 +12,7 @@ import { savePreviewsState } from "@/app/states/savedPreviewsState";
 import { previewData } from "@/types/previewData";
 import AddIcon from "@mui/icons-material/Add";
 import { userIdState } from "@/app/states/userIdState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 const MemoAddForm = () => {
   const userId = useRecoilValue(userIdState);
@@ -19,6 +20,7 @@ const MemoAddForm = () => {
   const [url, setUrl] = useRecoilState(urlState);
   const [preview, setPreview] = useRecoilState(previewState); // api/previewから取ってきたURLのプレビューデータとメモ、タイムスタンプを格納する単発ステート。ついでに、Firestoreへの保存処理の発火装置。
   const [savedPreviews, setSavedPreviews] = useRecoilState(savePreviewsState); // Firestoreに保存した複数のpreviewを格納しているステート
+  const familyCardId = useRecoilValue(familyCardIdState);
 
   // NOTE: クライアントからサーバーにリクエストを送信し、返ってきたレスポンスを状態として管理して、画面上に表示させるための処理
   const fetchPreview = async () => {
@@ -43,7 +45,17 @@ const MemoAddForm = () => {
       const savePreview = async () => {
         try {
           // Firestore にプレビューデータを保存
-          await addDoc(collection(db, "memo", userId, "previews"), preview);
+          await addDoc(
+            collection(
+              db,
+              "setMemoUser",
+              userId,
+              "memo",
+              familyCardId,
+              "previews"
+            ),
+            preview
+          );
           // UIに表示させるpreviewを最新のものに更新する
           setSavedPreviews([...savedPreviews, preview]);
           setPreview(null); // 保存後にプレビューをクリア

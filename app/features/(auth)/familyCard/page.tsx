@@ -6,7 +6,7 @@ import { Grid } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/libs/firebase";
+import { auth, db } from "@/libs/firebase";
 import CircularProgress from "@/app/components/CircularProgress";
 import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
 import BackToPageButton from "@/components/BackToPageButton";
@@ -14,6 +14,7 @@ import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import SelectedUserIcon from "@/app/components/familyCard/FamilyCardDetailAria/SelectedUserIcon";
 import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
+import { userIdState } from "@/app/states/userIdState";
 
 const page: React.FC = () => {
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
@@ -21,16 +22,44 @@ const page: React.FC = () => {
   // loading状況を格納するステート
   const [isLoading, setIsLoading] = useState(true);
   const openInputSpace = useRecoilValue(openInputSpaceState);
+  const [userId, setUserId] = useRecoilState(userIdState);
+  const user = auth.currentUser;
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      console.error("User is not logged in.");
+    }
+  }, []);
 
   // FamilyCardの初期登録が完了しているか調べる処理。
   useEffect(() => {
-    // !snapshot.emptyでFirestoreのクエリスナップショットの結果が空かどうかを判定し、true（空）でないJSXで<Top /> を表示し、falseであれば、FamilyCardの登録画面<FamilyCardAdd />に飛ぶようにしている。
-    const unsubscribe = onSnapshot(collection(db, "familyCard"), (snapshot) => {
-      setHasUserData(!snapshot.empty);
-      setIsLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+    if (userId) {
+      const docRef = collection(db, "familyCards", userId, "familyCard");
+      const unsubscribe = onSnapshot(
+        docRef,
+        (snapshot) => {
+          // スナップショットが空かどうかを確認
+          if (snapshot.empty) {
+            setHasUserData(false); // データがない場合
+            console.log("No documents found.");
+          } else {
+            setHasUserData(true); // データがある場合
+            console.log("Documents found.");
+          }
+          setIsLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching documents:", error);
+          setIsLoading(false);
+        }
+      );
+      return () => unsubscribe();
+    } else {
+      console.log("User is not.");
+    }
+  }, [userId]);
 
   if (isLoading) {
     return (

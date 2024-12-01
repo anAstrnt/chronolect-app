@@ -21,6 +21,7 @@ import { calcSchoolDates } from "@/components/calcSchoolDates";
 import { academicHistoryItemsState } from "@/app/states/academicHistoryItemsState";
 import { academicHistoryItemsTypes } from "@/types/academicHistoryItemTypes";
 import InputFormComp from "@/components/InputFormComp";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type AcademicHistoryProps = {
   selectedIndex: number | undefined;
@@ -31,44 +32,52 @@ type PreviousBirthdayType = {
   birthday: string;
 };
 
+// NOTE: familyCardの学歴欄の表示や処理をするコンポーネント。誕生日が登録されたら、自動で入卒年月を計算する処理が走る。値は編集可能。
 const AcademicHistory: React.FC<AcademicHistoryProps> = ({
   selectedIndex,
   detailIndex,
 }) => {
-  const userId = useRecoilValue(userIdState);
+  const userId = useRecoilValue(userIdState); // ユーザーが選択されているか判断するステート
+  const familyCardId = useRecoilValue(familyCardIdState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
-  );
-  const birthday = useRecoilValue(birthdayState);
+  ); // 編集モードに切り替えするためのステート
+  const birthday = useRecoilValue(birthdayState); // 誕生日が登録されたら、自動で入卒年月を計算するため、それに使われるステート
   const [academicHistoryItems, setAcademicHistoryItems] = useRecoilState(
     academicHistoryItemsState
-  );
-  // Firestoreから取得した初期のデータを保持
+  ); // 学歴が更新された際に値を格納するステート
   const [fetchHistoryItems, setFetchHistoryItems] = useState<
     academicHistoryItemsTypes[]
-  >([]);
+  >([]); // Firestoreから取得した学歴のデータを保持。ローカルのステート（academicHistoryItems）との比較に使う。
   const [previousBirthday, setPreviousBirthday] =
-    useState<PreviousBirthdayType>();
+    useState<PreviousBirthdayType>(); // Firestoreの学歴collectionから取得した誕生日のデータを保持。誕生日が更新された際に、学歴を自動計算させる時に使う。
 
-  // 初期データをFirestoreから取得
+  // NOTE: ユーザーが選択された時に、初期データをFirestoreから取得
   useEffect(() => {
-    if (userId) {
+    if (userId && familyCardId) {
       fetchAcademicHistoryFromFirebase();
     }
-  }, [userId]);
+  }, [userId, familyCardId]);
 
+  // NOTE: Firestoreから学歴と誕生日を取ってくる処理。誕生日は、FamilyCardの誕生日とは分けて、学歴のcollection内にもう一つ作成している。
   const fetchAcademicHistoryFromFirebase = async () => {
     try {
       const academicHistoryRef = collection(
         db,
-        "familyCard",
+        "familyCards",
         userId,
+        "familyCard",
+        familyCardId,
         "academicHistory"
       );
       const birthdayRef = doc(academicHistoryRef, "birthday");
       const academicHistoryDoc = await getDocs(academicHistoryRef);
       const birthdayDoc = await getDoc(birthdayRef);
+
+      // Firestoreから学歴情報を取ってこれているかで処理が分岐
       if (academicHistoryDoc) {
+        // 取ってこれていた場合、doc名がbirthday担っているものを除き、データをhistoryDataに格納。
+        // 並べ替えをし、academicHistoryItemsとfetchHistoryItemsに格納。
         const historyData = academicHistoryDoc.docs
           .filter((doc) => doc.id !== "birthday")
           .map((doc) => ({
@@ -77,6 +86,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
             contentStartDate: doc.data().contentStartDate,
             contentEndDate: doc.data().contentEndDate,
           }));
+        // docIdがbirthdayのデータが取れてきた場合は、その値をpreviousBirthdayステートに格納
         if (birthdayDoc.exists()) {
           const birthdayData = {
             birthday: birthdayDoc.data().birthday,
@@ -84,14 +94,16 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
           setPreviousBirthday(birthdayData);
         }
 
+        // 取ってきたデータの並べ替え処理。入学年月が若い方から並べ替え。
         historyData.sort((a, b) => {
           const dateA = new Date(a.contentStartDate).getTime();
           const dateB = new Date(b.contentStartDate).getTime();
           return dateA - dateB;
         });
 
+        // ステートの更新。
         setAcademicHistoryItems(historyData);
-        setFetchHistoryItems(historyData); // 初期データとして保持
+        setFetchHistoryItems(historyData);
       } else {
         setPreviousBirthday({ birthday: "" });
       }
@@ -100,47 +112,57 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     }
   };
 
-  // 誕生日が更新されたときに学歴を自動計算し、Firestoreに保存
+  // NOTE: 誕生日が更新されたときに学歴を自動計算し、saveAcademicHistoryToFirebase関数でFirestoreに保存
   useEffect(() => {
     if (birthday && birthday !== previousBirthday?.birthday) {
-      const schoolDates = calcSchoolDates(birthday);
+      const schoolDates = calcSchoolDates(birthday); // 自動計算させるコンポーネント（calcSchoolDates）に誕生日を渡す
       setAcademicHistoryItems(schoolDates);
-      saveAcademicHistoryToFirebase(schoolDates);
+      saveAcademicHistoryToFirebase(schoolDates); // 自動計算したデータをFirestoreにデータを送る関数へ渡す
     } else if (!birthday) {
       setAcademicHistoryItems([]);
     }
   }, [birthday]);
 
+  // NOTE: 誕生日から学歴が自動計算されたら、Firesoreに更新をかける処理
   const saveAcademicHistoryToFirebase = async (
     calcHistoryDates: academicHistoryItemsTypes[]
   ) => {
     try {
       const academicHistoryRef = collection(
         db,
-        "familyCard",
+        "familyCards",
         userId,
+        "familyCard",
+        familyCardId,
         "academicHistory"
       );
       const academicHistorySnapshot = await getDocs(academicHistoryRef);
+
+      // 誕生日の変更があった場合に、前回の誕生日から自動計算された学歴データもしくはそれ以降編集されたデータを一度全て削除
+      // 新たに誕生日から自動計算した学歴を表示させる。
       const deleteAcademicPromises = academicHistorySnapshot.docs.map(
-        (doc) => deleteDoc(doc.ref) // todoDoc.ref=todoDocのドキュメント参照。ドキュメントの削除や更新ができる。
+        (doc) => deleteDoc(doc.ref) // todoDoc.refを指定するとドキュメントの削除や更新ができる。
       );
-      await Promise.all(deleteAcademicPromises);
+      await Promise.all(deleteAcademicPromises); // snapshotで返ってくる値はPromise。わたってきた値がすべて実行されるまで、次の処理にうつらない。
+      // もとの学歴データの削除が終わったら、自動計算された学歴が再度Firestoreへ登録される
       calcHistoryDates.map(async (date) => {
         await addDoc(academicHistoryRef, date);
       });
 
+      // 更新された誕生日も再度、学歴collection配下に登録する
       const birthdayRef = doc(academicHistoryRef, "birthday");
       if (birthday) {
         await setDoc(birthdayRef, { birthday: birthday });
       }
+
+      // Firesoreへの登録が完了したら、画面上に新しいデータを表示させたいため、Firesoreから最新の値をとってくる
       fetchAcademicHistoryFromFirebase();
     } catch (error) {
       console.error("Error saving academic history:", error);
     }
   };
 
-  // 入力変更時のステート更新
+  // NOTE: 入力フォームに入力される値を格納するステート更新。学校・入学年月・卒業年月すべてacademicHistoryItemsに値を格納しデータを保持している。
   const handleInputChange = (
     index: number,
     key: keyof academicHistoryItemsTypes,
@@ -152,17 +174,21 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     setAcademicHistoryItems(updatedHistory);
   };
 
-  // Firestoreデータの保存処理
+  // NOTE: Enterを押した際にデータをFirestoreへ保存するための処理
   const handleSaveToFirebase = async (item: academicHistoryItemsTypes) => {
+    // firestoreにすでに登録してある値と、ローカルのステートを比較し、相違があるかで条件分岐
     if (
       JSON.stringify(fetchHistoryItems) !== JSON.stringify(academicHistoryItems)
     ) {
+      // ローカルの学歴情報に変更があった場合
       try {
         if (item.id) {
           const academicHistoryRef = doc(
             db,
-            "familyCard",
+            "familyCards",
             userId,
+            "familyCard",
+            familyCardId,
             "academicHistory",
             item.id
           );
@@ -172,24 +198,34 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
             contentEndDate: item.contentEndDate,
           });
           setFetchHistoryItems(academicHistoryItems); // 最新データを初期データとして更新
-        } else {
         }
       } catch (error) {
         console.error("Error updating academic history:", error);
       }
     }
+    // 編集モードを解除する
     setChangeEditDetail(false);
   };
 
+  // NOTE: 入力フォームの右横のプラスボタンが押され、編集モードが解除された時に次のFiresoreへの保存処理関数をはしらせる
+  useEffect(() => {
+    allSaveToFirebase();
+  }, [changeEditDetail]);
+
+  // NOTE: Firesoreへの保存処理
   const allSaveToFirebase = async () => {
     if (!userId) return;
 
+    // 編集されているかにかかわらず、すべての値をFiresoreに格納
+    // HACK: 編集ずみの値だけを取ってくる良い方法が思い浮かばなかったため、すべて保存にしてある。改善の余地あり。
     academicHistoryItems.map(async (item) => {
       if (item.id) {
         const academicHistoryRef = doc(
           db,
-          "familyCard",
+          "familyCards",
           userId,
+          "familyCard",
+          familyCardId,
           "academicHistory",
           item.id
         );
@@ -202,15 +238,12 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
     });
   };
 
-  useEffect(() => {
-    allSaveToFirebase();
-  }, [changeEditDetail]);
-
   return (
     <Grid
       container
       sx={{ margin: "20px 0 20px 0", justifyContent: "center", width: "100%" }}
     >
+      {/* 誕生日が登録されていたら、学歴を表示 */}
       {!previousBirthday?.birthday ? (
         <Grid item xs={12} justifyContent="center">
           <Typography textAlign="center">
@@ -219,6 +252,7 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
         </Grid>
       ) : (
         <Grid item sx={{ width: "100%" }}>
+          {/* 入力フォームのサンプルガイド */}
           <Grid container sx={{ width: "100%" }}>
             <Grid
               item
@@ -254,6 +288,8 @@ const AcademicHistory: React.FC<AcademicHistoryProps> = ({
               </Grid>
             </Grid>
           </Grid>
+
+          {/* 学歴の表示・編集欄 */}
           {academicHistoryItems.map((item, index) => (
             <Grid
               key={index}

@@ -13,6 +13,8 @@ import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";
 import { userIdState } from "@/app/states/userIdState";
 
 type deleteButtonProps = {
+  topCollection: string;
+  topDocId: string;
   mainCollection: string;
   mainDocId: string;
   collection: string;
@@ -22,6 +24,8 @@ type deleteButtonProps = {
 };
 
 const DeleteButton: React.FC<deleteButtonProps> = ({
+  topCollection,
+  topDocId,
   mainCollection,
   mainDocId,
   collection,
@@ -49,16 +53,44 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
       if (mainCollection === "familyCard") {
         if (collection === "detail") {
           const detailDocs = await getDocs(
-            collectionRef(db, mainCollection, mainDocId, collection)
+            collectionRef(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              collection
+            )
           );
           const academicHistoryDocs = await getDocs(
-            collectionRef(db, "familyCard", userId, "academicHistory")
+            collectionRef(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              "academicHistory"
+            )
           );
           const qualificationDocs = await getDocs(
-            collectionRef(db, "familyCard", userId, "qualification")
+            collectionRef(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              "qualification"
+            )
           );
           const workHistoryDocs = await getDocs(
-            collectionRef(db, "familyCard", userId, "workHistory")
+            collectionRef(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              "workHistory"
+            )
           );
           const deleteDetailPromises = detailDocs.docs.map((data) =>
             deleteDoc(data.ref)
@@ -76,19 +108,37 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
           await Promise.all(deleteAcademicPromises);
           await Promise.all(deleteQualificationPromises);
           await Promise.all(deleteWorkPromises);
-          const userDoc = await getDoc(doc(db, mainCollection, mainDocId));
+          const userDoc = await getDoc(
+            doc(db, topCollection, topDocId, mainCollection, mainDocId)
+          );
           await deleteDoc(userDoc.ref);
           window.location.reload();
         }
         if (collection === "qualification") {
           await deleteDoc(
-            doc(db, mainCollection, mainDocId, collection, docId)
+            doc(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              collection,
+              docId
+            )
           );
           setChangeQualifications(!changeQualifications);
         }
         if (collection === "workHistory") {
           await deleteDoc(
-            doc(db, mainCollection, mainDocId, collection, docId)
+            doc(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              collection,
+              docId
+            )
           );
           setFetchWorkHistory(!fetchWorkHistory);
         }
@@ -100,6 +150,8 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
         // todoに何かしら入っている状態でTitleを削除する際には、配下のtodoもすべて同時に削除する必要がある
         const todoCollectionRef = collectionRef(
           db,
+          topCollection,
+          topDocId,
           mainCollection,
           mainDocId,
           collection,
@@ -113,13 +165,25 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
         // `todo`の削除が完了するまで待機
         await Promise.all(deleteTodoPromises); // 非同期処理（Promise）を並行して実行し、そのすべてが完了するまで待つ
         // すべてのサブコレクションを削除した後に`title`を削除
-        await deleteDoc(doc(db, mainCollection, mainDocId, collection, docId));
+        await deleteDoc(
+          doc(
+            db,
+            topCollection,
+            topDocId,
+            mainCollection,
+            mainDocId,
+            collection,
+            docId
+          )
+        );
         setChangePreviews(!changePreviews);
         // NOTE：todoの削除処理
       } else if (collection2 && docId2) {
         await deleteDoc(
           doc(
             db,
+            topCollection,
+            topDocId,
             mainCollection,
             mainDocId,
             collection,
@@ -134,13 +198,29 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
       if (mainCollection === "memo") {
         if (collection === "category") {
           await deleteDoc(
-            doc(db, mainCollection, mainDocId, collection, docId)
+            doc(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              collection,
+              docId
+            )
           );
           setAddCategory(!addCategory);
         }
         if (collection === "previews") {
           await deleteDoc(
-            doc(db, mainCollection, mainDocId, collection, docId)
+            doc(
+              db,
+              topCollection,
+              topDocId,
+              mainCollection,
+              mainDocId,
+              collection,
+              docId
+            )
           );
         }
       }
