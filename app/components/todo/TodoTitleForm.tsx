@@ -1,19 +1,23 @@
 "use client";
 
-import { TextField, IconButton, Grid } from "@mui/material";
 import React from "react";
-import AddIcon from "@mui/icons-material/Add";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 import { useRecoilState, useRecoilValue } from "recoil";
+// NOTE:UIに関するインポート
+import { TextField, IconButton, Grid } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+// NOTE:Firebaseに関するインポート
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+// NOTE:ステートに関するインポート
 import { todoTitleState } from "@/app/states/todoTitleState";
 import { userIdState } from "@/app/states/userIdState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
+// NOTE: TodoTitleを入力・保存するためのコンポーネント
 const TodoTitleForm = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState); // NOTE: todoTitleとしてインプット欄に入力された値を一時格納。
-  const userId = useRecoilValue(userIdState);
-  const familyCardId = useRecoilValue(familyCardIdState);
+  const userId = useRecoilValue(userIdState); // NOTE:authのuidを格納。FirestoreのDocIdとして使用。
+  const familyCardId = useRecoilValue(familyCardIdState); // NOTE: FirestoreのサブDocId。FamilyCard毎にTodoを紐づけている。
 
   // NOTE: インプット欄に入力されたTodoTitldを一時取得・表示させる処理。
   const onChangeTodoTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +26,7 @@ const TodoTitleForm = () => {
 
   // NOTE: 入力されたTodoTitleをFirebaseに送信する処理。
   const onSubmitTodoTitle = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault(); // formのデフォルトの動作を遮断
     await addDoc(
       collection(db, "setTodoUser", userId, "todos", familyCardId, "title"),
       {

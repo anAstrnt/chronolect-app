@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+// NOTE:UIに関するインポート
 import {
   Card,
   CardActionArea,
@@ -8,9 +9,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { MenuData } from "@/data/MenuData";
-import SignOut from "@/app/components/SignOut";
+import { MenuData } from "@/data/MenuData"; // NOTE:メニューデータのインポート
+import SignOut from "@/app/components/SignOut"; // NOTE:サインアウトする際のコンポーネントのインポート
 
+// NOTE:featuresのトップメニュー画面
 const Page = () => {
   return (
     <Grid

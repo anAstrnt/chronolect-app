@@ -1,8 +1,11 @@
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
+// NOTE:UIに関するインポート
 import { Grid } from "@mui/material";
+// NOTE:Recoilに関するインポート。子コンポーネントでRecoilを使用するために必要。
 import { RecoilRoot } from "recoil";
+// NOTE:ユーザー認証に関するインポート
 import AuthCheck from "@/app/components/AuthCheck";
 
 type childrenProps = {
@@ -13,9 +16,11 @@ const layout = ({ children }: childrenProps) => {
   const [background, setBackground] = useState<string>();
 
   useEffect(() => {
+    // NOTE:時間の情報を取ってくる
     const newDate = new Date();
     const newHours = newDate.getHours();
 
+    // NOTE:サインインした時間にあわせて背景の色を変える処理
     if (18 >= newHours && 6 < newHours) {
       setBackground(
         "linear-gradient(90deg, rgba(141, 139, 226, 1), rgba(253, 187, 203, 1));"

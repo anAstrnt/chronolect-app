@@ -46,6 +46,7 @@ const page = () => {
         const errorCode = error.code;
         console.log({ code: errorCode });
         // エラーになった理由を表示する処理
+        // TODO:エラー文を追加する
         switch (errorCode) {
           case "auth/invalid-email":
             setErrorMessageEmail(

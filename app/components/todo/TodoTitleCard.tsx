@@ -1,11 +1,10 @@
 "use client";
 
-import { todoTitleState } from "@/app/states/todoTitleState";
-import AddIcon from "@mui/icons-material/Add";
+import React, { useEffect, useState } from "react";
 import { db } from "@/libs/firebase";
-import { todos as TodosType } from "@/types/todos";
-import { todoTytles } from "@/types/todoTytles";
+import { useRecoilValue } from "recoil";
 import DeleteButton from "@/components/DeleteButton";
+// NOTE:UIに関するインポート
 import {
   Card,
   CardContent,
@@ -14,6 +13,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
+import AddIcon from "@mui/icons-material/Add";
+// NOTE:Firebaseに関するインポート
 import {
   addDoc,
   collection,
@@ -24,9 +26,11 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import DoneIcon from "@mui/icons-material/Done";
+// NOTE:型に関するインポート
+import { todos as TodosType } from "@/types/todos";
+import { todoTytles } from "@/types/todoTytles";
+// NOTE:ステートに関するインポート
+import { todoTitleState } from "@/app/states/todoTitleState";
 import { userIdState } from "@/app/states/userIdState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
@@ -34,48 +38,26 @@ type todoType = {
   [key: string]: string;
 };
 
+// NOTE: TodoTitleFormコンポーネントでTodoTitleを入力したらタイトルが表示されたカードが生成されTodoを入力できるようになる。このカードを管理するためのコンポーネント。
 export const TodoTitleCard = () => {
-  const userId = useRecoilValue(userIdState);
-  const title = useRecoilValue(todoTitleState); // NOTE:todoTitleに入力された値を格納。cardに表示するTitleを取ってくるタイミングを操作するために使用。
+  const userId = useRecoilValue(userIdState); // NOTE:authのuidを格納。FirestoreのDocIdとして使用。
+  const todoTitle = useRecoilValue(todoTitleState); // NOTE:todoTitleに入力された値を格納。cardに表示するTitleを取ってくるタイミングを操作するために使用。
   const [todoTitles, setTodoTitles] = useState<todoTytles[]>([]); // NOTE: firebaseから取得したTodoTitleを格納。表示まわりやtodoの取得で使用。
   const [todo, setTodo] = useState<todoType>({}); // NOTE: todoとしてインプット欄に入力された値を一時格納。
   const [todosMap, setTodosMap] = useState<Map<string, TodosType[]>>(new Map()); // NOTE: firebaseからTodoを取得し、対応するtodoTitleIdに紐づけMapオブジェクトとして格納。TodoTitleIdに対応したTodoをJSXで表示するのに使用。
-  const familyCardId = useRecoilValue(familyCardIdState);
+  const familyCardId = useRecoilValue(familyCardIdState); // NOTE: FirestoreのサブDocId。FamilyCard毎にTodoを紐づけている。
 
-  // NOTE: 入力されたTodoをFirebaseに送信する処理。
-  const onSubmitTodos = async (
-    e: React.FormEvent<HTMLFormElement>,
-    index: number
+  // NOTE: インプット欄に入力されたTodoを一時取得・表示させる処理。
+  const onChangeTodos = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    titleId: string
   ) => {
-    e.preventDefault();
-    // NOTE: 入力されたTodoがどのTodoTitleのものかをindexで判別し、対応するtodoTitleIdを取得。
-    const titleId = todoTitles[index]?.titleId;
-    if (titleId) {
-      // NOTE: 取得したtodoTitleIdに紐づけて、Firebaseにtodoをサブコレクションとして送信する処理。
-      await addDoc(
-        collection(
-          db,
-          "setTodoUser",
-          userId,
-          "todos",
-          familyCardId,
-          "title",
-          titleId,
-          "todo"
-        ),
-        {
-          todo: todo[titleId],
-          isDone: false,
-          timeStamp: serverTimestamp(),
-        }
-      );
-    }
-    setTodo({ ...todo, [titleId]: "" });
+    setTodo({ ...todo, [titleId]: e.target.value });
   };
 
   // NOTE: cardにtodoTitleを表示するため、Firebaseから取得する処理。
   useEffect(() => {
-    // NOTE: sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
+    //  sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
     const q = query(
       collection(db, "setTodoUser", userId, "todos", familyCardId, "title"),
       orderBy("timestamp")
@@ -90,22 +72,14 @@ export const TodoTitleCard = () => {
       setTodoTitles(newTitles);
     });
     return () => unsubscribe();
-  }, [title, userId, familyCardId]);
-
-  // NOTE: インプット欄に入力されたTodoを一時取得・表示させる処理。
-  const onChangeTodos = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    titleId: string
-  ) => {
-    setTodo({ ...todo, [titleId]: e.target.value });
-  };
+  }, [todoTitle, userId, familyCardId]);
 
   // NOTE: todoをFirebaseから取得し、JSXで表示させるための処理。Firebaseから何かしらtodoTitleが取得されれば処理が走る。
   useEffect(() => {
     if (todoTitles.length > 0) {
-      // NOTE: todoTitleを個別のTitleにし、title.todoTitleIdに対応するtodoを取得。
+      // todoTitlesを個別のTitleにし、todoTitle.todoTitleIdに対応するtodoを取得。
       todoTitles.forEach((title) => {
-        // NOTE: sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
+        // sort（クライアント側）でtimeStampの並び替えを行うと、並び替えに若干のタイムラグが生じたのでorderBy（サーバー側）で並び替えをしています
         const q = query(
           collection(
             db,
@@ -127,15 +101,47 @@ export const TodoTitleCard = () => {
             isDone: doc.data().isDone,
             timeStamp: doc.data().timeStamp,
           }));
-          // NOTE: 取得したtodoは対応するTodoTitleの中で表示させたいので、TodoTitleIdに紐づけMapオブジェクトで管理する。
-          setTodosMap((prevMap) =>
-            new Map(prevMap).set(title.titleId, newTodos)
+          // newTodos: const titleId = [{doc},{doc}・・・];
+          // 取得したtodoは対応するTodoTitleの中で表示させたいので、TodoTitleIdに紐づけMapオブジェクトで管理する。
+          setTodosMap(
+            (prevMap) => new Map(prevMap).set(title.titleId, newTodos) // Map.set('key', 'value(todosオブジェクトの配列)');
           );
         });
         return () => unsubscribe();
       });
     }
   }, [todoTitles]);
+
+  // NOTE: 入力されたTodoをFirebaseに送信する処理。
+  const onSubmitTodos = async (
+    e: React.FormEvent<HTMLFormElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    //  入力されたTodoがどのTodoTitleのものかをindexで判別し、対応するtodoTitleIdを取得。
+    const titleId = todoTitles[index]?.titleId;
+    if (titleId) {
+      //  取得したtodoTitleIdに紐づけて、Firebaseにtodoをサブコレクションとして送信する処理。
+      await addDoc(
+        collection(
+          db,
+          "setTodoUser",
+          userId,
+          "todos",
+          familyCardId,
+          "title",
+          titleId,
+          "todo"
+        ),
+        {
+          todo: todo[titleId],
+          isDone: false,
+          timeStamp: serverTimestamp(),
+        }
+      );
+    }
+    setTodo({ ...todo, [titleId]: "" });
+  };
 
   // NOTE: 完了したTODOに取り消し線をつける処理
   const onChangeDoneTodo = async (
@@ -174,7 +180,7 @@ export const TodoTitleCard = () => {
           key={title.titleId}
           sx={{
             flex: "0 1 auto",
-            display: "flex", // Flexboxを使用
+            display: "flex",
             flexDirection: "column",
           }}
         >

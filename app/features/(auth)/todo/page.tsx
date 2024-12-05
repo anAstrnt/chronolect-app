@@ -1,27 +1,33 @@
 "use client";
 
 import React, { useEffect } from "react";
+// NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
+import { auth, db } from "@/libs/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+// NOTE:UIに関するインポート
+import { Grid, Typography } from "@mui/material";
+// NOTE:各種コンポーネントのインポート
+import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
 import AddTodoAria from "./AddTodoAria/page";
 import ShowTodoAria from "./ShowTodoAria/page";
 import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
-import { Grid, Typography } from "@mui/material";
+// NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
-import { auth, db } from "@/libs/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
-import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
 import { userIdState } from "@/app/states/userIdState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
+// NOTE:Todoページのトップコンポーネント
 const page = () => {
-  const openInputSpace = useRecoilValue(openInputSpaceState);
-  const [userId, setUserId] = useRecoilState(userIdState);
-  const setHasUserData = useSetRecoilState(hasUserDataState);
   const user = auth.currentUser;
+  const openInputSpace = useRecoilValue(openInputSpaceState);
   const familyCardId = useRecoilValue(familyCardIdState);
+  const setHasUserData = useSetRecoilState(hasUserDataState);
+  const [userId, setUserId] = useRecoilState(userIdState);
 
+  // NOTE:マウント時にユーザーUIDをステートにセットしておく。Authのフロント周りの処理やFirestoreのDocIdとして使用。
   useEffect(() => {
     if (user) {
       setUserId(user.uid);
@@ -30,14 +36,14 @@ const page = () => {
     }
   }, []);
 
-  // FamilyCardの初期登録が完了しているか調べる処理。
+  // NOTE:FamilyCardの初期登録が完了しているか調べる処理。
   useEffect(() => {
     if (userId) {
       const docRef = collection(db, "familyCards", userId, "familyCard");
       const unsubscribe = onSnapshot(
         docRef,
         (snapshot) => {
-          // スナップショットが空かどうかを確認
+          // スナップショットが空かどうかを確認。データが有ればSideバーにFamilyCard登録のアイコンが表示される。
           if (snapshot.empty) {
             setHasUserData(false); // データがない場合
             console.log("No documents found.");

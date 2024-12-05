@@ -1,14 +1,16 @@
 "use client";
 
-import { auth } from "@/libs/firebase";
-import { Grid } from "@mui/material";
-import SignIn from "@/app/features/(portal)/SignIn/page";
-import { RecoilRoot } from "recoil";
 import { useEffect, useState } from "react";
+// NOTE:UIに関するインポート
+import { Grid } from "@mui/material";
+// NOTE:ユーザー認証に関するインポート
+import { auth } from "@/libs/firebase";
 import { User } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import SignIn from "@/app/features/(portal)/SignIn/page";
 import Loading from "./loading";
 
+// NOTE:最上位コンポーネント。Recoilのルート設定やログインの有無判定をしている。
 export default function Home() {
   const router = useRouter();
   // userの認証状態を管理するステート
@@ -27,11 +29,9 @@ export default function Home() {
   }, [router]);
 
   return (
-    <RecoilRoot>
+    <Grid container sx={{ width: "100%", height: "100%" }}>
       {/* ルートページにアクセスしたときに認証の有無を判断し、認証されている場合はfeaturesにリダイレクトし、認証されていない場合はSignInのページを表示させる */}
-      <Grid container sx={{ width: "100%", height: "100%" }}>
-        {user === null ? <SignIn /> : <Loading />}
-      </Grid>
-    </RecoilRoot>
+      {user === null ? <SignIn /> : <Loading />}
+    </Grid>
   );
 }
