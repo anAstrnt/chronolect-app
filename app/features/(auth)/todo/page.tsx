@@ -21,11 +21,11 @@ import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 // NOTE:Todoページのトップコンポーネント
 const page = () => {
-  const user = auth.currentUser;
-  const openInputSpace = useRecoilValue(openInputSpaceState);
-  const familyCardId = useRecoilValue(familyCardIdState);
-  const setHasUserData = useSetRecoilState(hasUserDataState);
-  const [userId, setUserId] = useRecoilState(userIdState);
+  const user = auth.currentUser; // ユーザーのuidを取得するために使用
+  const openInputSpace = useRecoilValue(openInputSpaceState); // SidebarでfamilyCardの追加ボタンが押されたら、FamilyCardAddコンポーネントを表示させるためのステート
+  const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたTodoを表示させるためのステート
+  const setHasUserData = useSetRecoilState(hasUserDataState); // familyCardにデータが保存されていたらSidebarで表示させるためのステート
+  const [userId, setUserId] = useRecoilState(userIdState); // ユーザーのuidを格納するためのステート
 
   // NOTE:マウント時にユーザーUIDをステートにセットしておく。Authのフロント周りの処理やFirestoreのDocIdとして使用。
   useEffect(() => {
