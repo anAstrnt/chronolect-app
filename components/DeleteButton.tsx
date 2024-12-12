@@ -176,6 +176,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
             docId
           )
         );
+        // TODO: TODOの削除にプレビューの取得？
         setChangePreviews(!changePreviews);
         // NOTE：todoの削除処理
       } else if (collection2 && docId2) {

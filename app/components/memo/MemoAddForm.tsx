@@ -1,28 +1,33 @@
 "use client";
 
-import { Grid, IconButton, Input } from "@mui/material";
 import React, { useEffect } from "react";
+// NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/libs/firebase";
+// NOTE:UIに関するインポート
+import { Grid, IconButton, Input } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+// NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue } from "recoil";
 import { memoState } from "@/app/states/memoState";
 import { urlState } from "@/app/states/urlState";
 import { previewState } from "@/app/states/previewState";
 import { savePreviewsState } from "@/app/states/savedPreviewsState";
-import { previewData } from "@/types/previewData";
-import AddIcon from "@mui/icons-material/Add";
 import { userIdState } from "@/app/states/userIdState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
+// NOTE:型のインポート
+import { previewData } from "@/types/previewData";
 
+// NOTE:Memoを追加するためのコンポーネント
 const MemoAddForm = () => {
-  const userId = useRecoilValue(userIdState);
-  const [memo, setMemo] = useRecoilState(memoState);
-  const [url, setUrl] = useRecoilState(urlState);
+  const userId = useRecoilValue(userIdState); // ユーザーのuidを使用するためのステート
+  const [memo, setMemo] = useRecoilState(memoState); // memoの入力データを格納するためのステート
+  const [url, setUrl] = useRecoilState(urlState); // urlの入力データを格納するためのステート
   const [preview, setPreview] = useRecoilState(previewState); // api/previewから取ってきたURLのプレビューデータとメモ、タイムスタンプを格納する単発ステート。ついでに、Firestoreへの保存処理の発火装置。
   const [savedPreviews, setSavedPreviews] = useRecoilState(savePreviewsState); // Firestoreに保存した複数のpreviewを格納しているステート
-  const familyCardId = useRecoilValue(familyCardIdState);
+  const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたMemoを表示させるためのステート
 
-  // NOTE: クライアントからサーバーにリクエストを送信し、返ってきたレスポンスを状態として管理して、画面上に表示させるための処理
+  // NOTE: memoの追加ボタンで発動。クライアントからサーバーにリクエストを送信し、返ってきたレスポンスを状態として管理して、画面上に表示させるための処理
   const fetchPreview = async () => {
     try {
       // /api/previewのエンドポイントにエンコードしたURLを送信し、レスポンスを受け取る

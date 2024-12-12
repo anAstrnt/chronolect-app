@@ -1,27 +1,33 @@
 "use client";
 
 import React, { useEffect } from "react";
+// NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
+import { auth, db } from "@/libs/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+// NOTE:UIに関するインポート
+import { Grid, Typography } from "@mui/material";
+// NOTE:各種コンポーネントのインポート
 import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
 import AddMemoAria from "@/app/features/(auth)/memo/AddMemoAria/page";
 import ShowMemoAria from "@/app/features/(auth)/memo/ShowMemoAria/page";
-import { Grid, Typography } from "@mui/material";
+import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
+// NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
-import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
-import { auth, db } from "@/libs/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
+// NOTE:Memoページのトップコンポーネント
 const page = () => {
-  const [userId, setUserId] = useRecoilState(userIdState);
-  const openInputSpace = useRecoilValue(openInputSpaceState);
-  const setHasUserData = useSetRecoilState(hasUserDataState);
-  const user = auth.currentUser;
-  const familyCardId = useRecoilValue(familyCardIdState);
+  const user = auth.currentUser; // ユーザーのuidを取得するために使用
+  const [userId, setUserId] = useRecoilState(userIdState); // ユーザーのuidを格納するためのステート
+  const openInputSpace = useRecoilValue(openInputSpaceState); // SidebarでfamilyCardの追加ボタンが押されたら、FamilyCardAddコンポーネントを表示させるためのステート
+  const setHasUserData = useSetRecoilState(hasUserDataState); // familyCardにデータが保存されていたらSidebarで表示させるためのステート
+  const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたTodoを表示させるためのステート
 
+  // NOTE:マウント時にユーザーUIDをステートにセットしておく。Authのフロント周りの処理やFirestoreのDocIdとして使用。
   useEffect(() => {
     if (user) {
       setUserId(user.uid);
@@ -30,7 +36,7 @@ const page = () => {
     }
   }, []);
 
-  // FamilyCardの初期登録が完了しているか調べる処理。
+  // NOTE:FamilyCardの初期登録が完了しているか調べる処理。登録されていたら、Sidebarに表示させる。
   useEffect(() => {
     if (userId) {
       const docRef = collection(db, "familyCards", userId, "familyCard");

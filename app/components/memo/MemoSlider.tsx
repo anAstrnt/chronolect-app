@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
-import { useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+// NOTE:firestoreのデータを取得するためのインポート
+import { db } from "@/libs/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+// NOTE:スライダーを実装するためのインポート
 import Glide from "@glidejs/glide";
 import "@glidejs/glide/dist/css/glide.core.min.css";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { savePreviewsState } from "@/app/states/savedPreviewsState";
+// NOTE:UIに関するインポート
 import {
   Card,
   CardActionArea,
@@ -12,13 +14,15 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/libs/firebase";
-import { userIdState } from "@/app/states/userIdState";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+// NOTE:コンポーネントのインポート
 import CategorySelect from "./CategorySelect";
 import DeleteButton from "@/components/DeleteButton";
+// NOTE:recoilと各種ステートのインポート
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userIdState } from "@/app/states/userIdState";
+import { savePreviewsState } from "@/app/states/savedPreviewsState";
 import { changePreviewsState } from "@/app/states/changePreviewsState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
@@ -26,14 +30,15 @@ type MemoSliderType = {
   selectCategory: string;
 };
 
+// NOTE: プレビューデータをスライダーで表示するためのコンポーネント
 const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
-  const userId = useRecoilValue(userIdState);
-  const [savedPreviews, setSavedPreviews] = useRecoilState(savePreviewsState);
+  const userId = useRecoilValue(userIdState); // ユーザーのuidを使用するためのステート
+  const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたMemoを表示させるためのステート
+  const [savedPreviews, setSavedPreviews] = useRecoilState(savePreviewsState); // Firestore から保存されたPreviewデータを入れるためのステート
+  const changePreviews = useRecoilValue(changePreviewsState); // <CategorySelect />でカテゴリーが選択されプレビューデータをFirestoreに登録したあとに、最新のプレビューデータをFirestoreから取得するためのステート
   // 外部ライブラリ（Glider.js）を使うときに、Refを使って「どのHTML要素を操作するか」を指定する
   const glideRef = useRef<Glide | null>(null);
   const glideContainerRef = useRef<HTMLDivElement | null>(null);
-  const changePreviews = useRecoilValue(changePreviewsState);
-  const familyCardId = useRecoilValue(familyCardIdState);
 
   // NOTE: Firestore から保存されたPreviewデータを取得
   useEffect(() => {
@@ -58,19 +63,21 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
 
   // NOTE: Glid.jsでスライダーを実装
   useEffect(() => {
+    // glideContainerRef.current= ref={glideContainerRef}を指定したdiv要素が入る。初期値はnullでマウントされるとHTMLDivElementが設定される。アンマウントで再度nullになる。
     if (savedPreviews.length > 0 && glideContainerRef.current) {
       // glideContainerRefの参照を使いどのHTMLを操作するか指定しGliderライブラリに渡すことで、ライブラリがその要素の中でスライダーを動かすことができる
       glideRef.current = new Glide(glideContainerRef.current, {
-        gap: 1,
-        perView: 5,
-        bound: true,
+        gap: 1, // スライド間の隙間を1pxに。
+        perView: 5, // 一度に表示するスライドの数を５に。
+        bound: true, // スライダーが最後のスライドに達したときに、さらにスライドを動かせないように制限。
       });
+      // GridインスタンスをDOMにマウントするためのメソッド。スライダーが初期化され、指定した要素内で動作を開始する。
       glideRef.current.mount();
     }
     return () => {
-      // userIdが切り替わるとき、glideRefのデータがなかったり、前のRefが残っているとエラーが出るため、if文とnull代入をする
+      // familyCardIdが切り替わるとき、glideRefのデータがなかったり、前のRefが残っているとエラーが出るため、if文とnull代入をする
       if (glideRef.current) {
-        glideRef.current.destroy();
+        glideRef.current.destroy(); //スライダーのインスタンスを破棄
         glideRef.current = null;
       }
     };

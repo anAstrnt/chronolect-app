@@ -1,28 +1,32 @@
-import { Grid, IconButton, TextField } from "@mui/material";
 import React from "react";
-import AddIcon from "@mui/icons-material/Add";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { categoryNameState } from "@/app/states/categoryNameState";
+// NOTE:firestoreのデータを取得するためのインポート
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/libs/firebase";
+// NOTE:UIに関するインポート
+import { Grid, IconButton, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+// NOTE:recoilと各種ステートのインポート
+import { useRecoilState, useRecoilValue } from "recoil";
+import { categoryNameState } from "@/app/states/categoryNameState";
 import { userIdState } from "@/app/states/userIdState";
 import { addCategoryState } from "@/app/states/addCategoryState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
+// NOTE:カテゴリーを追加するためのコンポーネント
 const CategoryAddForm = () => {
-  const userId = useRecoilValue(userIdState); // 選択されたUserのIdを取ってくるステート
+  const userId = useRecoilValue(userIdState); // ユーザーのuidを使用するためのステート
   const [addCategory, setAddCategory] = useRecoilState(addCategoryState); // カテゴリーがFirestoreに追加された時に、booleanをフックに<MemoByCategory/>のfetchCategorys();でFirestoreから最新のカテゴリーデータを取ってくる
   const [categoryName, setCategoryName] = useRecoilState(categoryNameState); // TextFieldに入力されたデータを格納するステート
-  const familyCardId = useRecoilValue(familyCardIdState);
+  const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたMemoを表示させるためのステート
 
-  // NOTE: Firestoreにカテゴリーデータを保存する処理
+  // NOTE: 追加ボタンが押されたらFirestoreにカテゴリーデータを保存する処理
   const addCategoryNameToFirebase = async () => {
     try {
       const memoCategoryRef = doc(
         collection(db, "setMemoUser", userId, "memo", familyCardId, "category")
       );
       await setDoc(memoCategoryRef, { categoryName: categoryName });
-      setAddCategory(!addCategory);
+      setAddCategory(!addCategory); // <MemoByCategory/>のfetchCategorys();でFirestoreから最新のカテゴリーデータを取ってくる
     } catch (error) {
       console.log("error:", error);
     }
