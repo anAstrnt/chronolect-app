@@ -1,18 +1,22 @@
 "use client";
 
-import { avatarState } from "@/app/states/avatarState";
-import { familyCardIdState } from "@/app/states/familyCardIdState";
-import { openInputSpaceState } from "@/app/states/openInputSpaceState";
-import { userIdState } from "@/app/states/userIdState";
-import { userNameState } from "@/app/states/userNameState";
+import React, { useState } from "react";
+// NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
+import { db, storage } from "@/libs/firebase";
+import { addDoc, collection } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// NOTE:UIに関するインポート
+import { Grid, TextField } from "@mui/material";
+// NOTE:各種コンポーネントのインポート
 import FamilyCardAddButton from "@/components/FamilyCardAddButton";
 import ImageUpload from "@/components/ImageUpload";
-import { auth, db, storage } from "@/libs/firebase";
-import { Grid, TextField } from "@mui/material";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+// NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { userIdState } from "@/app/states/userIdState";
+import { userNameState } from "@/app/states/userNameState";
+import { openInputSpaceState } from "@/app/states/openInputSpaceState";
+import { familyCardIdState } from "@/app/states/familyCardIdState";
+import { avatarState } from "@/app/states/avatarState";
 
 // NOTE: ユーザーの新規登録を行うコンポーネント。FamilyCard・Todo・Memoコンポーネントのサイドバーで＋ボタンを押すと作動する
 const FamilyCardAdd: React.FC = () => {
@@ -79,7 +83,7 @@ const FamilyCardAdd: React.FC = () => {
       }
     }
 
-    // アバター画像とユーザー名をFirestoreのcollectionにFamilyCardとして登録する際に、同時にサブコレクションとしてdetailを登録する処理
+    // NOTE:アバター画像とユーザー名をFirestoreのcollectionにFamilyCardとして登録する際に、同時にサブコレクションとしてdetailを登録する処理
     if (newFamilyCardDocRef) {
       const detailCollectionRef = collection(newFamilyCardDocRef, "detail");
       await addDoc(detailCollectionRef, {
@@ -100,12 +104,6 @@ const FamilyCardAdd: React.FC = () => {
     setOpenInputSpace(false);
     window.location.reload();
   };
-
-  // useEffect(() => {
-  //   if (auth.currentUser?.uid) {
-  //     setUserId(auth.currentUser?.uid);
-  //   }
-  // }, []);
 
   return (
     <Grid container sx={{ width: "100%", height: "100%" }}>

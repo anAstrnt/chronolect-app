@@ -1,21 +1,26 @@
 "use client";
 
-import EditButton from "@/components/EditButton";
-import { Grid, Input, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+// NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
+import { db } from "@/libs/firebase";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+// NOTE:UIに関するインポート
+import { Grid, Input, Typography } from "@mui/material";
+// NOTE:各種コンポーネントのインポート
 import AcademicHistory from "../../../../components/familyCard/FamilyCardDetailAria/AcademicHistory";
 import WorkHistory from "../../../../components/familyCard/FamilyCardDetailAria/WorkHistory";
-import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import { db } from "@/libs/firebase";
+import EditButton from "@/components/EditButton";
 import InputButton from "@/components/InputButton";
+import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qualification";
+import DeleteButton from "@/components/DeleteButton";
+// NOTE:faimlyCardの項目を格納したデータ
+import { FamilyCardDetailData } from "@/data/FamilyCardDetailData";
+// NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
 import { userDetailState } from "@/app/states/userDetailState";
-import Qualification from "@/app/components/familyCard/FamilyCardDetailAria/Qualification";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
-import DeleteButton from "@/components/DeleteButton";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 type fieldMap = {
@@ -25,8 +30,9 @@ type fieldMap = {
   };
 };
 
+// NOTE:familyCardの一覧を表示するためのコンポーネント
 const FamilyCardDetail = () => {
-  const userId = useRecoilValue(userIdState);
+  const userId = useRecoilValue(userIdState); // ユーザーのuidを格納するためのステート
   const [userDetail, setUserDetail] = useRecoilState(userDetailState);
   const [changeEditDetail, setChangeEditDetail] = useRecoilState(
     changeEditDetailState
@@ -36,8 +42,8 @@ const FamilyCardDetail = () => {
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
   const familyCardId = useRecoilValue(familyCardIdState);
 
-  // FamilyCardDetailに表示する各種のデータを使いまわしたいので、オブジェクトとして管理
-  // JSXで値をmapで回しているので、indexを取得し、それぞれのfieldに紐づけられるようにしている。
+  // NOTE:FamilyCardDetailに表示する各種のデータを使いまわしたいので、オブジェクトとして管理
+  // NOTE:JSXで値をmapで回しているので、indexを取得し、それぞれのfieldに紐づけられるようにしている。
   const fieldMap: fieldMap = {
     1: {
       field: "name",
@@ -61,7 +67,7 @@ const FamilyCardDetail = () => {
     },
   };
 
-  // インプット欄に入力された値をset〇〇のステートにそれぞれ格納
+  // NOTE:インプット欄に入力された値をset〇〇のステートにそれぞれ格納
   const onChangeDetail = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
@@ -76,7 +82,7 @@ const FamilyCardDetail = () => {
     }
   };
 
-  // set〇〇のステートにそれぞれ格納された値をインプット欄に表示
+  // NOTE:set〇〇のステートにそれぞれ格納された値をインプット欄に表示
   const onChangeValue = (index: number) => {
     const selectedField = fieldMap[index + 1];
     if (selectedField) {
@@ -84,7 +90,7 @@ const FamilyCardDetail = () => {
     }
   };
 
-  // InputButtonにtype="submit"をつけているため、押されたときにformのonSubmitが発火し、値をfirestoreに送信するための処理。
+  // NOTE:InputButtonにtype="submit"をつけているため、押されたときにformのonSubmitが発火し、値をfirestoreに送信するための処理。
   const onSubmitDetailData = async (
     e: React.FormEvent<HTMLFormElement>,
     index: number
@@ -127,7 +133,7 @@ const FamilyCardDetail = () => {
     setChangeEditDetail(!changeEditDetail);
   };
 
-  // Firestoreからサブコレクション"detail"の値を取得。userDetailのステートに格納し、各所で使えるようにしています。
+  // NOTE:Firestoreからサブコレクション"detail"の値を取得。userDetailのステートに格納し、各所で使えるようにしています。
   const fetchDetailDocs = async () => {
     const detailCollectionRef = collection(
       db,
@@ -173,12 +179,14 @@ const FamilyCardDetail = () => {
     }
   }, [userId, familyCardId]);
 
+  // NOTE: 誕生日が変更されたら学歴を自動計算させる処理
   useEffect(() => {
     if (userDetail?.birthday) {
       setBirthday(userDetail.birthday);
     }
   }, [changeBirthday]);
 
+  // NOTE: 画面を切り替えたときに編集モードを解除するための処理
   useEffect(() => {
     setChangeEditDetail(false);
   }, [userId, familyCardId]);
