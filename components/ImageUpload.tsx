@@ -10,7 +10,9 @@ import { avatarState } from "@/app/states/avatarState";
 
 type ImageUploadProps = {
   setAvatarImage: React.Dispatch<React.SetStateAction<File | null>>;
-  setSampleAvatarImageNum: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setSampleAvatarImageNum: React.Dispatch<
+    React.SetStateAction<number | undefined>
+  >;
 };
 
 // setAvatarImage：ユーザーが任意に選択された画像のFileデータをFamilyCardAddコンポーネントに設置したステートに格納するために渡したProps
@@ -69,8 +71,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   return (
-    <div className={style.outerBox}>
-      <Grid sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div className={style.outerBox} style={{ width: "300px" }}>
+      <Grid
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
         <Avatar
           sx={{
             margin: "25px",
@@ -129,7 +133,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                   },
                 }}
               >
-                <Avatar sx={{ border: "2px solid #333" }} src={prevSampleAvatarImage} />
+                <Avatar
+                  sx={{ border: "2px solid #333" }}
+                  src={prevSampleAvatarImage}
+                />
               </Grid>
             </IconButton>
           ))}

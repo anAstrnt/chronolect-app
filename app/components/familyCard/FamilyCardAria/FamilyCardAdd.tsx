@@ -111,27 +111,29 @@ const FamilyCardAdd: React.FC = () => {
         <Grid
           container
           flexDirection="column"
+          justifyContent="center"
           alignItems="center"
           sx={{ width: "100%" }}
         >
-          <Grid item sx={{ width: "100%" }}>
+          <Grid item>
             <Grid
               container
+              spacing={2}
               justifyContent="center"
               alignItems="center"
               sx={{ width: "100%" }}
             >
-              <Grid item sx={{ margin: "40px" }}>
+              <Grid item xs={12} sm={6} md={4} sx={{ margin: "40px" }}>
                 <TextField
                   id="standard-basic"
                   label="name"
                   variant="standard"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  sx={{ margin: "40px 20px 0 0", width: "300px" }}
+                  sx={{ margin: "40px 20px 0 0", width: "250px" }}
                 />
               </Grid>
-              <Grid item sx={{ margin: "40px" }}>
+              <Grid item xs={12} sm={6} md={4} sx={{ margin: "40px" }}>
                 <ImageUpload
                   setAvatarImage={setAvatarImage}
                   setSampleAvatarImageNum={setSampleAvatarImageNum}
