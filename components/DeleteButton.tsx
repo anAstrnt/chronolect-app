@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
 import { deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
@@ -21,6 +21,7 @@ type deleteButtonProps = {
   docId: string;
   collection2?: string;
   docId2?: string;
+  appearance?: string;
 };
 
 const DeleteButton: React.FC<deleteButtonProps> = ({
@@ -32,6 +33,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   docId,
   collection2,
   docId2,
+  appearance,
 }) => {
   const userId = useRecoilValue(userIdState);
   const [changeQualifications, setChangeQualifications] = useRecoilState(
@@ -231,19 +233,38 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   };
 
   return (
-    <IconButton
-      type="button"
-      sx={{
-        borderColor: "rgba(0,0,0,0.8)",
-        "&:hover": {
-          cursor: "pointer",
-          background: "rgba(247,72,59,0.2)",
-        },
-      }}
-      onClick={(e) => delelteAction(e, mainDocId, docId)}
-    >
-      <ClearIcon />
-    </IconButton>
+    <>
+      {appearance == "icon" && (
+        <IconButton
+          type="button"
+          sx={{
+            borderColor: "rgba(0,0,0,0.8)",
+            "&:hover": {
+              cursor: "pointer",
+              background: "rgba(247,72,59,0.2)",
+            },
+          }}
+          onClick={(e) => delelteAction(e, mainDocId, docId)}
+        >
+          <ClearIcon />
+        </IconButton>
+      )}
+      {appearance == "string" && (
+        <Button
+          type="button"
+          sx={{
+            borderColor: "rgba(0,0,0,0.8)",
+            "&:hover": {
+              cursor: "pointer",
+              background: "rgba(247,72,59,0.2)",
+            },
+          }}
+          onClick={(e) => delelteAction(e, mainDocId, docId)}
+        >
+          削除
+        </Button>
+      )}
+    </>
   );
 };
 

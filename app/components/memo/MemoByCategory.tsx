@@ -77,6 +77,7 @@ const MemoByCategory = () => {
               mainDocId={familyCardId}
               collection="category"
               docId={category.id}
+              appearance={"icon"}
             />
           </Grid>
           {/* プレビューデータの本体 */}

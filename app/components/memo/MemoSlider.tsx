@@ -141,6 +141,7 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
                       mainDocId={familyCardId}
                       collection="previews"
                       docId={p.previewTitleId || ""}
+                      appearance={"icon"}
                     />
                   </Grid>
                   <Card>

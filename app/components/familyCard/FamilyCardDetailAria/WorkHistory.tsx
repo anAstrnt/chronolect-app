@@ -350,6 +350,7 @@ const WorkHistory: React.FC<workHistoryProps> = ({
                 mainDocId={familyCardId}
                 collection="workHistory"
                 docId={item.id || ""}
+                appearance={"icon"}
               />
             </Grid>
           ) : (

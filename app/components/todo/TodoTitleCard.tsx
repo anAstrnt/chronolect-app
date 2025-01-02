@@ -203,6 +203,7 @@ export const TodoTitleCard = () => {
                   mainDocId={familyCardId}
                   collection={"title"}
                   docId={title.titleId}
+                  appearance={"icon"}
                 />
               </Grid>
               <form
@@ -275,6 +276,7 @@ export const TodoTitleCard = () => {
                     docId={title.titleId}
                     collection2={"todo"}
                     docId2={todo.todoId}
+                    appearance={"icon"}
                   />
                 </Grid>
               ))}

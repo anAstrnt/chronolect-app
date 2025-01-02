@@ -262,6 +262,7 @@ const Qualification: React.FC<QualificationProps> = ({
                     mainDocId={familyCardId}
                     collection="qualification"
                     docId={item.id}
+                    appearance={"icon"}
                   />
                 </Grid>
               </Grid>

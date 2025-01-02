@@ -22,6 +22,7 @@ import { userDetailState } from "@/app/states/userDetailState";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { birthdayState } from "@/app/states/birthdayState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
+import DeleteConfirmationDialog from "@/components/DeleteConfirmationDialog";
 
 type fieldMap = {
   [key: number]: {
@@ -211,7 +212,7 @@ const FamilyCardDetail = () => {
         }}
       >
         {familyCardId && (
-          <DeleteButton
+          <DeleteConfirmationDialog
             topCollection="familyCards"
             topDocId={userId}
             mainCollection="familyCard"
