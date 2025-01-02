@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
 import { auth, db } from "@/libs/firebase";
 import { collection, onSnapshot } from "firebase/firestore";

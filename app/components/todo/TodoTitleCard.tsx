@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { db } from "@/libs/firebase";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import DeleteButton from "@/components/DeleteButton";
 // NOTE:UIに関するインポート
 import {
@@ -13,6 +13,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import DoneIcon from "@mui/icons-material/Done";
 import AddIcon from "@mui/icons-material/Add";
 // NOTE:Firebaseに関するインポート
@@ -46,6 +48,9 @@ export const TodoTitleCard = () => {
   const [todo, setTodo] = useState<todoType>({}); // NOTE: todoとしてインプット欄に入力された値を一時格納。
   const [todosMap, setTodosMap] = useState<Map<string, TodosType[]>>(new Map()); // NOTE: firebaseからTodoを取得し、対応するtodoTitleIdに紐づけMapオブジェクトとして格納。TodoTitleIdに対応したTodoをJSXで表示するのに使用。
   const familyCardId = useRecoilValue(familyCardIdState); // NOTE: FirestoreのサブDocId。FamilyCard毎にTodoを紐づけている。
+  const [showTodos, setShowTodos] = useState<boolean[]>(
+    new Array(todoTitles.length).fill(true)
+  ); // NOTE:Todoの表示非表示を切り替えるステート。初期値：Titleの数分ある値のすべてをtrueとする。
 
   // NOTE: インプット欄に入力されたTodoを一時取得・表示させる処理。
   const onChangeTodos = (
@@ -170,6 +175,14 @@ export const TodoTitleCard = () => {
     }
   };
 
+  const onClickShowTodosChange = (index: number) => {
+    setShowTodos((prev) => {
+      const newShowTodos = [...prev];
+      newShowTodos[index] = !newShowTodos[index];
+      return newShowTodos;
+    });
+  };
+
   return (
     <Grid
       sx={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}
@@ -186,25 +199,66 @@ export const TodoTitleCard = () => {
         >
           <Card
             sx={{
-              minWidth: 200,
+              minWidth: 300,
               maxWidth: 500,
               margin: "10px",
             }}
           >
-            <CardContent sx={{ flexGrow: 1 }}>
-              <Grid sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="h5" component="div">
-                  {title.title}
-                </Typography>
-                <DeleteButton
-                  topCollection="setTodoUser"
-                  topDocId={userId}
-                  mainCollection={"todos"}
-                  mainDocId={familyCardId}
-                  collection={"title"}
-                  docId={title.titleId}
-                  appearance={"icon"}
-                />
+            <CardContent sx={{ position: "relative" }}>
+              <Grid container alignItems="center" justifyContent="center">
+                <Grid
+                  container
+                  item
+                  width="auto"
+                  sx={{ margin: "10px 30px 10px 10px" }}
+                >
+                  <Typography variant="h5" component="div">
+                    {title.title}
+                  </Typography>
+                  <Grid
+                    item
+                    sx={{
+                      margin: "0 5px",
+                      position: "absolute",
+                      right: 0,
+                      top: 0,
+                    }}
+                  >
+                    <DeleteButton
+                      topCollection="setTodoUser"
+                      topDocId={userId}
+                      mainCollection={"todos"}
+                      mainDocId={familyCardId}
+                      collection={"title"}
+                      docId={title.titleId}
+                      appearance={"icon"}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  item
+                  justifyContent="flex-end"
+                  alignItems="center"
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <Grid item>
+                    <Typography sx={{ color: "gray" }}>
+                      {todosMap.get(title.titleId)?.length}
+                    </Typography>
+                  </Grid>
+                  <IconButton onClick={() => onClickShowTodosChange(index)}>
+                    {showTodos[index] ? (
+                      <KeyboardArrowUpIcon sx={{ fontSize: "medium" }} />
+                    ) : (
+                      <KeyboardArrowDownIcon sx={{ fontSize: "medium" }} />
+                    )}
+                  </IconButton>
+                </Grid>
               </Grid>
               <form
                 onSubmit={(e) => onSubmitTodos(e, index)}
@@ -212,6 +266,7 @@ export const TodoTitleCard = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  margin: "30px 0",
                 }}
               >
                 <TextField
@@ -234,52 +289,53 @@ export const TodoTitleCard = () => {
                   <AddIcon />
                 </IconButton>
               </form>
-              {todosMap.get(title.titleId)?.map((todo) => (
-                <Grid
-                  sx={{ display: "flex", alignItems: "center" }}
-                  key={todo.todoId}
-                >
-                  <Typography
-                    sx={{
-                      textDecoration: todo.isDone ? "line-through" : "none",
-                      color: todo.isDone ? "text.disabled" : "text.primary",
-                    }}
+              {showTodos[index] &&
+                todosMap.get(title.titleId)?.map((todo) => (
+                  <Grid
+                    sx={{ display: "flex", alignItems: "center" }}
+                    key={todo.todoId}
                   >
-                    {todo.todo}
-                  </Typography>
-                  <IconButton
-                    type="button"
-                    sx={{
-                      borderColor: "rgba(0,0,0,0.8)",
-                      "&:hover": {
-                        cursor: "pointer",
-                        background: "rgba(61,196,59,0.2)",
-                      },
-                    }}
-                    onClick={(e) =>
-                      onChangeDoneTodo(
-                        e,
-                        title.titleId,
-                        todo.todoId,
-                        todo.isDone
-                      )
-                    }
-                  >
-                    <DoneIcon />
-                  </IconButton>
-                  <DeleteButton
-                    topCollection="setTodoUser"
-                    topDocId={userId}
-                    mainCollection={"todos"}
-                    mainDocId={familyCardId}
-                    collection={"title"}
-                    docId={title.titleId}
-                    collection2={"todo"}
-                    docId2={todo.todoId}
-                    appearance={"icon"}
-                  />
-                </Grid>
-              ))}
+                    <Typography
+                      sx={{
+                        textDecoration: todo.isDone ? "line-through" : "none",
+                        color: todo.isDone ? "text.disabled" : "text.primary",
+                      }}
+                    >
+                      {todo.todo}
+                    </Typography>
+                    <IconButton
+                      type="button"
+                      sx={{
+                        borderColor: "rgba(0,0,0,0.8)",
+                        "&:hover": {
+                          cursor: "pointer",
+                          background: "rgba(61,196,59,0.2)",
+                        },
+                      }}
+                      onClick={(e) =>
+                        onChangeDoneTodo(
+                          e,
+                          title.titleId,
+                          todo.todoId,
+                          todo.isDone
+                        )
+                      }
+                    >
+                      <DoneIcon />
+                    </IconButton>
+                    <DeleteButton
+                      topCollection="setTodoUser"
+                      topDocId={userId}
+                      mainCollection={"todos"}
+                      mainDocId={familyCardId}
+                      collection={"title"}
+                      docId={title.titleId}
+                      collection2={"todo"}
+                      docId2={todo.todoId}
+                      appearance={"icon"}
+                    />
+                  </Grid>
+                ))}
             </CardContent>
           </Card>
         </Grid>
