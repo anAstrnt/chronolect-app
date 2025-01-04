@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📒 chronolect
 
-## Getting Started
+家族のこと・やること・保存したい Web ページをまるごと記録しておけるアプリです。
 
-First, run the development server:
+<img src="https://github.com/user-attachments/assets/04411ed8-01b7-4a6b-8294-e9a3cfdd3316">
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Family Card
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+家族や大切な人の情報（名前・誕生日・郵便番号・住所・メールアドレス・資格・学歴・職歴）を保存するページです。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Todo
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+日々の Todo をタイトルごとに保存することがでるページです。
 
-## Learn More
+### Memo
 
-To learn more about Next.js, take a look at the following resources:
+気になるページの URL をメモ付きで保存できるページです。  
+例えば、勉強でまた見返したいページを保存するときや、美味しそうなレシピを見つけたときに URL にメモを付けて保存してみてください。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🌼 このサービスを作った想い
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+例えば、「サービスの申し込みをするときに、家族の誕生日や住所が思い出せない。」「ついでにやらなければならないこともまとめておきたい。」  
+そんな悩みを持つ方に向けて作成したアプリです。
+役場の窓口でお子様の生年月日をなかなか思い出せない方が案外いらっしゃることに気づき、このアプリを作成しました。
 
-## Deploy on Vercel
+## 🔧 機能一覧
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ユーザー認証
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- メールアドレスとパスワードによるログイン
+- ユーザー登録機能
+- ログアウト機能
+
+### Family Card
+
+⭐️ 家族カード管理
+
+- 家族のプロフィール作成・編集
+- 家族情報の表示
+- 家族カードの削除
+
+⭐️ 職歴管理
+
+- 職歴の追加・編集・削除
+- 職歴データの表示
+- 職歴のソート機能（雇用日順）
+
+⭐️ 学歴管理
+
+- 学歴の追加・編集・削除
+- 学歴データの表示
+- 誕生日に基づく自動学歴計算
+
+⭐️ 資格情報管理
+
+- 資格情報の追加・編集・削除
+- 資格データの表示
+
+### Todo
+
+⭐️ Todo リスト管理
+
+- Todo タイトルの追加・表示
+- Todo アイテムの追加・編集・削除
+
+### Memo
+
+⭐️ メモ管理
+
+- URL とメモの追加・表示
+- メモのカテゴリー分け
+- メモのプレビュー表示
+
+⭐️ カテゴリー管理
+
+- メモのカテゴリーの追加・削除
+- カテゴリーに基づくメモのフィルタリング
+
+### Tips
+
+⭐️ ヘルプ・チップ機能
+
+- 各機能に関する使い方やヒントの表示
+
+## 🔧 使用技術
+
+#### プログラミング言語
+
+- JavaScript
+- TypeScript
+
+#### フレームワーク・ライブラリ
+
+- React
+- Next.js
+
+#### 状態管理
+
+- Recoil
+
+#### スタイリング
+
+- Material-UI
+
+#### データベース
+
+- Firebase Firestore
+- Firebase Storage
+
+#### 認証
+
+- Firebase Authentication
+
+#### API
+
+- LinkPreview API
+
+#### バージョン管理
+
+- GitHub
