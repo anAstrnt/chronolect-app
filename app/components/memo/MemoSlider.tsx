@@ -51,7 +51,9 @@ const MemoSlider: React.FC<MemoSliderType> = ({ selectCategory }) => {
           category: doc.data().category,
           title: doc.data().title,
           description: doc.data().description,
-          image: doc.data().image,
+          image:
+            doc.data().image ||
+            "https://github.com/user-attachments/assets/04411ed8-01b7-4a6b-8294-e9a3cfdd3316",
           url: doc.data().url,
           memo: doc.data().memo,
         }));

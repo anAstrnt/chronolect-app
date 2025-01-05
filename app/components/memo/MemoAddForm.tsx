@@ -37,7 +37,13 @@ const MemoAddForm = () => {
         // 返ってきたレスポンスをjson形式にパースし、型で明示的に定義する
         const data: previewData = await res.json();
         // プレビューの状態を保持を保持し、画面上に表示させるための処理の一部
-        await setPreview({ ...data, memo, timeStamp: serverTimestamp() });
+        await setPreview({
+          ...data,
+          memo,
+          url: url,
+          category: "カテゴリーなし",
+          timeStamp: serverTimestamp(),
+        });
       }
     } catch (error) {
       console.error("プレビューの取得に失敗しました:", error);

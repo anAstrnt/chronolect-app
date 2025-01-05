@@ -22,7 +22,7 @@ const MemoPreview = () => {
         </Typography>
         {/* プレビューデータの本体 */}
         <Grid item sx={{ margin: "0px 30px" }}>
-          <MemoSlider selectCategory="" />
+          <MemoSlider selectCategory="カテゴリーなし" />
         </Grid>
       </Grid>
     </Grid>
