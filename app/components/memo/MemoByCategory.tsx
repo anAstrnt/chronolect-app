@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 // NOTE:firestoreのデータを取得するためのインポート
 import { db } from "@/libs/firebase";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
 // NOTE:UIに関するインポート
 import { Grid, Typography } from "@mui/material";
 // NOTE:コンポーネントのインポート
@@ -14,6 +21,8 @@ import { addCategoryState } from "@/app/states/addCategoryState";
 import { memoCategorysState } from "@/app/states/memoCategorysState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 import { savePreviewsState } from "@/app/states/savedPreviewsState";
+import { deleteCategoryState } from "@/app/states/deleteCategoryState";
+import { changePreviewsState } from "@/app/states/changePreviewsState";
 
 // NOTE:カテゴリー分けされたプレビューデータを表示させるコンポーネント
 const MemoByCategory = () => {
@@ -23,6 +32,10 @@ const MemoByCategory = () => {
   const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたMemoを表示させるためのステート
   const savedPreviews = useRecoilValue(savePreviewsState); // Firestoreに保存した複数のpreviewを格納しているステート
   const [fetchCategory, setFetchCategory] = useState(false); // カテゴリーなしを１回だけFirestoreに登録するよう制御するステート
+  const [deleteCategory, setDeleteCategory] =
+    useRecoilState(deleteCategoryState);
+  const [changePreviews, setChangePreviews] =
+    useRecoilState(changePreviewsState);
 
   // NOTE: Firestoreからcategoryデータを取ってくる処理
   const fetchCategorys = async () => {
@@ -42,14 +55,16 @@ const MemoByCategory = () => {
           categoryName: doc.data().categoryName,
         }))
       );
-      setFetchCategory(true);
+      if (savedPreviews) {
+        setFetchCategory(true);
+      }
     } catch (error) {
       console.log("error:", error);
     }
   };
   useEffect(() => {
     fetchCategorys();
-  }, [userId, familyCardId, addCategory, savedPreviews]);
+  }, [userId, familyCardId, addCategory, savedPreviews, deleteCategory]);
 
   // NOTE:ユーザーアイコンが押されたら↑のfetchCategorys関数が作動し、カテゴリーをFirestoreから取得してくるが、カテゴリーが何も登録されていない状態だったら「カテゴリーなし」をカテゴリーに追加する処理
   const addFirstCategory = async () => {
@@ -66,8 +81,54 @@ const MemoByCategory = () => {
   };
   useEffect(() => {
     if (categorys.length === 0 && fetchCategory) {
-      console.log("in");
       addFirstCategory();
+    }
+  }, [fetchCategory]);
+
+  // NOTE:カテゴリーの削除がされた際にfetchCategorys関数の処理完了後に発火する処理。削除したカテゴリー上にMemoがあった場合は、カテゴリーなしに再振り分けを行う
+  const afterDeleteCategory = async () => {
+    try {
+      // 削除されたカテゴリーがない場合、メモを「カテゴリーなし」に移動
+      const updatedPreviews = savedPreviews.map((preview) => {
+        const categoryExists = categorys.some((category) => {
+          return category.categoryName === preview.category;
+        });
+        // カテゴリーが存在しなければ "カテゴリーなし" に変更
+        if (!categoryExists) {
+          return {
+            ...preview,
+            category: "カテゴリーなし",
+          };
+        }
+        return preview;
+      });
+      // Firestore にアップデート
+      const updatePromises = updatedPreviews.map(async (preview) => {
+        if (preview.previewTitleId) {
+          const previewRef = doc(
+            db,
+            "setMemoUser",
+            userId,
+            "memo",
+            familyCardId,
+            "previews",
+            preview.previewTitleId
+          );
+          await updateDoc(previewRef, { category: preview.category });
+        }
+      });
+      // Firestore のすべての更新処理が完了するまで待機
+      await Promise.all(updatePromises);
+      // 最新のプレビュー情報を取得してUIを更新
+      setChangePreviews(!changePreviews);
+      setDeleteCategory(false);
+    } catch (error) {
+      console.error("Error in afterDeleteCategory:", error);
+    }
+  };
+  useEffect(() => {
+    if (deleteCategory) {
+      afterDeleteCategory();
     }
   }, [categorys]);
 

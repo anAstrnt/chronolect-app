@@ -3,14 +3,14 @@ import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
 import { deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "@/libs/firebase";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { changeQualificationsState } from "@/app/states/changeQualificationsState";
 import { collection as collectionRef } from "firebase/firestore";
 import "firebase/compat/firestore";
 import { addCategoryState } from "@/app/states/addCategoryState";
 import { changePreviewsState } from "@/app/states/changePreviewsState";
 import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";
-import { userIdState } from "@/app/states/userIdState";
+import { deleteCategoryState } from "@/app/states/deleteCategoryState";
 
 type deleteButtonProps = {
   topCollection: string;
@@ -35,7 +35,6 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   docId2,
   appearance,
 }) => {
-  const userId = useRecoilValue(userIdState);
   const [changeQualifications, setChangeQualifications] = useRecoilState(
     changeQualificationsState
   );
@@ -45,6 +44,8 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   const [fetchWorkHistory, setFetchWorkHistory] = useRecoilState(
     fetchWorkHistoryState
   );
+  const [deleteCategory, setDeleteCategory] =
+    useRecoilState(deleteCategoryState);
 
   const delelteAction = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -200,18 +201,18 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
       // NOTE：memoコンポーネントのcategory の削除処理
       if (mainCollection === "memo") {
         if (collection === "category") {
-          await deleteDoc(
-            doc(
-              db,
-              topCollection,
-              topDocId,
-              mainCollection,
-              mainDocId,
-              collection,
-              docId
-            )
+          const docRef = doc(
+            db,
+            topCollection,
+            topDocId,
+            mainCollection,
+            mainDocId,
+            collection,
+            docId
           );
-          setAddCategory(!addCategory);
+          await deleteDoc(docRef);
+          // setAddCategory(!addCategory);
+          setDeleteCategory(true);
         }
         if (collection === "previews") {
           await deleteDoc(
