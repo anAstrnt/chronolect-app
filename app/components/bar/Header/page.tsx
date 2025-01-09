@@ -5,9 +5,9 @@ import BackToPageButton from "@/components/BackToPageButton";
 import { Grid, Typography } from "@mui/material";
 import Tips from "@/app/components/bar/Tips/page";
 
-interface HeaderProps {
+type HeaderProps = {
   title: string;
-}
+};
 
 // NOTE:FamilyCard.Todo.Memoの上部に表示させるコンポーネント
 // NOTE:今いるコンポーネント名を表示・Tipsの表示・メニューへ戻るボタンの表示をしている。

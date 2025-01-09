@@ -104,7 +104,7 @@ const Page: React.FC = () => {
               zIndex: 1000,
             }}
           >
-            <Header title={"Family Card"} />
+            <Header title="Family Card" />
           </Grid>
 
           <Grid item sx={{ flexGrow: 1 }}>
