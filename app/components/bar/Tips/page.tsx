@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import { Box, Grid, Modal, Typography } from "@mui/material";
@@ -9,8 +9,8 @@ type tipsCompProps = {
 
 // NOTE: Headerに表示されるTipsのコンポーネント
 // NOTE: それぞれのページの操作方法についての説明書き
-const page: React.FC<tipsCompProps> = ({ title }) => {
-  const [open, setOpen] = React.useState(false); //  ダイアログの開閉をするステート
+const Page: React.FC<tipsCompProps> = ({ title }) => {
+  const [open, setOpen] = useState(false); //  ダイアログの開閉をするステート
 
   const style = {
     position: "absolute",
@@ -144,4 +144,4 @@ const page: React.FC<tipsCompProps> = ({ title }) => {
   );
 };
 
-export default page;
+export default Page;

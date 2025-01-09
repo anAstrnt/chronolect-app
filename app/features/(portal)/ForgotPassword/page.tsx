@@ -10,7 +10,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import Link from "next/link";
 
 //NOTE:パスワードを忘れたユーザーにパスワード再設定メールを送信するコンポーネント
-const page = () => {
+const Page = () => {
   // NOTE:ユーザーが入力したパスワード再設定メールを送るためのメールアドレスを格納するためのステート
   const [email, setEmail] = useState("");
   // NOTE:メールの送信が失敗したときにエラーメッセージを受け取るステート
@@ -80,4 +80,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

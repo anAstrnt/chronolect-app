@@ -12,7 +12,7 @@ import {
 } from "firebase/auth";
 import { red } from "@mui/material/colors";
 
-const page = () => {
+const Page = () => {
   const [currentPassword, setCurrentPassword] =
     useRecoilState(currentPasswordState);
   const [errorMessage, setErrorMessage] = useState("");
@@ -122,4 +122,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

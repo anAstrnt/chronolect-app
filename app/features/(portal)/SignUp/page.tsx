@@ -21,7 +21,7 @@ import { auth } from "@/libs/firebase";
 import { useRouter } from "next/navigation";
 
 //NOTE:新規ユーザー登録をするためのコンポーネント
-const page = () => {
+const Page = () => {
   // NOTE:アカウント登録に成功したらページ遷移するためのHooks
   const router = useRouter();
 
@@ -171,4 +171,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

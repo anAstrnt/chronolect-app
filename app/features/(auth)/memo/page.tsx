@@ -20,7 +20,7 @@ import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 // NOTE:Memoページのトップコンポーネント
-const page = () => {
+const Page = () => {
   const user = auth.currentUser; // ユーザーのuidを取得するために使用
   const [userId, setUserId] = useRecoilState(userIdState); // ユーザーのuidを格納するためのステート
   const openInputSpace = useRecoilValue(openInputSpaceState); // SidebarでfamilyCardの追加ボタンが押されたら、FamilyCardAddコンポーネントを表示させるためのステート
@@ -162,4 +162,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

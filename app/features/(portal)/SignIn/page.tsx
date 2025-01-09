@@ -24,7 +24,7 @@ import { auth } from "@/libs/firebase";
 import { useRouter } from "next/navigation";
 
 //NOTE:登録済みのユーザーがログインをするためのコンポーネント
-const page = () => {
+const Page = () => {
   const router = useRouter();
   // NOTE:ログインするメールアドレス・パスワードを格納するステート
   const [email, setEmail] = React.useState("");
@@ -191,4 +191,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

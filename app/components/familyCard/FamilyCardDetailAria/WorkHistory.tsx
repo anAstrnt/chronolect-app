@@ -34,13 +34,6 @@ const WorkHistory: React.FC<workHistoryProps> = ({
   const [employmentDate, setEmploymentDate] = useState<string>("");
   const [resignationDate, setResignationDate] = useState<string>("");
 
-  // userを切り替えたらFirestoreからデータ取得
-  useEffect(() => {
-    if (userId && familyCardId) {
-      fetchWorkHistoryFromFirebase();
-    }
-  }, [userId, familyCardId]);
-
   // Firestoreからデータ取得する処理
   const fetchWorkHistoryFromFirebase = async () => {
     try {
@@ -75,6 +68,13 @@ const WorkHistory: React.FC<workHistoryProps> = ({
       setWorkHistoryItems([]);
     }
   };
+
+  // userを切り替えたらFirestoreからデータ取得
+  useEffect(() => {
+    if (userId && familyCardId) {
+      fetchWorkHistoryFromFirebase();
+    }
+  }, [userId, familyCardId]);
 
   // 編集フォームへ入力された値を表示、workHistoryItemsへ格納する。
   const handleInputChange = (

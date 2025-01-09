@@ -12,7 +12,7 @@ type childrenProps = {
   children: ReactNode;
 };
 
-const layout = ({ children }: childrenProps) => {
+const Layout = ({ children }: childrenProps) => {
   const [background, setBackground] = useState<string>();
 
   useEffect(() => {
@@ -55,4 +55,4 @@ const layout = ({ children }: childrenProps) => {
   );
 };
 
-export default layout;
+export default Layout;

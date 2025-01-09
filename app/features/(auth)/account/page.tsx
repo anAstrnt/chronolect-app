@@ -24,7 +24,7 @@ import {
 import { auth } from "@/libs/firebase";
 import { currentPasswordState } from "@/app/states/currentPasswordState";
 
-const page = () => {
+const Page = () => {
   const [message, setMessage] = useRecoilState(changeAccountMessageState);
   const [openDaialog, setOpenDaialog] = useState(false);
   const [openDaialogChangeEmailAddress, setOpenDaialogChangeEmailAddress] =
@@ -188,4 +188,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

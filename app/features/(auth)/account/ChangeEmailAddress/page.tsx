@@ -13,7 +13,7 @@ import { changeAccountMessageState } from "@/app/states/changeAccountMessageStat
 import { Button, Grid, Input, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
 
-const page = () => {
+const Page = () => {
   const [newEmail, setNewEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [currentPassword, setCurrentPassword] =
@@ -151,4 +151,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
