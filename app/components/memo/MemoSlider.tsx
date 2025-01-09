@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect } from "react";
 // NOTE:firestoreのデータを取得するためのインポート
 import { db } from "@/libs/firebase";

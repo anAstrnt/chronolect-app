@@ -1,3 +1,5 @@
+"use client";
+
 import { currentPasswordState } from "@/app/states/currentPasswordState";
 import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";

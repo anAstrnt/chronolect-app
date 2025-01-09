@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 // NOTE:firestoreのデータを取得するためのインポート
 import { db } from "@/libs/firebase";
@@ -7,7 +9,6 @@ import {
   getDocs,
   setDoc,
   updateDoc,
-  writeBatch,
 } from "firebase/firestore";
 // NOTE:UIに関するインポート
 import { Grid, Typography } from "@mui/material";

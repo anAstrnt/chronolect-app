@@ -1,3 +1,5 @@
+"use client";
+
 import { currentPasswordState } from "@/app/states/currentPasswordState";
 import { Button, Grid, Input, Typography } from "@mui/material";
 import React, { useState } from "react";
