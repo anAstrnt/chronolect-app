@@ -3,7 +3,7 @@ import MemoAddForm from "@/app/components/memo/MemoAddForm";
 import { Grid } from "@mui/material";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <Grid
       container
@@ -24,4 +24,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

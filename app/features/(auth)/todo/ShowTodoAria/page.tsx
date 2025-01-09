@@ -2,7 +2,7 @@ import { TodoTitleCard } from "@/app/components/todo/TodoTitleCard";
 import { Grid } from "@mui/material";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <Grid container sx={{ width: "100%" }}>
       <TodoTitleCard />
@@ -10,4 +10,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
