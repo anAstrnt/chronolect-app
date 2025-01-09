@@ -21,7 +21,7 @@ import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { userIdState } from "@/app/states/userIdState";
 
 // NOTE:FamilyCardページのトップコンポーネント
-const page: React.FC = () => {
+const Page: React.FC = () => {
   const user = auth.currentUser; // ユーザーのuidを取得するために使用
   const [userId, setUserId] = useRecoilState(userIdState); // ユーザーのuidを格納するためのステート
   // Firestore/"familyCard"のクエリスナップショットに値が入っていたらTrue。入っていなかったらFalseを返し、ユーザーが初めてアクセスした場合に、表示する画面を切り替えられるようにしている。
@@ -212,4 +212,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -20,7 +20,7 @@ import { userIdState } from "@/app/states/userIdState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 // NOTE:Todoページのトップコンポーネント
-const page = () => {
+const Page = () => {
   const user = auth.currentUser; // ユーザーのuidを取得するために使用
   const openInputSpace = useRecoilValue(openInputSpaceState); // SidebarでfamilyCardの追加ボタンが押されたら、FamilyCardAddコンポーネントを表示させるためのステート
   const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたTodoを表示させるためのステート
@@ -183,4 +183,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
