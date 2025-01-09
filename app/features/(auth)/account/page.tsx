@@ -9,7 +9,7 @@ import ChangeEmailAddress from "@/app/features/(auth)/account/ChangeEmailAddress
 import ChangePassword from "@/app/features/(auth)/account/ChangePassword/page";
 import DeleteAccount from "@/app/features/(auth)/account/DeleteAccount/page";
 
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { changeAccountMessageState } from "@/app/states/changeAccountMessageState";
 import {
   Box,
@@ -22,9 +22,10 @@ import {
   Typography,
 } from "@mui/material";
 import { auth } from "@/libs/firebase";
+import { currentPasswordState } from "@/app/states/currentPasswordState";
 
 const page = () => {
-  const message = useRecoilValue(changeAccountMessageState);
+  const [message, setMessage] = useRecoilState(changeAccountMessageState);
   const [openDaialog, setOpenDaialog] = useState(false);
   const [openDaialogChangeEmailAddress, setOpenDaialogChangeEmailAddress] =
     useState(false);
@@ -32,6 +33,7 @@ const page = () => {
     useState(false);
   const [openDaialogDeleteAccount, setOpenDaialogDeleteAccount] =
     useState(false);
+  const setCurrentPassword = useSetRecoilState(currentPasswordState);
   const user = auth.currentUser;
 
   const style = {
@@ -68,6 +70,8 @@ const page = () => {
 
   const handleClickOpenDaialog = (comp: string) => {
     setOpenDaialog(true);
+    setMessage("");
+    setCurrentPassword("");
     switch (comp) {
       case "mail":
         setOpenDaialogChangeEmailAddress(true);
@@ -83,6 +87,7 @@ const page = () => {
 
   const handleClose = () => {
     setOpenDaialog(false);
+
     if (openDaialogChangeEmailAddress) {
       setOpenDaialogChangeEmailAddress(false);
     }

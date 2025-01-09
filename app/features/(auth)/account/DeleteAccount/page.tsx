@@ -1,19 +1,19 @@
-import { changeAccountMessageState } from "@/app/states/changeAccountMessageState";
 import { currentPasswordState } from "@/app/states/currentPasswordState";
 import { Button, Grid, Input, Typography } from "@mui/material";
-import React from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import React, { useState } from "react";
+import { useRecoilState } from "recoil";
 import { auth } from "@/libs/firebase";
 import {
   deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
+import { red } from "@mui/material/colors";
 
 const page = () => {
   const [currentPassword, setCurrentPassword] =
     useRecoilState(currentPasswordState);
-  const setMessage = useSetRecoilState(changeAccountMessageState);
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function changeDeleteAccount(currentPassword: string): Promise<void> {
     const user = auth.currentUser;
@@ -28,15 +28,44 @@ const page = () => {
         user.email!,
         currentPassword
       );
-      await reauthenticateWithCredential(user, credential);
+      await reauthenticateWithCredential(user, credential)
+        .then(async () => {
+          console.log("Auth successfully.");
 
-      // 2. ユーザーの削除
-      await deleteUser(user);
-
-      console.log("Password updated successfully.");
+          // 2. ユーザーの削除
+          await deleteUser(user)
+            .then(() => {
+              console.log("Delete User successfully.");
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              console.error("Error updating password:", error);
+              switch (errorCode) {
+                case "auth/internal-error":
+                  setErrorMessage("サーバーで予期しないエラーが発生しました。");
+                  break;
+              }
+              return;
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          console.error("Error updating password:", error);
+          switch (errorCode) {
+            case "auth/invalid-credential":
+              setErrorMessage("パスワードが違います。");
+              break;
+          }
+          return;
+        });
     } catch (error) {
       console.error("Error updating password:", error);
-      throw error;
+      switch (error) {
+        case "auth/invalid-credential":
+          setErrorMessage("パスワードが違います。");
+          break;
+      }
+      return;
     }
   }
 
@@ -72,6 +101,9 @@ const page = () => {
           onChange={(e) => setCurrentPassword(e.target.value)}
         />
       </Grid>
+      <Typography sx={{ textAlign: "center", color: red[500] }}>
+        {errorMessage}
+      </Typography>
       <Grid item>
         <Button
           color="secondary"
