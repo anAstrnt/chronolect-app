@@ -9,15 +9,15 @@ import AddIcon from "@mui/icons-material/Add";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { collection, onSnapshot } from "firebase/firestore";
-import { auth, db } from "@/libs/firebase";
+import { db } from "@/libs/firebase";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 // NOTE: FamilyCard・Todo・Memo欄のサイドバーとして表示させるコンポーネント
 // NOTE: ユーザーの切替をすることができます。
-const page = () => {
+const Page = () => {
   const hasUserData = useRecoilValue(hasUserDataState); // ユーザーデータが存在するかどうかを示すステート
   const [users, setUsers] = useRecoilState(usersState); // 現在のユーザーリストを保持するステート
-  const [userId, setUserId] = useRecoilState(userIdState); // 現在選択されているユーザーのIDを格納するためのステート
+  const userId = useRecoilValue(userIdState); // 現在選択されているユーザーのIDを格納するためのステート
   const setFamilyCardId = useSetRecoilState(familyCardIdState);
   const [openInputSpace, setOpenInputSpace] =
     useRecoilState(openInputSpaceState); // 入力スペースが開いているかどうかを示すステート
@@ -138,4 +138,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
