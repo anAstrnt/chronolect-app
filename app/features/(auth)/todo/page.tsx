@@ -18,6 +18,7 @@ import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { userIdState } from "@/app/states/userIdState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
+import { headerTitleState } from "@/app/states/headerTitleState";
 
 // NOTE:Todoページのトップコンポーネント
 const Page = () => {
@@ -26,6 +27,7 @@ const Page = () => {
   const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたTodoを表示させるためのステート
   const setHasUserData = useSetRecoilState(hasUserDataState); // familyCardにデータが保存されていたらSidebarで表示させるためのステート
   const [userId, setUserId] = useRecoilState(userIdState); // ユーザーのuidを格納するためのステート
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   // NOTE:マウント時にユーザーUIDをステートにセットしておく。Authのフロント周りの処理やFirestoreのDocIdとして使用。
   useEffect(() => {
@@ -62,6 +64,10 @@ const Page = () => {
     }
   }, [userId]);
 
+  useEffect(() => {
+    setHeaderTitle("Todo List");
+  }, []);
+
   return (
     <Grid container direction="column" sx={{ width: "100%", height: "100%" }}>
       <Grid
@@ -74,7 +80,7 @@ const Page = () => {
           zIndex: 1000,
         }}
       >
-        <Header title="Todo List" />
+        <Header />
       </Grid>
       <Grid item sx={{ width: "100%", height: "100%" }}>
         <Grid container sx={{ width: "100%", height: "100%" }}>

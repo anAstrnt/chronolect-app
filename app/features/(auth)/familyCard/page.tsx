@@ -15,10 +15,11 @@ import Header from "@/app/components/bar/Header/page";
 import Side from "@/app/components/bar/Side/page";
 import BackToPageButton from "@/components/BackToPageButton";
 // NOTE:recoilと各種ステートのインポート
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { userIdState } from "@/app/states/userIdState";
+import { headerTitleState } from "@/app/states/headerTitleState";
 
 // NOTE:FamilyCardページのトップコンポーネント
 const Page: React.FC = () => {
@@ -28,6 +29,7 @@ const Page: React.FC = () => {
   const [hasUserData, setHasUserData] = useRecoilState(hasUserDataState);
   const [isLoading, setIsLoading] = useState(true); // loading状況を格納するステート
   const openInputSpace = useRecoilValue(openInputSpaceState);
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   useEffect(() => {
     if (user) {
@@ -79,6 +81,10 @@ const Page: React.FC = () => {
     );
   }
 
+  useEffect(() => {
+    setHeaderTitle("Family Card");
+  }, []);
+
   return (
     <Grid
       sx={{
@@ -104,7 +110,7 @@ const Page: React.FC = () => {
               zIndex: 1000,
             }}
           >
-            <Header title="Family Card" />
+            <Header />
           </Grid>
 
           <Grid item sx={{ flexGrow: 1 }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import KeyIcon from "@mui/icons-material/Key";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
@@ -9,7 +9,7 @@ import ChangeEmailAddress from "@/app/features/(auth)/account/ChangeEmailAddress
 import ChangePassword from "@/app/features/(auth)/account/ChangePassword/page";
 import DeleteAccount from "@/app/features/(auth)/account/DeleteAccount/page";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { changeAccountMessageState } from "@/app/states/changeAccountMessageState";
 import {
   Box,
@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { auth } from "@/libs/firebase";
 import { currentPasswordState } from "@/app/states/currentPasswordState";
+import { headerTitleState } from "@/app/states/headerTitleState";
 
 const Page = () => {
   const [message, setMessage] = useRecoilState(changeAccountMessageState);
@@ -35,6 +36,7 @@ const Page = () => {
     useState(false);
   const setCurrentPassword = useSetRecoilState(currentPasswordState);
   const user = auth.currentUser;
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   const style = {
     position: "absolute",
@@ -99,6 +101,10 @@ const Page = () => {
     }
   };
 
+  useEffect(() => {
+    setHeaderTitle("Account");
+  }, []);
+
   return (
     <Grid
       sx={{
@@ -111,7 +117,7 @@ const Page = () => {
       <Grid
         sx={{ width: "100%", position: "fixed", top: 0, left: 0, zIndex: 1000 }}
       >
-        <Header title="Account" />
+        <Header />
       </Grid>
       <Grid
         container

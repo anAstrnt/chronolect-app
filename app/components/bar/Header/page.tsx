@@ -4,14 +4,13 @@ import React from "react";
 import BackToPageButton from "@/components/BackToPageButton";
 import { Grid, Typography } from "@mui/material";
 import Tips from "@/app/components/bar/Tips/page";
-
-type HeaderProps = {
-  title: string;
-};
+import { useRecoilValue } from "recoil";
+import { headerTitleState } from "@/app/states/headerTitleState";
 
 // NOTE:FamilyCard.Todo.Memoの上部に表示させるコンポーネント
 // NOTE:今いるコンポーネント名を表示・Tipsの表示・メニューへ戻るボタンの表示をしている。
-const Page: React.FC<HeaderProps> = ({ title }) => {
+const Page = () => {
+  const headerTitle = useRecoilValue(headerTitleState);
   return (
     <Grid
       container
@@ -44,7 +43,7 @@ const Page: React.FC<HeaderProps> = ({ title }) => {
       >
         <Grid item>
           <Typography sx={{ letterSpacing: "8px", color: "white" }}>
-            {title}
+            {headerTitle}
           </Typography>
         </Grid>
         <Grid item>
@@ -53,7 +52,7 @@ const Page: React.FC<HeaderProps> = ({ title }) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Tips title={title} />
+          <Tips title={headerTitle} />
         </Grid>
       </Grid>
     </Grid>

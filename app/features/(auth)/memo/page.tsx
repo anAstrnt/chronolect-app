@@ -18,6 +18,7 @@ import { userIdState } from "@/app/states/userIdState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
+import { headerTitleState } from "@/app/states/headerTitleState";
 
 // NOTE:Memoページのトップコンポーネント
 const Page = () => {
@@ -26,6 +27,7 @@ const Page = () => {
   const openInputSpace = useRecoilValue(openInputSpaceState); // SidebarでfamilyCardの追加ボタンが押されたら、FamilyCardAddコンポーネントを表示させるためのステート
   const setHasUserData = useSetRecoilState(hasUserDataState); // familyCardにデータが保存されていたらSidebarで表示させるためのステート
   const familyCardId = useRecoilValue(familyCardIdState); // Sidebarで選択されたFamilyCardに紐づけたTodoを表示させるためのステート
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   // NOTE:マウント時にユーザーUIDをステートにセットしておく。Authのフロント周りの処理やFirestoreのDocIdとして使用。
   useEffect(() => {
@@ -62,6 +64,10 @@ const Page = () => {
     }
   }, [userId]);
 
+  useEffect(() => {
+    setHeaderTitle("URL Memo List");
+  }, []);
+
   return (
     <Grid container sx={{ width: "100%", height: "100%" }}>
       <Grid
@@ -74,7 +80,7 @@ const Page = () => {
           zIndex: 1000,
         }}
       >
-        <Header title="URL Memo List" />
+        <Header />
       </Grid>
       <Grid
         item

@@ -1,9 +1,9 @@
 "use client";
 
+import React, { useEffect } from "react";
 import { userIdState } from "@/app/states/userIdState";
 import { usersState } from "@/app/states/usersState";
 import { Avatar, Button, Grid, IconButton } from "@mui/material";
-import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import AddIcon from "@mui/icons-material/Add";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
