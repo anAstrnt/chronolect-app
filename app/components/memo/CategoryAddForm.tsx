@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 // NOTE:firestoreのデータを取得するためのインポート
 import { collection, doc, setDoc } from "firebase/firestore";
@@ -41,7 +43,9 @@ const CategoryAddForm = () => {
           label="Add Category"
           variant="outlined"
           value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setCategoryName(e.target.value)
+          }
         />
         <IconButton
           onClick={addCategoryNameToFirebase}
