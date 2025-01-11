@@ -33,8 +33,8 @@ const Layout = ({ children }: childrenProps) => {
   }, []);
 
   return (
-    <Grid container sx={{ width: "100%", height: "100%" }}>
-      <RecoilRoot>
+    <RecoilRoot>
+      <Grid container sx={{ width: "100%", height: "100%" }}>
         <AuthCheck>
           <Grid
             container
@@ -50,8 +50,8 @@ const Layout = ({ children }: childrenProps) => {
             </Grid>
           </Grid>
         </AuthCheck>
-      </RecoilRoot>
-    </Grid>
+      </Grid>
+    </RecoilRoot>
   );
 };
 
