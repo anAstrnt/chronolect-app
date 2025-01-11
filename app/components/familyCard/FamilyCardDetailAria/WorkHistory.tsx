@@ -6,7 +6,7 @@ import { changeEditDetailState } from "@/app/states/changeEditDetailState";
 import { workHistoryItemsState } from "@/app/states/workHistoryItemsState";
 import InputFormComp from "@/components/InputFormComp";
 import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { db } from "@/libs/firebase";
+import db from "@/libs/firebase";
 import { workHistoryItemsTypes } from "@/types/workHistoryItemTypes";
 import DeleteButton from "@/components/DeleteButton";
 import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";

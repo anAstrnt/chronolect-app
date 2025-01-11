@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { db } from "@/libs/firebase";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import db from "@/libs/firebase";
+import { useRecoilValue } from "recoil";
 import DeleteButton from "@/components/DeleteButton";
 // NOTE:UIに関するインポート
 import {

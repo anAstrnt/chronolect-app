@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 // NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "@/libs/firebase";
+import db from "@/libs/firebase";
 // NOTE:UIに関するインポート
 import { Grid, IconButton, Input } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";

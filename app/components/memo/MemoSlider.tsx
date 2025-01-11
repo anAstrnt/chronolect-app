@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 // NOTE:firestoreのデータを取得するためのインポート
-import { db } from "@/libs/firebase";
+import db from "@/libs/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 // NOTE:スライダーを実装するためのインポート
 import Glide from "@glidejs/glide";

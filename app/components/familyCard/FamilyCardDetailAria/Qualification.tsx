@@ -3,7 +3,7 @@ import { changeQualificationsState } from "@/app/states/changeQualificationsStat
 import { userIdState } from "@/app/states/userIdState";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteButton from "@/components/DeleteButton";
-import { db } from "@/libs/firebase";
+import db from "@/libs/firebase";
 import { Grid, IconButton, Input, Typography } from "@mui/material";
 import {
   collection,

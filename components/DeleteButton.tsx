@@ -2,12 +2,11 @@ import { Button, IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
 import { deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "@/libs/firebase";
-import { useRecoilState } from "recoil";
+import db from "@/libs/firebase";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { changeQualificationsState } from "@/app/states/changeQualificationsState";
 import { collection as collectionRef } from "firebase/firestore";
 import "firebase/compat/firestore";
-import { addCategoryState } from "@/app/states/addCategoryState";
 import { changePreviewsState } from "@/app/states/changePreviewsState";
 import { fetchWorkHistoryState } from "@/app/states/fetchWorkHistoryState";
 import { deleteCategoryState } from "@/app/states/deleteCategoryState";
@@ -38,14 +37,12 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   const [changeQualifications, setChangeQualifications] = useRecoilState(
     changeQualificationsState
   );
-  const [addCategory, setAddCategory] = useRecoilState(addCategoryState);
   const [changePreviews, setChangePreviews] =
     useRecoilState(changePreviewsState);
   const [fetchWorkHistory, setFetchWorkHistory] = useRecoilState(
     fetchWorkHistoryState
   );
-  const [deleteCategory, setDeleteCategory] =
-    useRecoilState(deleteCategoryState);
+  const setDeleteCategory = useSetRecoilState(deleteCategoryState);
 
   const delelteAction = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
