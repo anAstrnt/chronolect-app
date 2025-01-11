@@ -52,7 +52,7 @@ const Page = () => {
           </Typography>
         </Grid>
         <Grid item>
-          <Tips title={headerTitle} />
+          <Tips />
         </Grid>
       </Grid>
     </Grid>

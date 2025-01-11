@@ -4,15 +4,14 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import { Box, Grid, Modal, Typography } from "@mui/material";
-
-type tipsCompProps = {
-  title: string;
-};
+import { useRecoilValue } from "recoil";
+import { headerTitleState } from "@/app/states/headerTitleState";
 
 // NOTE: Headerに表示されるTipsのコンポーネント
 // NOTE: それぞれのページの操作方法についての説明書き
-const Page: React.FC<tipsCompProps> = ({ title }) => {
+const Page = () => {
   const [open, setOpen] = useState(false); //  ダイアログの開閉をするステート
+  const headerTitle = useRecoilValue(headerTitleState);
 
   const style = {
     position: "absolute",
@@ -35,7 +34,7 @@ const Page: React.FC<tipsCompProps> = ({ title }) => {
 
   // NOTE: ダイアログに表示させる、それぞれのページの操作方法。
   const tipsDetail = () => {
-    if (title === "Family Card") {
+    if (headerTitle === "Family Card") {
       return [
         "【Family Cardの作り方・削除の仕方】",
         "① サイドバーのユーザーアイコンをクリックし、ユーザーごとにプロフィールを作成することができます",
@@ -45,7 +44,7 @@ const Page: React.FC<tipsCompProps> = ({ title }) => {
         "⑤ 画面右上の✗ボタンを押すとユーザーを削除することができます。",
       ];
     }
-    if (title === "Todo List") {
+    if (headerTitle === "Todo List") {
       return [
         "【Todo Titleの作り方】",
         "① サイドバーのユーザーアイコンをクリックし、ユーザーごとにTodoを作成することができます",
@@ -63,7 +62,7 @@ const Page: React.FC<tipsCompProps> = ({ title }) => {
         "Todo Titleまたは、Todo横の✗ボタンを押すと対象のアイテムが削除されます",
       ];
     }
-    if (title === "URL Memo List") {
+    if (headerTitle === "URL Memo List") {
       return [
         "【Memoの作り方】",
         "① サイドバーのユーザーアイコンをクリックし、ユーザーごとにMemoを作成することができます",
@@ -79,7 +78,7 @@ const Page: React.FC<tipsCompProps> = ({ title }) => {
         "Memoまたは、カテゴリーの右上の✗ボタンを押すと対象のアイテムが削除されます",
       ];
     }
-    if (title === "Account") {
+    if (headerTitle === "Account") {
       return [
         "【概要】",
         "ユーザーの情報を変更削除できるページです。",
@@ -131,7 +130,7 @@ const Page: React.FC<tipsCompProps> = ({ title }) => {
         >
           <Box>
             <Typography sx={{ fontSize: "30px" }}>
-              {title + "に関するヒント"}
+              {headerTitle + "に関するヒント"}
             </Typography>
             <Grid sx={{ margin: "20px 0" }}>
               {tipsDetail().map((tip, index) => (
