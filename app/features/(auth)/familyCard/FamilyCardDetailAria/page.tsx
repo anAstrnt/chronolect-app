@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 // NOTE:Firebaseのauth認証firestoreのデータを取得するためのインポート
-import db from "@/libs/firebase";
+import { db } from "@/libs/firebase";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 // NOTE:UIに関するインポート
 import { Grid, Input, Typography } from "@mui/material";

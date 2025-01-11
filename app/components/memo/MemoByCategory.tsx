@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 // NOTE:firestoreのデータを取得するためのインポート
-import db from "@/libs/firebase";
+import { db } from "@/libs/firebase";
 import {
   collection,
   doc,

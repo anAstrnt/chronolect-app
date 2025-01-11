@@ -11,7 +11,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import db from "@/libs/firebase";
+import { db } from "@/libs/firebase";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
 import { Grid, Typography } from "@mui/material";

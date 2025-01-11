@@ -2,7 +2,7 @@ import { Button, IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
 import { deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
-import db from "@/libs/firebase";
+import { db } from "@/libs/firebase";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { changeQualificationsState } from "@/app/states/changeQualificationsState";
 import { collection as collectionRef } from "firebase/firestore";

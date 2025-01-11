@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
 import { hasUserDataState } from "@/app/states/hasUserDataState";
 import { collection, onSnapshot } from "firebase/firestore";
-import db from "@/libs/firebase";
+import { db } from "@/libs/firebase";
 import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 // NOTE: FamilyCard・Todo・Memo欄のサイドバーとして表示させるコンポーネント
