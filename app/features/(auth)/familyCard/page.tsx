@@ -67,6 +67,10 @@ const Page: React.FC = () => {
     }
   }, [userId]);
 
+  useEffect(() => {
+    setHeaderTitle("Family Card");
+  }, []);
+
   // NOTE: マウント中にアイコンを表示する処理
   if (isLoading) {
     return (
@@ -80,10 +84,6 @@ const Page: React.FC = () => {
       </Grid>
     );
   }
-
-  useEffect(() => {
-    setHeaderTitle("Family Card");
-  }, []);
 
   return (
     <Grid
