@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { db } from "@/libs/firebase";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 // NOTE:UIに関するインポート
-import { Grid, Input, Typography } from "@mui/material";
+import { Grid, Input, TextField, Typography } from "@mui/material";
 // NOTE:各種コンポーネントのインポート
 import AcademicHistory from "../../../../components/familyCard/FamilyCardDetailAria/AcademicHistory";
 import WorkHistory from "../../../../components/familyCard/FamilyCardDetailAria/WorkHistory";
@@ -273,13 +273,15 @@ const FamilyCardDetail = () => {
                     {changeEditDetail &&
                     selectedIndex === index &&
                     [1, 2, 3, 4, 5].includes(index + 1) ? (
-                      <Input
+                      <TextField
                         name={data.name}
                         type={data.type}
                         value={onChangeValue(index)}
-                        onChange={(e) => onChangeDetail(e, index)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          onChangeDetail(e, index)
+                        }
                         fullWidth
-                        disableUnderline
+                        variant="outlined"
                         sx={{
                           width: "85%",
                           paddingLeft: "10px",

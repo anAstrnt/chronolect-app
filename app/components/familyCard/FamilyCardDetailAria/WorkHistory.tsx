@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Input, Typography } from "@mui/material";
+import { Grid, Input, TextField, Typography } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userIdState } from "@/app/states/userIdState";
 import { changeEditDetailState } from "@/app/states/changeEditDetailState";
@@ -363,12 +363,17 @@ const WorkHistory: React.FC<workHistoryProps> = ({
       {changeEditDetail && selectedIndex === detailIndex && (
         <Grid container justifyContent="space-around">
           <Grid item sx={{ width: "100%" }}>
-            <Input
+            <TextField
               type="text"
               value={company}
-              onKeyDown={(e) => e.key === "Enter" && addNewHistoryEntry()}
-              onChange={(e) => setCompany(e.target.value)}
-              disableUnderline
+              inputProps={{
+                onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) =>
+                  e.key === "Enter" && addNewHistoryEntry(),
+              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setCompany(e.target.value)
+              }
+              variant="outlined"
               sx={{
                 width: "100%",
                 backgroundColor: "rgba(0, 0, 0, 0.05)",
@@ -389,12 +394,17 @@ const WorkHistory: React.FC<workHistoryProps> = ({
               }}
             >
               <Grid item sx={{ marginBottom: "10px" }}>
-                <Input
+                <TextField
                   type="month"
                   value={employmentDate}
-                  onKeyDown={(e) => e.key === "Enter" && addNewHistoryEntry()}
-                  onChange={(e) => setEmploymentDate(e.target.value)}
-                  disableUnderline
+                  inputProps={{
+                    onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) =>
+                      e.key === "Enter" && addNewHistoryEntry(),
+                  }}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEmploymentDate(e.target.value)
+                  }
+                  variant="outlined"
                   sx={{
                     width: "100%",
                     backgroundColor: "rgba(0, 0, 0, 0.05)",
@@ -426,12 +436,17 @@ const WorkHistory: React.FC<workHistoryProps> = ({
                 margin: "10px 0 20px 0",
               }}
             >
-              <Input
+              <TextField
                 type="month"
                 value={resignationDate}
-                onKeyDown={(e) => e.key === "Enter" && addNewHistoryEntry()}
-                onChange={(e) => setResignationDate(e.target.value)}
-                disableUnderline
+                inputProps={{
+                  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) =>
+                    e.key === "Enter" && addNewHistoryEntry(),
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setResignationDate(e.target.value)
+                }
+                variant="outlined"
                 sx={{
                   width: "100%",
                   backgroundColor: "rgba(0, 0, 0, 0.05)",

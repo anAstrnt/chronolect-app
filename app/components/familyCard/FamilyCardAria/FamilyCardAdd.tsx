@@ -129,7 +129,9 @@ const FamilyCardAdd: React.FC = () => {
                   label="name"
                   variant="standard"
                   value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setUserName(e.target.value)
+                  }
                   sx={{ margin: "40px 20px 0 0", width: "250px" }}
                 />
               </Grid>

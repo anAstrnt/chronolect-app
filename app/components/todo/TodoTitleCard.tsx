@@ -274,7 +274,9 @@ export const TodoTitleCard = () => {
                   label="Todo"
                   variant="standard"
                   value={todo[title.titleId] || ""}
-                  onChange={(e) => onChangeTodos(e, title.titleId)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChangeTodos(e, title.titleId)
+                  }
                   fullWidth
                 />
                 <IconButton
@@ -312,7 +314,7 @@ export const TodoTitleCard = () => {
                           background: "rgba(61,196,59,0.2)",
                         },
                       }}
-                      onClick={(e) =>
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                         onChangeDoneTodo(
                           e,
                           title.titleId,

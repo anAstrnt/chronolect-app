@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/libs/firebase";
 // NOTE:UIに関するインポート
-import { Grid, IconButton, Input } from "@mui/material";
+import { Grid, IconButton, Input, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 // NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -85,17 +85,21 @@ const MemoAddForm = () => {
       container
       sx={{ width: "100%", display: "flex", justifyContent: "center" }}
     >
-      <Input
+      <TextField
         type="text"
         value={memo}
-        onChange={(e) => setMemo(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setMemo(e.target.value)
+        }
         placeholder="Enter a memo"
         sx={{ width: "200px", marginRight: "30px" }}
       />
-      <Input
+      <TextField
         type="text"
         value={url}
-        onChange={(e) => setUrl(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setUrl(e.target.value)
+        }
         placeholder="Enter a URL"
         sx={{ width: "500px", marginRight: "30px" }}
       />

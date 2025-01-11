@@ -44,11 +44,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
   );
   const setDeleteCategory = useSetRecoilState(deleteCategoryState);
 
-  const delelteAction = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    mainDocId: string,
-    docId: string
-  ) => {
+  const delelteAction = async (mainDocId: string, docId: string) => {
     try {
       if (mainCollection === "familyCard") {
         if (collection === "detail") {
@@ -242,7 +238,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
               background: "rgba(247,72,59,0.2)",
             },
           }}
-          onClick={(e) => delelteAction(e, mainDocId, docId)}
+          onClick={() => delelteAction(mainDocId, docId)}
         >
           <ClearIcon />
         </IconButton>
@@ -257,7 +253,7 @@ const DeleteButton: React.FC<deleteButtonProps> = ({
               background: "rgba(247,72,59,0.2)",
             },
           }}
-          onClick={(e) => delelteAction(e, mainDocId, docId)}
+          onClick={() => delelteAction(mainDocId, docId)}
         >
           削除
         </Button>

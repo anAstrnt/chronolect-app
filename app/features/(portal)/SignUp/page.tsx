@@ -105,7 +105,9 @@ const Page = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setUserName(e.target.value)
+                  }
                   value={userName}
                   autoComplete="given-name"
                   name="yourName"
@@ -118,7 +120,9 @@ const Page = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
                   value={email}
                   required
                   fullWidth
@@ -131,7 +135,9 @@ const Page = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setPassword(e.target.value)
+                  }
                   value={password}
                   required
                   fullWidth

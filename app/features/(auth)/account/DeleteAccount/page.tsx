@@ -1,7 +1,7 @@
 "use client";
 
 import { currentPasswordState } from "@/app/states/currentPasswordState";
-import { Button, Grid, Input, Typography } from "@mui/material";
+import { Button, Grid, Input, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { auth } from "@/libs/firebase";
@@ -96,11 +96,13 @@ const Page = () => {
         >
           現在のパスワード：
         </Typography>
-        <Input
+        <TextField
           type="password"
           placeholder="Current Password"
           value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setCurrentPassword(e.target.value)
+          }
         />
       </Grid>
       <Typography sx={{ textAlign: "center", color: red[500] }}>

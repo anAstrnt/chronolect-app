@@ -10,7 +10,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { changeAccountMessageState } from "@/app/states/changeAccountMessageState";
-import { Button, Grid, Input, Typography } from "@mui/material";
+import { Button, Grid, Input, TextField, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
 
 const Page = () => {
@@ -107,11 +107,13 @@ const Page = () => {
         >
           現在のパスワード：
         </Typography>
-        <Input
+        <TextField
           type="password"
           placeholder="Current Password"
           value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setCurrentPassword(e.target.value)
+          }
         />
       </Grid>
       <Typography sx={{ textAlign: "center", color: red[500] }}>
@@ -134,11 +136,13 @@ const Page = () => {
         >
           新しいパスワード：
         </Typography>
-        <Input
+        <TextField
           type="password"
           placeholder="New Password"
           value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewPassword(e.target.value)
+          }
         />
       </Grid>
       <Grid item>

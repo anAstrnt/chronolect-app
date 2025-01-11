@@ -4,7 +4,7 @@ import { userIdState } from "@/app/states/userIdState";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/libs/firebase";
-import { Grid, IconButton, Input, Typography } from "@mui/material";
+import { Grid, IconButton, Input, TextField, Typography } from "@mui/material";
 import {
   collection,
   doc,
@@ -182,12 +182,16 @@ const Qualification: React.FC<QualificationProps> = ({
                   <Grid item sx={{ width: "80%" }}>
                     <Grid container sx={{ width: "100%" }}>
                       <Grid item sx={{ width: "30%", marginRight: "5px" }}>
-                        <Input
-                          inputProps={{ type: "month" }} // 年月のみを入力するフォーム
+                        <TextField
                           value={qualificationYear}
-                          onChange={(e) => setQualificationYear(e.target.value)}
-                          onKeyDown={handleKeyDown} // エンターキーのイベントを追加
-                          disableUnderline
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setQualificationYear(e.target.value)
+                          }
+                          inputProps={{
+                            type: "month", // 年月のみを入力するフォーム
+                            onKeyDown: handleKeyDown, // エンターキーのイベントを追加
+                          }}
+                          variant="outlined"
                           sx={{
                             backgroundColor: "rgba(0, 0, 0, 0.05)",
                             "&:hover": {
@@ -197,13 +201,15 @@ const Qualification: React.FC<QualificationProps> = ({
                         />
                       </Grid>
                       <Grid item sx={{ width: "65%", marginRight: "5px" }}>
-                        <Input
+                        <TextField
                           value={qualificationDetail}
-                          onChange={(e) =>
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setQualificationDetail(e.target.value)
                           }
-                          onKeyDown={handleKeyDown} // エンターキーのイベントを追加
-                          disableUnderline
+                          inputProps={{
+                            onKeyDown: handleKeyDown, // エンターキーのイベントを追加
+                          }}
+                          variant="outlined"
                           sx={{
                             width: "100%",
                             backgroundColor: "rgba(0, 0, 0, 0.05)",
@@ -273,14 +279,18 @@ const Qualification: React.FC<QualificationProps> = ({
           ) : (
             <Grid container sx={{ width: "100%" }}>
               <Grid item sx={{ width: "20%", marginRight: "10px" }}>
-                <Input
-                  inputProps={{ type: "month" }} // 年月のみを入力するフォーム
+                <TextField
                   placeholder="資格の年月"
                   value={qualificationYear}
-                  onChange={(e) => setQualificationYear(e.target.value)}
-                  onKeyDown={handleKeyDown} // エンターキーのイベントを追加
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setQualificationYear(e.target.value)
+                  }
+                  inputProps={{
+                    type: "month", // 年月のみを入力するフォーム
+                    onKeyDown: handleKeyDown, // エンターキーのイベントを追加
+                  }}
                   fullWidth
-                  disableUnderline
+                  variant="outlined"
                   sx={{
                     backgroundColor: "rgba(0, 0, 0, 0.05)",
                     "&:hover": {
@@ -291,13 +301,17 @@ const Qualification: React.FC<QualificationProps> = ({
               </Grid>
 
               <Grid item sx={{ width: "75%" }}>
-                <Input
+                <TextField
                   placeholder="資格の詳細"
                   value={qualificationDetail}
-                  onChange={(e) => setQualificationDetail(e.target.value)}
-                  onKeyDown={handleKeyDown} // エンターキーのイベントを追加
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setQualificationDetail(e.target.value)
+                  }
+                  inputProps={{
+                    onKeyDown: handleKeyDown, // エンターキーのイベントを追加
+                  }}
                   fullWidth
-                  disableUnderline
+                  variant="outlined"
                   sx={{
                     backgroundColor: "rgba(0, 0, 0, 0.05)",
                     "&:hover": {

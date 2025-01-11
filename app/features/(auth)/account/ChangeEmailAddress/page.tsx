@@ -10,7 +10,7 @@ import {
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
 import { changeAccountMessageState } from "@/app/states/changeAccountMessageState";
-import { Button, Grid, Input, Typography } from "@mui/material";
+import { Button, Grid, Input, TextField, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
 
 const Page = () => {
@@ -106,11 +106,13 @@ const Page = () => {
         <Typography sx={{ textAlign: "center", padding: "10px 0" }}>
           新しいメールアドレス
         </Typography>
-        <Input
+        <TextField
           type="email"
           placeholder="New Email"
           value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewEmail(e.target.value)
+          }
           sx={{ width: "80%" }}
         />
       </Grid>
@@ -125,11 +127,13 @@ const Page = () => {
         }}
       >
         <Typography sx={{ textAlign: "center" }}>パスワード：</Typography>
-        <Input
+        <TextField
           type="password"
           placeholder="Current Password"
           value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setCurrentPassword(e.target.value)
+          }
         />
       </Grid>
       <Typography sx={{ textAlign: "center", color: red[500] }}>
