@@ -25,7 +25,7 @@
 
 ## 💁🏼‍♀️ App URL（PC 用アプリとなります。）
 
-<link src="https://chronolect-app-jwf5-e9vy8edws-anastrnts-projects.vercel.app/">chronolect</link>
+https://chronolect-app-jwf5-e9vy8edws-anastrnts-projects.vercel.app/
 
 ## 🔧 機能一覧
 
