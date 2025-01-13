@@ -23,7 +23,9 @@
 そんな悩みを持つ方に向けて作成したアプリです。
 役場の窓口でお子様の生年月日をなかなか思い出せない方が案外いらっしゃることに気づき、このアプリを作成しました。
 
-## 🌼 App URL（PC 用アプリとなります。）
+## 💁🏼‍♀️ App URL（PC 用アプリとなります。）
+
+<link src="https://chronolect-app-jwf5-e9vy8edws-anastrnts-projects.vercel.app/">chronolect</link>
 
 ## 🔧 機能一覧
 
