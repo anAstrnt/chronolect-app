@@ -9,7 +9,7 @@ import { headerTitleState } from "@/app/states/headerTitleState";
 
 // NOTE: Headerに表示されるTipsのコンポーネント
 // NOTE: それぞれのページの操作方法についての説明書き
-const Page = () => {
+const Tips = () => {
   const [open, setOpen] = useState(false); //  ダイアログの開閉をするステート
   const headerTitle = useRecoilValue(headerTitleState);
 
@@ -145,4 +145,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Tips;

@@ -7,8 +7,8 @@ import { collection, onSnapshot } from "firebase/firestore";
 // NOTE:UIに関するインポート
 import { Grid, Typography } from "@mui/material";
 // NOTE:各種コンポーネントのインポート
-import Header from "@/app/components/bar/Header/page";
-import Side from "@/app/components/bar/Side/page";
+import Header from "@/app/components/bar/Header";
+import Side from "@/app/components/bar/Side";
 import AddMemoAria from "@/app/features/(auth)/memo/AddMemoAria/page";
 import ShowMemoAria from "@/app/features/(auth)/memo/ShowMemoAria/page";
 import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";

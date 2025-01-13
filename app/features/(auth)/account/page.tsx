@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import KeyIcon from "@mui/icons-material/Key";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
-import Header from "@/app/components/bar/Header/page";
+import Header from "@/app/components/bar/Header";
 import ChangeEmailAddress from "@/app/features/(auth)/account/ChangeEmailAddress/page";
 import ChangePassword from "@/app/features/(auth)/account/ChangePassword/page";
 import DeleteAccount from "@/app/features/(auth)/account/DeleteAccount/page";

@@ -11,8 +11,8 @@ import FamilyCardDetailAria from "./FamilyCardDetailAria/page";
 import CircularProgress from "@/app/components/CircularProgress";
 import SelectedUserIcon from "@/app/components/familyCard/FamilyCardDetailAria/SelectedUserIcon";
 import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
-import Header from "@/app/components/bar/Header/page";
-import Side from "@/app/components/bar/Side/page";
+import Header from "@/app/components/bar/Header";
+import Side from "@/app/components/bar/Side";
 import BackToPageButton from "@/components/BackToPageButton";
 // NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";

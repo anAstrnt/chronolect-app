@@ -14,7 +14,7 @@ import { familyCardIdState } from "@/app/states/familyCardIdState";
 
 // NOTE: FamilyCard・Todo・Memo欄のサイドバーとして表示させるコンポーネント
 // NOTE: ユーザーの切替をすることができます。
-const Page = () => {
+const Side = () => {
   const hasUserData = useRecoilValue(hasUserDataState); // ユーザーデータが存在するかどうかを示すステート
   const [users, setUsers] = useRecoilState(usersState); // 現在のユーザーリストを保持するステート
   const userId = useRecoilValue(userIdState); // 現在選択されているユーザーのIDを格納するためのステート
@@ -138,4 +138,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Side;

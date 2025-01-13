@@ -10,8 +10,8 @@ import { Grid, Typography } from "@mui/material";
 import FamilyCardAdd from "@/app/components/familyCard/FamilyCardAria/FamilyCardAdd";
 import AddTodoAria from "./AddTodoAria/page";
 import ShowTodoAria from "./ShowTodoAria/page";
-import Header from "@/app/components/bar/Header/page";
-import Side from "@/app/components/bar/Side/page";
+import Header from "@/app/components/bar/Header";
+import Side from "@/app/components/bar/Side";
 // NOTE:recoilと各種ステートのインポート
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { openInputSpaceState } from "@/app/states/openInputSpaceState";
